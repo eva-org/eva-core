@@ -15,6 +15,8 @@ const url = require('url')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let isShow = false
+let input = ''
+let query = ''
 
 function createWindow() {
   // Create the browser window.
