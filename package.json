@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "debug": "electron --inspect=5858 ."
   },
   "author": "",
   "license": "ISC",
