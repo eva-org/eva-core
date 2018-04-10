@@ -19,10 +19,20 @@
 </head>
 
 <body>
-  <input autofocus="autofocus">
+  <input id="boxInput" autofocus="autofocus">
   <script>
+    const {
+      ipcRenderer
+    } = require('electron')
+    console.log(ipcRenderer)
+    document.getElementById('boxInput').oninput = function(e) {
+      console.log('input')
+      console.log(e)
+      ipcRenderer.send('box-input', document.getElementById('boxInput').value)
+    }
+
     // You can also require other files to run in this process
-    require('./renderer.js')
+    // require('./renderer.js')
   </script>
 </body>
 
