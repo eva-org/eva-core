@@ -1,0 +1,20 @@
+.DS_STORE
+*.bak
+*.log
+*.out
+
+node_modules
+npm-debug.log*
+dist
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+sync
+
+.uglify
+.cache-loader
+.cache
