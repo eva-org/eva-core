@@ -23,6 +23,7 @@ const SearchInBaidu = require('./base_plugin/SearchInBaidu')
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
+    y: 85,
     width: 500,
     height: 76,
     frame: false
@@ -56,8 +57,10 @@ ipcMain.on('box-input-enter', (event, arg) => {
   console.log(arg) // prints "ping"
   // TODO 组件调用器
   const inputArr = arg.split(' ')
-  if(inputArr[0]==='bd'){
-    SearchInBaidu({query:inputArr[1]})
+  if (inputArr[0] === 'bd') {
+    SearchInBaidu({
+      query: inputArr[1]
+    })
     mainWindow.hide()
   }
 
