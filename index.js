@@ -17,6 +17,8 @@ let mainWindow
 let isShow = false
 let input = ''
 let query = ''
+// TODO 组件加载器
+const SearchInBaidu = require('./base_plugin/SearchInBaidu')
 
 function createWindow() {
   // Create the browser window.
@@ -46,10 +48,20 @@ function createWindow() {
 }
 
 ipcMain.on('box-input', (event, arg) => {
+  // TODO 实时校验系统
   console.log(arg) // prints "ping"
-  event.returnValue = 'pong'
 })
 
+ipcMain.on('box-input-enter', (event, arg) => {
+  console.log(arg) // prints "ping"
+  // TODO 组件调用器
+  const inputArr = arg.split(' ')
+  if(inputArr[0]==='bd'){
+    SearchInBaidu({query:inputArr[1]})
+    mainWindow.hide()
+  }
+
+})
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
