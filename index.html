@@ -24,10 +24,7 @@
     const {
       ipcRenderer
     } = require('electron')
-    console.log(ipcRenderer)
     document.getElementById('boxInput').oninput = function(e) {
-      console.log('input')
-      console.log(e)
       ipcRenderer.send('box-input', document.getElementById('boxInput').value)
     }
 
