@@ -33,7 +33,8 @@ function createWindow(x, y) {
         y: +y,
         width: 500,
         height: 76,
-        frame: false
+        frame: false,
+        skipTaskbar: true
     })
     console.log(mainWindow)
     // and load the index.html of the app.
@@ -64,14 +65,14 @@ ipcMain.on('box-input-enter', (event, arg) => {
     // TODO 组件调用器
     const inputArr = arg.split(' ')
     if (inputArr[0] === 'bd') {
-      SearchInBaidu({
-        query: inputArr[1]
-      })
-      mainWindow.hide()
+        SearchInBaidu({
+            query: inputArr[1]
+        })
+        hideWindow()
     } else if (inputArr[0] === 'log') {
-      HbmLog({
-        query: inputArr[1]
-      })
+        HbmLog({
+            query: inputArr[1]
+        })
     }
 })
 // This method will be called when Electron has finished
@@ -84,11 +85,18 @@ app.on('ready', () => {
     const y = 90
     createWindow(x, 90)
     isShow = true
-    globalShortcut.register('CommandOrControl+Shift+M', () => {
-        isShow ? mainWindow.hide() : mainWindow.showInactive()
-        isShow = !isShow
-    })
+    globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
 })
+
+function hideWindow() {
+    mainWindow.hide()
+    isShow = false
+}
+
+function switchWindowShown() {
+    isShow ? mainWindow.hide() : mainWindow.showInactive()
+    isShow = !isShow
+}
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
