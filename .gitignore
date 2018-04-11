@@ -18,4 +18,3 @@ sync
 .uglify
 .cache-loader
 .cache
-yarn.lock
