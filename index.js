@@ -29,8 +29,8 @@ function createWindow(x, y) {
   console.log(11)
   mainWindow = new BrowserWindow({
     alwaysOnTop:true,
-    x: x,
-    y: y,
+    x: +x,
+    y: +y,
     width: 500,
     height: 76,
     frame: false
