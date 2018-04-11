@@ -3,13 +3,14 @@ const electron = require('electron')
 const {
   app,
   globalShortcut,
-  ipcMain
+  ipcMain,
+  BrowserWindow
 } = electron
 // Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
 
 const path = require('path')
 const url = require('url')
+const mainFun = require('./main')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -19,16 +20,22 @@ let input = ''
 let query = ''
 // TODO 组件加载器
 const SearchInBaidu = require('./base_plugin/SearchInBaidu')
+const HbmLog = require('./extend_plugin/HbmLog')
 
-function createWindow() {
+function createWindow(x, y) {
+
   // Create the browser window.
+  console.log(x + ',' + y)
+  console.log(11)
   mainWindow = new BrowserWindow({
-    y: 85,
+    alwaysOnTop:true,
+    x: x,
+    y: y,
     width: 500,
     height: 76,
     frame: false
   })
-
+  console.log(mainWindow)
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
@@ -62,18 +69,25 @@ ipcMain.on('box-input-enter', (event, arg) => {
       query: inputArr[1]
     })
     mainWindow.hide()
+  } else if (inputArr[0] === 'log') {
+    HbmLog({
+      query: inputArr[1]
+    })
   }
-
 })
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  createWindow()
+  const winW = electron.screen.getPrimaryDisplay().workAreaSize.width
+  const winH = electron.screen.getPrimaryDisplay().workAreaSize.height
+  const x = (winW / 2 - 250).toFixed(0)
+  const y = 90
+  createWindow(x, 90)
   isShow = true
   globalShortcut.register('CommandOrControl+Shift+M', () => {
     console.log(isShow)
-    isShow ? mainWindow.hide() : mainWindow.show()
+    isShow ? mainWindow.hide() : mainWindow.showInactive()
     isShow = !isShow
   })
 })
@@ -91,6 +105,8 @@ app.on('activate', function() {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
-    createWindow()
+    const winW = electron.screen.getPrimaryDisplay().workAreaSize.width
+    const winH = electron.screen.getPrimaryDisplay().workAreaSize.height
+    createWindow((winW / 2 - 250).toFixed(0), 90)
   }
 })
