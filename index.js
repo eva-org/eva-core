@@ -25,8 +25,6 @@ const HbmLog = require('./extend_plugin/HbmLog')
 function createWindow(x, y) {
 
   // Create the browser window.
-  console.log(x + ',' + y)
-  console.log(11)
   mainWindow = new BrowserWindow({
     alwaysOnTop:true,
     x: +x,
@@ -61,7 +59,6 @@ ipcMain.on('box-input', (event, arg) => {
 })
 
 ipcMain.on('box-input-enter', (event, arg) => {
-  console.log(arg) // prints "ping"
   // TODO 组件调用器
   const inputArr = arg.split(' ')
   if (inputArr[0] === 'bd') {
@@ -86,7 +83,6 @@ app.on('ready', () => {
   createWindow(x, 90)
   isShow = true
   globalShortcut.register('CommandOrControl+Shift+M', () => {
-    console.log(isShow)
     isShow ? mainWindow.hide() : mainWindow.showInactive()
     isShow = !isShow
   })
