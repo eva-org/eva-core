@@ -64,6 +64,7 @@ ipcMain.on('box-input', (event, arg) => {
     console.log(arg) // prints "ping"
 })
 
+const clearBoxInputWhenEnter = true
 ipcMain.on('box-input-enter', (event, arg) => {
     // TODO 组件调用器
     const [quickName, value] = arg.split(' ')
@@ -71,6 +72,7 @@ ipcMain.on('box-input-enter', (event, arg) => {
         if (plugin.quick === quickName) plugin.exec({query: value})
     }
 
+    event.sender.send('clear-box-input-event', 'aaaa')
     hideWindow()
 })
 

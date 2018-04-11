@@ -29,8 +29,17 @@
       ipcRenderer.send('box-input', document.getElementById('boxInput').value)
     }
 
+    initEventListener()
     initKeyCodeEvent()
 
+
+    function initEventListener() {
+        ipcRenderer.on('clear-box-input-event', function (event, clearBoxInputWhenEnter) {
+            if (clearBoxInputWhenEnter) {
+                document.getElementById('boxInput').value = ''
+            }
+        })
+    }
     function initKeyCodeEvent() {
         document.getElementById('boxInput').onkeydown = function(e) {
             if(e.keyCode === 13) ipcRenderer.send('box-input-enter', document.getElementById('boxInput').value)
