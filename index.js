@@ -54,6 +54,9 @@ function createWindow(x, y) {
         // when you should delete the corresponding element.
         mainWindow = null
     })
+    mainWindow.on('blur', function () {
+        hideWindow()
+    })
 }
 
 ipcMain.on('box-input', (event, arg) => {
@@ -68,13 +71,15 @@ ipcMain.on('box-input-enter', (event, arg) => {
         SearchInBaidu({
             query: inputArr[1]
         })
-        hideWindow()
     } else if (inputArr[0] === 'log') {
         HbmLog({
             query: inputArr[1]
         })
     }
+    hideWindow()
 })
+
+ipcMain.on('box-input-esc', () => hideWindow())
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
