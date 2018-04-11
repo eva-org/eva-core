@@ -98,9 +98,13 @@ function hideWindow() {
     isShow = false
 }
 
+function showWindow() {
+    mainWindow.show()
+    isShow = true
+}
+
 function switchWindowShown() {
-    isShow ? mainWindow.hide() : mainWindow.showInactive()
-    isShow = !isShow
+    isShow ? hideWindow() : showWindow()
 }
 
 // Quit when all windows are closed.
