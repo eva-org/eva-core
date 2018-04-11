@@ -66,16 +66,11 @@ ipcMain.on('box-input', (event, arg) => {
 
 ipcMain.on('box-input-enter', (event, arg) => {
     // TODO 组件调用器
-    const inputArr = arg.split(' ')
-    if (inputArr[0] === 'bd') {
-        SearchInBaidu({
-            query: inputArr[1]
-        })
-    } else if (inputArr[0] === 'log') {
-        HbmLog({
-            query: inputArr[1]
-        })
+    const [quickName, value] = arg.split(' ')
+    for (const plugin of plugins) {
+        if (plugin.quick === quickName) plugin.exec({query: value})
     }
+
     hideWindow()
 })
 
