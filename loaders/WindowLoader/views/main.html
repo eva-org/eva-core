@@ -35,9 +35,7 @@
 
     function initEventListener() {
         ipcRenderer.on('clear-box-input-event', function (event, clearBoxInputWhenEnter) {
-            if (clearBoxInputWhenEnter) {
-                document.getElementById('boxInput').value = ''
-            }
+            if (clearBoxInputWhenEnter) document.getElementById('boxInput').value = ''
         })
     }
     function initKeyCodeEvent() {
