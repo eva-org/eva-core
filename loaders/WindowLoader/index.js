@@ -1,9 +1,11 @@
 module.exports = {
   createMainWindow: () => {
     // Create the browser window.
-    const {electron:{
-      BrowserWindow
-    }} = global
+    const {
+      electron: {
+        BrowserWindow
+      }
+    } = global
     const x = (electron.screen.getPrimaryDisplay().workAreaSize.width / 2 - 250).toFixed(0)
     const y = 90
 
@@ -13,9 +15,10 @@ module.exports = {
       y: +y,
       width: 500,
       height: 76,
-      frame: false
+      frame: false,
+      skipTaskbar: true
     })
-    
+
     // and load the index.html of the app.
     mainWindow.loadURL(url.format({
       pathname: path.join(__dirname, 'views/main.html'),
@@ -33,6 +36,19 @@ module.exports = {
       // when you should delete the corresponding element.
       // mainWindow = null
     })
+
+    mainWindow.on('blur', function () {
+        hideWindow()
+    })
     return mainWindow
+  },
+  hideWindow: (window)=>{
+    window.hide()
+  },
+  showWindow: (window)=>{
+    window.show()
+  },
+  switchWindowShown: (window)=>{
+    // window.hide()
   }
 }
