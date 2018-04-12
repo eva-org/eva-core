@@ -1,3 +1,6 @@
+const {
+  hideWindow
+} = require('../../utils')
 module.exports = {
   createMainWindow: () => {
     // Create the browser window.
@@ -37,18 +40,9 @@ module.exports = {
       // mainWindow = null
     })
 
-    mainWindow.on('blur', function () {
-        hideWindow()
+    mainWindow.on('blur', function() {
+      hideWindow(mainWindow)
     })
     return mainWindow
-  },
-  hideWindow: (window)=>{
-    window.hide()
-  },
-  showWindow: (window)=>{
-    window.show()
-  },
-  switchWindowShown: (window)=>{
-    // window.hide()
   }
 }
