@@ -19,7 +19,9 @@ module.exports = {
       width: 500,
       height: 76,
       frame: false,
-      skipTaskbar: true
+      skipTaskbar: true,
+      resizable: false,
+      movable: false
     })
 
     // and load the index.html of the app.
