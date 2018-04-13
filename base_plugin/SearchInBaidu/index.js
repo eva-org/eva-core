@@ -6,6 +6,7 @@ module.exports = {
 
         const openUrl = `https://www.baidu.com/s?wd=${query}`
         let cmd
+        
         if (process.platform == 'win32') {
             cmd = 'start'
             return child_process.exec(`${cmd} ${openUrl}`)
