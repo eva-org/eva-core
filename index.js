@@ -8,8 +8,7 @@ const {
   electron: {
     app,
     globalShortcut,
-    ipcMain,
-    BrowserWindow
+    ipcMain
   }
 } = global
 
@@ -23,43 +22,47 @@ const {hideWindow, switchWindowShown} = require('./utils')
 app.on('ready', () => {
   global.mainWindow = createMainWindow()
 
-  globalShortcut.register('CommandOrControl+Shift+M', () => {
-    switchWindowShown(mainWindow)
-  })
+  initGlobalShortcut()
+  initIpcEvent()
+})
 
+function initIpcEvent() {
+  ipcMain.on('box-input', boxInput)
+  ipcMain.on('box-input-enter', boxInputEnter)
+  ipcMain.on('box-input-esc', boxInputEsc)
+  ipcMain.on('hide-main-window', hideMainWindow)
+}
+
+function initGlobalShortcut() {
+  globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown(mainWindow))
   globalShortcut.register('CommandOrControl+Shift+Alt+M', () => {
     const h = 50
-
     const [width, height] = mainWindow.getSize()
     mainWindow.setSize(width, height + h)
   })
+}
 
-  ipcMain.on('box-input', (event, arg) => {
-    console.log(arg) // prints "ping"
-  })
-
-  ipcMain.on('box-input-enter', (event, arg) => {
-    let vaildTag = false
-    const [quickName, value] = arg.split(' ')
-    for (const plugin of plugins) {
-      if (plugin.quick === quickName) {
-        plugin.exec({
-          query: value
-        })
-        vaildTag = true
-      }
+const hideMainWindow = () => hideWindow(mainWindow)
+const boxInputEsc = () => hideWindow(mainWindow)
+const boxInput = (event, arg) => console.log(arg)
+const boxInputEnter = (event, arg) => {
+  let validTag = false
+  const [quickName, value] = arg.split(' ')
+  for (const plugin of plugins) {
+    if (plugin.quick === quickName) {
+      plugin.exec({
+        query: value
+      })
+      validTag = true
     }
-    if (vaildTag) {
-      // 删除input框的内容
-      event.returnValue = 'clear'
-    } else {
-      event.returnValue = ''
-    }
-  })
-  ipcMain.on('box-input-esc', () => hideWindow(mainWindow))
-
-  ipcMain.on('hide-main-window', () => hideWindow(mainWindow))
-})
+  }
+  if (validTag) {
+    // 删除input框的内容
+    event.returnValue = 'clear'
+  } else {
+    event.returnValue = ''
+  }
+}
 
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
