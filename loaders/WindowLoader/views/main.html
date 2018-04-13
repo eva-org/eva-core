@@ -40,11 +40,19 @@
     }
     function initKeyCodeEvent() {
         document.getElementById('boxInput').onkeydown = function(e) {
-            if(e.keyCode === 13) ipcRenderer.send('box-input-enter', document.getElementById('boxInput').value)
+            if(e.keyCode === 13) {
+              const msg = ipcRenderer.sendSync('box-input-enter', document.getElementById('boxInput').value)
+              if(msg === 'clear') {
+                clearInput()
+                ipcRenderer.send('hide-main-window')
+              }
+            }
             if(e.keyCode === 27) ipcRenderer.send('box-input-esc', document.getElementById('boxInput').value)
         }
     }
-
+    function clearInput() {
+      document.getElementById('boxInput').value = ''
+    }
 
     // You can also require other files to run in this process
     // require('./renderer.js')

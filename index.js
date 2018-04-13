@@ -2,6 +2,7 @@
 global.electron = require('electron')
 global.path = require('path')
 global.url = require('url')
+global.__ROOTPATH = __dirname
 
 // Module to control application life.
 const {
@@ -12,13 +13,16 @@ const {
   }
 } = global
 
-const SearchInBaidu = require('./base_plugin/SearchInBaidu')
-const HbmLog = require('./extend_plugin/HbmLog')
-const plugins = [SearchInBaidu, HbmLog]
+// const SearchInBaidu = require('./base_plugin/SearchInBaidu')
+// const HbmLog = require('./extend_plugin/HbmLog')
+// const plugins = [SearchInBaidu, HbmLog]
 
 const {
   createMainWindow
 } = require('./loaders/windowLoader')
+
+const PluginLoader = require('./loaders/PluginLoader')
+const plugins = Object.values(PluginLoader())
 
 const {
   hideWindow,
@@ -40,21 +44,27 @@ app.on('ready', () => {
   })
 
   ipcMain.on('box-input-enter', (event, arg) => {
+    let vaildTag = false
     const [quickName, value] = arg.split(' ')
     for (const plugin of plugins) {
-      if (plugin.quick === quickName) plugin.exec({
-        query: value
-      })
+      if (plugin.quick === quickName) {
+        plugin.exec({
+          query: value
+        })
+        vaildTag = true
+      }
     }
-    // 删除input框的内容
-    event.sender.send('clear-box-input-event', true)
-
-    hideWindow(mainWindow)
+    if (vaildTag) {
+      // 删除input框的内容
+      event.returnValue = 'clear'
+    }
   })
   ipcMain.on('box-input-esc', () => hideWindow(mainWindow))
+
+  ipcMain.on('hide-main-window',()=> hideWindow(mainWindow))
 })
 
-app.on('window-all-closed', function () {
+app.on('window-all-closed', function() {
   if (process.platform !== 'darwin') {
     app.quit()
   }
