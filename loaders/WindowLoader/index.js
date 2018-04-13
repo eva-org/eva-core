@@ -1,14 +1,8 @@
-const {
-  hideWindow
-} = require('../../utils')
+const {hideWindow} = require('../../utils')
 module.exports = {
   createMainWindow: () => {
     // Create the browser window.
-    const {
-      electron: {
-        BrowserWindow
-      }
-    } = global
+    const {electron: {BrowserWindow}} = global
     const x = (electron.screen.getPrimaryDisplay().workAreaSize.width / 2 - 250).toFixed(0)
     const y = 90
 
