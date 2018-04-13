@@ -8,27 +8,30 @@ const {
   electron: {
     app,
     globalShortcut,
-    ipcMain
+    ipcMain,
+    BrowserWindow
   }
 } = global
 
-const {
-  createMainWindow
-} = require('./loaders/windowLoader')
+const {createMainWindow} = require('./loaders/windowLoader')
 
 const PluginLoader = require('./loaders/PluginLoader')
 const plugins = Object.values(PluginLoader())
 
-const {
-  hideWindow,
-  switchWindowShown
-} = require('./utils')
+const {hideWindow, switchWindowShown} = require('./utils')
 
 app.on('ready', () => {
   global.mainWindow = createMainWindow()
 
   globalShortcut.register('CommandOrControl+Shift+M', () => {
     switchWindowShown(mainWindow)
+  })
+
+  globalShortcut.register('CommandOrControl+Shift+Alt+M', () => {
+    const h = 50
+
+    const [width, height] = mainWindow.getSize()
+    mainWindow.setSize(width, height + h)
   })
 
   ipcMain.on('box-input', (event, arg) => {
@@ -49,14 +52,16 @@ app.on('ready', () => {
     if (vaildTag) {
       // 删除input框的内容
       event.returnValue = 'clear'
+    } else {
+      event.returnValue = ''
     }
   })
   ipcMain.on('box-input-esc', () => hideWindow(mainWindow))
 
-  ipcMain.on('hide-main-window',()=> hideWindow(mainWindow))
+  ipcMain.on('hide-main-window', () => hideWindow(mainWindow))
 })
 
-app.on('window-all-closed', function() {
+app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
     app.quit()
   }
