@@ -4,7 +4,6 @@ global.path = require('path')
 global.url = require('url')
 global.__ROOTPATH = __dirname
 
-// Module to control application life.
 const {
   electron: {
     app,
@@ -12,10 +11,6 @@ const {
     ipcMain
   }
 } = global
-
-// const SearchInBaidu = require('./base_plugin/SearchInBaidu')
-// const HbmLog = require('./extend_plugin/HbmLog')
-// const plugins = [SearchInBaidu, HbmLog]
 
 const {
   createMainWindow
@@ -31,9 +26,6 @@ const {
 
 app.on('ready', () => {
   global.mainWindow = createMainWindow()
-  const {
-    mainWindow
-  } = global
 
   globalShortcut.register('CommandOrControl+Shift+M', () => {
     switchWindowShown(mainWindow)

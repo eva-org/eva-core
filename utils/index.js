@@ -8,6 +8,5 @@ module.exports = {
   switchWindowShown: (win) => {
     const isVisible = win.isVisible()
     isVisible ? win.hide() : win.show()
-    // window.hide()
   }
 }
