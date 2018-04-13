@@ -22,24 +22,20 @@ const {hideWindow, switchWindowShown} = require('./utils')
 app.on('ready', () => {
   global.mainWindow = createMainWindow()
 
-  initGlobalShortcut()
-  initIpcEvent()
-})
+  globalShortcut.register('CommandOrControl+Shift+M', hide)
+  globalShortcut.register('CommandOrControl+Shift+Alt+M', grow)
 
-function initIpcEvent() {
   ipcMain.on('box-input', boxInput)
   ipcMain.on('box-input-enter', boxInputEnter)
   ipcMain.on('box-input-esc', boxInputEsc)
   ipcMain.on('hide-main-window', hideMainWindow)
-}
+})
 
-function initGlobalShortcut() {
-  globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown(mainWindow))
-  globalShortcut.register('CommandOrControl+Shift+Alt+M', () => {
-    const h = 50
-    const [width, height] = mainWindow.getSize()
-    mainWindow.setSize(width, height + h)
-  })
+const hide = () => switchWindowShown(mainWindow)
+const grow = () => {
+  const h = 50
+  const [width, height] = mainWindow.getSize()
+  mainWindow.setSize(width, height + h)
 }
 
 const hideMainWindow = () => hideWindow(mainWindow)
