@@ -52,12 +52,11 @@ const boxInputEnter = (event, arg) => {
       validTag = true
     }
   }
-  if (validTag) {
-    // 删除input框的内容
-    event.returnValue = 'clear'
-  } else {
-    event.returnValue = ''
+  const returnData = {
+    code: validTag,
+    result: ['one', 'two', 'three']
   }
+  event.returnValue = returnData
 }
 
 app.on('window-all-closed', function () {
