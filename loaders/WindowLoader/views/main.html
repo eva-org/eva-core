@@ -2,61 +2,61 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <style>
-    input {
-      margin: 0;
-      padding: 5px;
-      outline: none;
-      border: none;
-      height: 60px;
-      line-height: 60px;
-      font-size: 40px;
-      width: 484px;
-      box-sizing: border-box;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <style>
+        input {
+            margin: 0;
+            padding: 5px;
+            outline: none;
+            border: none;
+            height: 60px;
+            line-height: 60px;
+            font-size: 40px;
+            width: 484px;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 
 <body>
-  <input id="boxInput" autofocus="autofocus">
-  <script>
-    const {
-      ipcRenderer
-    } = require('electron')
-    document.getElementById('boxInput').oninput = function(e) {
-      console.log(e)
-      ipcRenderer.send('box-input', document.getElementById('boxInput').value)
-    }
+<input id="boxInput" autofocus="autofocus">
+<script>
+  const {ipcRenderer} = require('electron')
+  document.getElementById('boxInput').oninput = function (e) {
+    console.log(e)
+    ipcRenderer.send('box-input', document.getElementById('boxInput').value)
+  }
 
-    initEventListener()
-    initKeyCodeEvent()
+  initEventListener()
+  initKeyCodeEvent()
 
 
-    function initEventListener() {
-        ipcRenderer.on('clear-box-input-event', function (event, clearBoxInputWhenEnter) {
-            if (clearBoxInputWhenEnter) document.getElementById('boxInput').value = ''
-        })
-    }
-    function initKeyCodeEvent() {
-        document.getElementById('boxInput').onkeydown = function(e) {
-            if(e.keyCode === 13) {
-              const msg = ipcRenderer.sendSync('box-input-enter', document.getElementById('boxInput').value)
-              if(msg === 'clear') {
-                clearInput()
-                ipcRenderer.send('hide-main-window')
-              }
-            }
-            if(e.keyCode === 27) ipcRenderer.send('box-input-esc', document.getElementById('boxInput').value)
+  function initEventListener() {
+    ipcRenderer.on('clear-box-input-event', function (event, clearBoxInputWhenEnter) {
+      if (clearBoxInputWhenEnter) document.getElementById('boxInput').value = ''
+    })
+  }
+
+  function initKeyCodeEvent() {
+    document.getElementById('boxInput').onkeydown = function (e) {
+      if (e.keyCode === 13) {
+        const msg = ipcRenderer.sendSync('box-input-enter', document.getElementById('boxInput').value)
+        if (msg === 'clear') {
+          clearInput()
+          ipcRenderer.send('hide-main-window')
         }
+      }
+      if (e.keyCode === 27) ipcRenderer.send('box-input-esc', document.getElementById('boxInput').value)
     }
-    function clearInput() {
-      document.getElementById('boxInput').value = ''
-    }
+  }
 
-    // You can also require other files to run in this process
-    // require('./renderer.js')
-  </script>
+  function clearInput() {
+    document.getElementById('boxInput').value = ''
+  }
+
+  // You can also require other files to run in this process
+  // require('./renderer.js')
+</script>
 </body>
 
 </html>
