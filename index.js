@@ -6,7 +6,7 @@ global.__ROOTPATH = __dirname
 Object.assign(global, require('./config.base'))
 const {electron: {app, globalShortcut, ipcMain}} = global
 
-const {createMainWindow} = require('./loaders/windowLoader')
+const {createEvaWindow} = require('./loaders/windowLoader')
 // 插件加载器
 const PluginLoader = require('./loaders/PluginLoader')
 const plugins = PluginLoader()
@@ -14,7 +14,7 @@ console.log(plugins);
 const {hideWindow, switchWindowShown} = require('./utils')
 
 app.on('ready', () => {
-  global.mainWindow = createMainWindow()
+  global.mainWindow = createEvaWindow()
 
   globalShortcut.register('CommandOrControl+Shift+M', hide)
   globalShortcut.register('CommandOrControl+Shift+Alt+M', grow)
@@ -56,9 +56,3 @@ const boxInputEnter = (event, arg) => {
   }
   event.returnValue = returnData
 }
-
-// app.on('window-all-closed', function () {
-//   if (process.platform !== 'darwin') {
-//     app.quit()
-//   }
-// })
