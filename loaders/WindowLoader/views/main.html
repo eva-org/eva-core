@@ -43,7 +43,7 @@
         const msg = ipcRenderer.sendSync('box-input-enter', document.getElementById('boxInput').value)
 
 
-        if (msg.code === 'clear') {
+        if (msg.code) {
           clearInput()
           ipcRenderer.send('hide-main-window')
         }

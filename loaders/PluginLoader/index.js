@@ -1,8 +1,8 @@
+const path = require('path')
+
 module.exports = () => {
-  // const BASE_PLUGIN_DIR = path.join(__ROOTPATH, 'base_plugin')
-  // const EXTEND_PLUGIN_DIR = path.join(__ROOTPATH, 'extend_plugin')
-  const baseArr = getPluginFromDir(BASE_PLUGIN_DIR)
-  const extendArr = getPluginFromDir(EXTEND_PLUGIN_DIR)
+  const baseArr = getPluginFromDir(path.join(evaSpace.ENTRY_DIR, 'base_plugin'))
+  const extendArr = getPluginFromDir(path.join(evaSpace.ENTRY_DIR, 'extend_plugin'))
   return baseArr.concat(extendArr)
 }
 

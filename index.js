@@ -1,44 +1,38 @@
-// 全局绑定
-global.electron = require('electron')
-global.path = require('path')
-global.url = require('url')
-global.__ROOTPATH = __dirname
-Object.assign(global, require('./config.base'))
-const {electron: {app, globalShortcut, ipcMain}} = global
+const evaSpace = {}
+Object.assign(evaSpace, require('./global'))
+global.evaSpace = evaSpace
 
-const {createEvaWindow} = require('./loaders/windowLoader')
-// 插件加载器
+const {app, globalShortcut, ipcMain} = require('electron')
+const {createEvaWindow, createMainWindow} = require('./loaders/windowLoader')
 const PluginLoader = require('./loaders/PluginLoader')
+
+// 插件加载器
 const plugins = PluginLoader()
 console.log(plugins);
-const {hideWindow, switchWindowShown} = require('./utils')
 
+let evaWindow
+let mainWindow
 app.on('ready', () => {
-  global.evaWindow = createEvaWindow()
+  mainWindow = createMainWindow();
+  evaWindow = createEvaWindow(mainWindow)
+  evaWindow.on('blur', () => hideWindow())
 
-  globalShortcut.register('CommandOrControl+Shift+M', hide)
+  globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
+  globalShortcut.register('CommandOrControl+Shift+Alt+K', () => evaWindow.close())
   globalShortcut.register('CommandOrControl+Shift+Alt+M', grow)
-  globalShortcut.register('CommandOrControl+Shift+Alt+K', exit)
 
-  ipcMain.on('box-input', boxInput)
   ipcMain.on('box-input-enter', boxInputEnter)
-  ipcMain.on('box-input-esc', boxInputEsc)
-  ipcMain.on('hide-main-window', hideEvaWindow)
+  ipcMain.on('box-input-esc', () => hideWindow())
+  ipcMain.on('hide-main-window', () => hideWindow())
+  ipcMain.on('box-input', (event, arg) => console.log(arg))
 })
 
-const hide = () => switchWindowShown(evaWindow)
 const grow = () => {
   const h = 50
   const [width, height] = evaWindow.getSize()
   evaWindow.setSize(width, height + h)
 }
-const exit = () => {
-  evaWindow.close()
-}
 
-const hideEvaWindow = () => hideWindow(evaWindow)
-const boxInputEsc = () => hideWindow(evaWindow)
-const boxInput = (event, arg) => console.log(arg)
 const boxInputEnter = (event, arg) => {
   let validTag = false
   const [quickName, value] = arg.split(' ')
@@ -55,4 +49,20 @@ const boxInputEnter = (event, arg) => {
     result: ['one', 'two', 'three']
   }
   event.returnValue = returnData
+}
+
+let show = true
+
+function hideWindow() {
+  evaWindow.close()
+  show = false
+}
+
+function showWindow() {
+  evaWindow = createEvaWindow(mainWindow)
+  show = true
+}
+
+function switchWindowShown() {
+  show ? hideWindow() : showWindow()
 }
