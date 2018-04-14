@@ -8,7 +8,6 @@ const PluginLoader = require('./loaders/PluginLoader')
 
 // 插件加载器
 const plugins = PluginLoader()
-console.log(plugins);
 
 let evaWindow
 let mainWindow
