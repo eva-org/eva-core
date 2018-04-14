@@ -36,33 +36,31 @@ const grow = () => {
 const boxInputEnter = (event, arg) => {
   let validTag = false
   const [quickName, value] = arg.split(' ')
+
+  let pluginReturnValue
   for (const plugin of plugins) {
     if (plugin.quick === quickName) {
-      plugin.exec({
+      pluginReturnValue = plugin.exec({
         query: value
       })
       validTag = true
     }
   }
-  const returnData = {
+  event.returnValue = {
     code: validTag,
-    result: ['one', 'two', 'three']
+    result: pluginReturnValue
   }
-  event.returnValue = returnData
 }
 
-let show = true
-
 function hideWindow() {
-  evaWindow.close()
-  show = false
+  evaWindow.hide()
 }
 
 function showWindow() {
-  evaWindow = createEvaWindow(mainWindow)
-  show = true
+  evaWindow.show()
 }
 
 function switchWindowShown() {
-  show ? hideWindow() : showWindow()
+  const isVisible = evaWindow.isVisible()
+  isVisible ? hideWindow() : showWindow()
 }
