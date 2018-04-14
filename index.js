@@ -14,7 +14,7 @@ console.log(plugins);
 const {hideWindow, switchWindowShown} = require('./utils')
 
 app.on('ready', () => {
-  global.mainWindow = createEvaWindow()
+  global.evaWindow = createEvaWindow()
 
   globalShortcut.register('CommandOrControl+Shift+M', hide)
   globalShortcut.register('CommandOrControl+Shift+Alt+M', grow)
@@ -23,21 +23,21 @@ app.on('ready', () => {
   ipcMain.on('box-input', boxInput)
   ipcMain.on('box-input-enter', boxInputEnter)
   ipcMain.on('box-input-esc', boxInputEsc)
-  ipcMain.on('hide-main-window', hideMainWindow)
+  ipcMain.on('hide-main-window', hideEvaWindow)
 })
 
-const hide = () => switchWindowShown(mainWindow)
+const hide = () => switchWindowShown(evaWindow)
 const grow = () => {
   const h = 50
-  const [width, height] = mainWindow.getSize()
-  mainWindow.setSize(width, height + h)
+  const [width, height] = evaWindow.getSize()
+  evaWindow.setSize(width, height + h)
 }
 const exit = () => {
-  mainWindow.close()
+  evaWindow.close()
 }
 
-const hideMainWindow = () => hideWindow(mainWindow)
-const boxInputEsc = () => hideWindow(mainWindow)
+const hideEvaWindow = () => hideWindow(evaWindow)
+const boxInputEsc = () => hideWindow(evaWindow)
 const boxInput = (event, arg) => console.log(arg)
 const boxInputEnter = (event, arg) => {
   let validTag = false
