@@ -1,9 +1,10 @@
 module.exports = {
   hideWindow: (win) => {
-    win.hide()
+    // win.hide()
+    win.minimize()
   },
   showWindow: (win) => {
-    win.show()
+    win.restore()
   },
   switchWindowShown: (win) => {
     const isVisible = win.isVisible()

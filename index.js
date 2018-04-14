@@ -3,7 +3,7 @@ global.electron = require('electron')
 global.path = require('path')
 global.url = require('url')
 global.__ROOTPATH = __dirname
-
+Object.assign(global, require('./config.base'))
 const {
   electron: {
     app,

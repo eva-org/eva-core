@@ -1,8 +1,14 @@
-const {hideWindow} = require('../../utils')
+const {
+  hideWindow
+} = require('../../utils')
 module.exports = {
   createMainWindow: () => {
     // Create the browser window.
-    const {electron: {BrowserWindow}} = global
+    const {
+      electron: {
+        BrowserWindow
+      }
+    } = global
     const x = (electron.screen.getPrimaryDisplay().workAreaSize.width / 2 - 250).toFixed(0)
     const y = 90
 
@@ -17,7 +23,12 @@ module.exports = {
       resizable: false,
       movable: false
     })
-
+    // mainWindow.setAlwaysOnTop(true, 'screen-saver')
+    // 全屏代码
+    electron.app.dock.hide();
+    mainWindow.setAlwaysOnTop(true, "floating");
+    mainWindow.setVisibleOnAllWorkspaces(true);
+    mainWindow.setFullScreenable(false);
     // and load the index.html of the app.
     mainWindow.loadURL(url.format({
       pathname: path.join(__dirname, 'views/main.html'),
@@ -29,14 +40,14 @@ module.exports = {
     // mainWindow.webContents.openDevTools()
 
     // Emitted when the window is closed.
-    mainWindow.on('closed', function () {
+    mainWindow.on('closed', function() {
       // Dereference the window object, usually you would store windows
       // in an array if your app supports multi windows, this is the time
       // when you should delete the corresponding element.
       // mainWindow = null
     })
 
-    mainWindow.on('blur', function () {
+    mainWindow.on('blur', function() {
       hideWindow(mainWindow)
     })
     return mainWindow
