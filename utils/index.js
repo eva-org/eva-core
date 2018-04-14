@@ -1,7 +1,7 @@
 module.exports = {
   hideWindow: (win) => {
-    // win.hide()
-    win.minimize()
+    win.hide()
+    // win.minimize()
   },
   showWindow: (win) => {
     win.restore()
