@@ -4,13 +4,7 @@ global.path = require('path')
 global.url = require('url')
 global.__ROOTPATH = __dirname
 Object.assign(global, require('./config.base'))
-const {
-  electron: {
-    app,
-    globalShortcut,
-    ipcMain
-  }
-} = global
+const {electron: {app, globalShortcut, ipcMain}} = global
 
 const {createMainWindow} = require('./loaders/windowLoader')
 // 插件加载器
@@ -24,6 +18,7 @@ app.on('ready', () => {
 
   globalShortcut.register('CommandOrControl+Shift+M', hide)
   globalShortcut.register('CommandOrControl+Shift+Alt+M', grow)
+  globalShortcut.register('CommandOrControl+Shift+Alt+K', exit)
 
   ipcMain.on('box-input', boxInput)
   ipcMain.on('box-input-enter', boxInputEnter)
@@ -36,6 +31,9 @@ const grow = () => {
   const h = 50
   const [width, height] = mainWindow.getSize()
   mainWindow.setSize(width, height + h)
+}
+const exit = () => {
+  mainWindow.close()
 }
 
 const hideMainWindow = () => hideWindow(mainWindow)
@@ -59,8 +57,8 @@ const boxInputEnter = (event, arg) => {
   event.returnValue = returnData
 }
 
-app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+// app.on('window-all-closed', function () {
+//   if (process.platform !== 'darwin') {
+//     app.quit()
+//   }
+// })
