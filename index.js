@@ -13,10 +13,10 @@ const {
 } = global
 
 const {createMainWindow} = require('./loaders/windowLoader')
-
+// 插件加载器
 const PluginLoader = require('./loaders/PluginLoader')
-const plugins = Object.values(PluginLoader())
-
+const plugins = PluginLoader()
+console.log(plugins);
 const {hideWindow, switchWindowShown} = require('./utils')
 
 app.on('ready', () => {

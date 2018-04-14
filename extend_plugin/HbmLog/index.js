@@ -1,6 +1,7 @@
 module.exports = {
     name: 'HbmLog',
     quick: 'log',
+    icon:'log.gif',
     exec: ({query}) => {
         const child_process = require('child_process')
 
