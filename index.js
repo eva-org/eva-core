@@ -53,16 +53,19 @@ const boxInputEnter = (event, arg) => {
     result: pluginReturnValue
   }
 }
+
+
 let appIsVisible = true
+
 function hideWindow() {
   evaWindow.hide()
-  app.hide()
+  if (process.platform === 'darwin') app.hide()
   appIsVisible = false
 }
 
 function showWindow() {
   evaWindow.show()
-  app.show()
+  if (process.platform === 'darwin') app.show()
   appIsVisible = true
 }
 
