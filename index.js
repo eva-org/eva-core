@@ -5,6 +5,7 @@ global.evaSpace = evaSpace
 const {app, globalShortcut, ipcMain} = require('electron')
 const {createEvaWindow, createMainWindow} = require('./loaders/windowLoader')
 const PluginLoader = require('./loaders/PluginLoader')
+const {isMac} = require('./utils')
 
 // 插件加载器
 const plugins = PluginLoader()
@@ -59,13 +60,13 @@ let appIsVisible = true
 
 function hideWindow() {
   evaWindow.hide()
-  if (process.platform === 'darwin') app.hide()
+  if (isMac()) app.hide()
   appIsVisible = false
 }
 
 function showWindow() {
   evaWindow.show()
-  if (process.platform === 'darwin') app.show()
+  if (isMac()) app.show()
   appIsVisible = true
 }
 
