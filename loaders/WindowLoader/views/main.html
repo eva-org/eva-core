@@ -26,7 +26,10 @@
     console.log(e)
     ipcRenderer.send('box-input', document.getElementById('boxInput').value)
   }
-
+  document.getElementById('boxInput').onblur = function (e) {
+    console.log(e)
+    ipcRenderer.send('box-blur', document.getElementById('boxInput').value)
+  }
   initEventListener()
   initKeyCodeEvent()
 

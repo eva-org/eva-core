@@ -14,7 +14,9 @@ let mainWindow
 app.on('ready', () => {
   mainWindow = createMainWindow();
   evaWindow = createEvaWindow(mainWindow)
-  evaWindow.on('blur', () => hideWindow())
+  // 初次启动，隐藏窗口，快捷键呼出即可
+  hideWindow()
+  // evaWindow.on('blur', () => hideWindow())
 
   globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
   globalShortcut.register('CommandOrControl+Shift+Alt+K', () => evaWindow.close())
@@ -24,6 +26,7 @@ app.on('ready', () => {
   ipcMain.on('box-input-esc', () => hideWindow())
   ipcMain.on('hide-main-window', () => hideWindow())
   ipcMain.on('box-input', (event, arg) => console.log(arg))
+  ipcMain.on('box-blur', () => hideWindow())
 })
 
 const grow = () => {
@@ -50,16 +53,19 @@ const boxInputEnter = (event, arg) => {
     result: pluginReturnValue
   }
 }
-
+let appIsVisible = true
 function hideWindow() {
   evaWindow.hide()
+  app.hide()
+  appIsVisible = false
 }
 
 function showWindow() {
   evaWindow.show()
+  app.show()
+  appIsVisible = true
 }
 
 function switchWindowShown() {
-  const isVisible = evaWindow.isVisible()
-  isVisible ? hideWindow() : showWindow()
+  appIsVisible ? hideWindow() : showWindow()
 }

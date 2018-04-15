@@ -4,11 +4,11 @@ const {BrowserWindow} = electron
 const path = require('path')
 const url = require('url')
 
-function createMainWindow() {
-  return new BrowserWindow({show: false})
+function createMainWindow () {
+  return new BrowserWindow({x: 0, y: 0, width: 0, height: 0, show: false, focusable: false})
 }
 
-function createEvaWindow(mainWindow) {
+function createEvaWindow (mainWindow) {
   // Create the browser window.
   const x = (electron.screen.getPrimaryDisplay().workAreaSize.width / 2 - 250).toFixed(0)
   const y = 90
@@ -22,11 +22,10 @@ function createEvaWindow(mainWindow) {
     frame: false,
     skipTaskbar: true,
     resizable: false,
-    movable: false,
-    parent: mainWindow
+    movable: false
+    // parent: mainWindow
   })
 
-  // mainWindow.setAlwaysOnTop(true, 'screen-saver')
   // 全屏代码
   if (process.platform === 'darwin') electron.app.dock.hide()
   evaWindow.setAlwaysOnTop(true, "floating")

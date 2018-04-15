@@ -7,7 +7,9 @@ module.exports = () => {
 }
 
 function getPluginFromDir(path) {
-  return require("fs").readdirSync(path).map(file => {
+  return require("fs").readdirSync(path).filter(item => {
+    return item !== '.DS_Store'
+  }).map(file => {
     const middleObject = require(`${path}/` + file)
     return {
       ...middleObject,
