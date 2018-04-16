@@ -1,67 +1,62 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
-    <style>
-        input {
-            margin: 0;
-            padding: 5px;
-            outline: none;
-            border: none;
-            height: 60px;
-            line-height: 60px;
-            font-size: 40px;
-            width: 484px;
-            box-sizing: border-box;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="text/javascript" src="vue.js"></script>
 </head>
-
 <body>
-<input id="boxInput" autofocus="autofocus">
+<div id="app">
+    <input id="boxInput" autofocus="autofocus" onblur="onBlur()" onkeydown="onKeyDown(event)" v-model="input">
+    <template v-if="queryResult.length">
+        <div v-for="(item, index) of queryResult" :class="index === currIndex ? 'chosen' : 'unchosen'">
+            <span class="title">{{item.title}}</span>
+            <br>
+            <span class="subTitle">{{item.subTitle}}</span>
+        </div>
+    </template>
+</div>
 <script>
   const {ipcRenderer} = require('electron')
-  document.getElementById('boxInput').oninput = function (e) {
-    console.log(e)
-    ipcRenderer.send('box-input', document.getElementById('boxInput').value)
-  }
-  document.getElementById('boxInput').onblur = function (e) {
-    console.log(e)
-    ipcRenderer.send('box-blur', document.getElementById('boxInput').value)
-  }
-  initEventListener()
-  initKeyCodeEvent()
 
-
-  function initEventListener() {
-    ipcRenderer.on('clear-box-input-event', function (event, clearBoxInputWhenEnter) {
-      if (clearBoxInputWhenEnter) document.getElementById('boxInput').value = ''
-    })
-  }
-
-  function initKeyCodeEvent() {
-    document.getElementById('boxInput').onkeydown = function (e) {
-      if (e.keyCode === 13) {
-        const msg = ipcRenderer.sendSync('box-input-enter', document.getElementById('boxInput').value)
-
-
-        if (msg.code) {
-          clearInput()
-          ipcRenderer.send('hide-main-window')
-        }
+  const vue = new Vue({
+    el: '#app',
+    data() {
+      return {
+        input: '',
+        queryResult: [],
+        currIndex: 0
       }
-      if (e.keyCode === 27) ipcRenderer.send('box-input-esc', document.getElementById('boxInput').value)
+    },
+    watch: {
+      input() {
+        this.queryResult = ipcRenderer.sendSync('box-input', this.input)
+      }
+    }
+  })
+
+  ipcRenderer.on('clear-box-input-event', () => vue.$data.input = '')
+
+  function onBlur() {
+    // ipcRenderer.send('box-blur', vue.$data.input)
+  }
+
+  function onKeyDown(e) {
+    if (e.keyCode === 13) {
+      ipcRenderer.send('action', vue.$data.currIndex)
+      ipcRenderer.send('hide-main-window')
+    }
+    if (e.keyCode === 27) ipcRenderer.send('box-input-esc', vue.$data.input)
+
+    // 方向键上
+    if (e.keyCode === 38) {
+      if (vue.$data.currIndex > 0) return vue.$data.currIndex--
+    }
+    // 方向键下
+    if (e.keyCode === 40) {
+      if (vue.$data.currIndex + 1 < vue.$data.queryResult.length) return vue.$data.currIndex++
     }
   }
-
-  function clearInput() {
-    document.getElementById('boxInput').value = ''
-  }
-
-  // You can also require other files to run in this process
-  // require('./renderer.js')
 </script>
 </body>
-
 </html>

@@ -1,0 +1,50 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+}
+
+#app {
+    height: 100%;
+    background-color: #232323;
+}
+
+.chosen {
+    background-color: #3a8187;
+    height: 45px;
+    margin: 0;
+    padding: 5px;
+}
+
+.unchosen {
+    height: 45px;
+    margin: 0;
+    padding: 5px;
+}
+
+input {
+    margin: 0;
+    padding: 5px;
+    outline: none;
+    border: none;
+    height: 60px;
+    line-height: 55px;
+    font-size: 40px;
+    box-sizing: border-box;
+    background-color: #1e1e1e;
+    color: #ffffff;
+    width: 100%;
+}
+
+.title {
+    color: #ffffff;
+    font-size: 12px;
+}
+
+.subTitle {
+    color: #939393;
+    font-size: 10px;
+}

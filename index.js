@@ -1,8 +1,11 @@
-const evaSpace = {}
+const evaSpace = {
+  returnValue: {}
+}
 Object.assign(evaSpace, require('./global'))
 global.evaSpace = evaSpace
 
-const {app, globalShortcut, ipcMain} = require('electron')
+const electron = require('electron')
+const {app, globalShortcut, ipcMain} = electron
 const {createEvaWindow, createMainWindow} = require('./loaders/windowLoader')
 const PluginLoader = require('./loaders/PluginLoader')
 const {isMac} = require('./utils')
@@ -12,49 +15,61 @@ const plugins = PluginLoader()
 
 let evaWindow
 let mainWindow
+let evaWidth
+let evaHeight
+let queryResult
 app.on('ready', () => {
   mainWindow = createMainWindow();
   evaWindow = createEvaWindow(mainWindow)
+  const sizeArr = evaWindow.getSize()
+  evaWidth = sizeArr[0]
+  evaHeight = sizeArr[1]
+
   // 初次启动，隐藏窗口，快捷键呼出即可
   hideWindow()
-  // evaWindow.on('blur', () => hideWindow())
 
   globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
   globalShortcut.register('CommandOrControl+Shift+Alt+K', () => evaWindow.close())
-  globalShortcut.register('CommandOrControl+Shift+Alt+M', grow)
+  globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
 
-  ipcMain.on('box-input-enter', boxInputEnter)
   ipcMain.on('box-input-esc', () => hideWindow())
   ipcMain.on('hide-main-window', () => hideWindow())
-  ipcMain.on('box-input', (event, arg) => console.log(arg))
+  ipcMain.on('box-input', boxInput)
   ipcMain.on('box-blur', () => hideWindow())
+  ipcMain.on('action', action)
 })
 
-const grow = () => {
+function changeBoxNum(num) {
+  if (num > 5) num = 5
   const h = 50
-  const [width, height] = evaWindow.getSize()
-  evaWindow.setSize(width, height + h)
+  evaWindow.setSize(evaWidth, +evaHeight + h * num)
 }
 
-const boxInputEnter = (event, arg) => {
-  let validTag = false
-  const [quickName, value] = arg.split(' ')
+function action(event, index) {
+  queryResult[index].action()
+  event.sender.send('clear-box-input-event')
+  changeBoxNum(0)
+}
 
-  let pluginReturnValue
-  for (const plugin of plugins) {
-    if (plugin.quick === quickName) {
-      pluginReturnValue = plugin.exec({
-        query: value
-      })
-      validTag = true
+function boxInput(event, arg) {
+  console.log(arg)
+
+  const [quickName, value] = arg.split(' ')
+  if (!quickName || !value) return event.returnValue = []
+
+  let plugin
+  for (const p of plugins) {
+    if (p.quick === quickName) {
+      plugin = p
+      break
     }
   }
-  event.returnValue = {
-    code: validTag,
-    result: pluginReturnValue
-  }
-}
+  if (!plugin) return event.returnValue = []
 
+  queryResult = plugin.query({param: value});
+  changeBoxNum(queryResult.length)
+  event.returnValue = queryResult
+}
 
 let appIsVisible = true
 

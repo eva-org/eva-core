@@ -18,7 +18,7 @@ function createEvaWindow (mainWindow) {
     x: +x,
     y: +y,
     width: 500,
-    height: 76,
+    height: 60,
     frame: false,
     skipTaskbar: true,
     resizable: false,
