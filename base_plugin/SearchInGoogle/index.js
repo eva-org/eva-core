@@ -8,7 +8,7 @@ module.exports = {
       title: '百度搜索',
       subTitle: '基于百度搜索',
       action() {
-        const openUrl = `https://www.google.com/search?q=${query}`
+        const openUrl = `https://www.google.com/search?q=${param}`
         let cmd
         if (process.platform === 'win32') {
           cmd = 'start'
