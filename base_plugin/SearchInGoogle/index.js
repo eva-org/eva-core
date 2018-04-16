@@ -1,14 +1,14 @@
 const child_process = require('child_process');
 
 module.exports = {
-  name: 'SearchInBaidu',
-  quick: 'bd',
-  query: ({param}) => {
+  name: 'SearchInGoogle',
+  quick: 'g',
+  query: ({query}) => {
     return [{
-      title: '百度搜索',
-      subTitle: '基于百度搜索',
+      title: '谷歌搜索',
+      subTitle: '基于谷歌搜索',
       action() {
-        const openUrl = `https://www.google.com/search?q=${param}`
+        const openUrl = `https://www.google.com/search?q=${query}`
         let cmd
         if (process.platform === 'win32') {
           cmd = 'start'

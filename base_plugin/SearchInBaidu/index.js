@@ -3,12 +3,12 @@ const child_process = require('child_process');
 module.exports = {
   name: 'SearchInBaidu',
   quick: 'bd',
-  query: ({param}) => {
+  query: ({query}) => {
     return [{
       title: '百度搜索',
       subTitle: '基于百度搜索',
       action() {
-        const openUrl = `https://www.baidu.com/s?wd=${param}`
+        const openUrl = `https://www.baidu.com/s?wd=${query}`
         let cmd
         if (process.platform === 'win32') {
           cmd = 'start'

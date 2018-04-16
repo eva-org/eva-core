@@ -4,12 +4,12 @@ module.exports = {
   name: 'HbmLog',
   quick: 'log',
   icon: 'log.gif',
-  query: ({param}) => {
+  query: ({query}) => {
     return [{
       title: 'Raiyee log',
       subTitle: 'subTitle',
       action() {
-        const openUrl = `http://hbm.easy-hi.cn/blackcat-detail/log/${param}`
+        const openUrl = `http://hbm.easy-hi.cn/blackcat-detail/log/${query}`
         let cmd
         if (process.platform === 'win32') {
           cmd = 'start'

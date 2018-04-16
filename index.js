@@ -40,19 +40,19 @@ app.on('ready', () => {
   ipcMain.on('restore-box-height', () => changeBoxNum(0))
 })
 
-function changeBoxNum(num) {
+function changeBoxNum (num) {
   if (num > 5) num = 5
   const h = 50
   evaWindow.setSize(evaWidth, +evaHeight + h * num)
 }
 
-function action(event, index) {
+function action (event, index) {
   queryResult[index].action()
   event.sender.send('clear-box-input-event')
   changeBoxNum(0)
 }
 
-function boxInput(event, arg) {
+function boxInput (event, arg) {
   console.log(arg)
 
   const [quickName, value] = arg.split(' ')
@@ -67,25 +67,25 @@ function boxInput(event, arg) {
   }
   if (!plugin) return event.returnValue = []
 
-  queryResult = plugin.query({param: value});
+  queryResult = plugin.query({query: value});
   changeBoxNum(queryResult.length)
-  event.returnValue = queryResult
+  queryResult.then(ret => event.returnValue = ret)
 }
 
 let appIsVisible = true
 
-function hideWindow() {
+function hideWindow () {
   evaWindow.hide()
   if (isMac()) app.hide()
   appIsVisible = false
 }
 
-function showWindow() {
+function showWindow () {
   evaWindow.show()
   if (isMac()) app.show()
   appIsVisible = true
 }
 
-function switchWindowShown() {
+function switchWindowShown () {
   appIsVisible ? hideWindow() : showWindow()
 }
