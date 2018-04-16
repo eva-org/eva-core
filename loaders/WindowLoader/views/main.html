@@ -31,6 +31,7 @@
     watch: {
       input() {
         this.queryResult = ipcRenderer.sendSync('box-input', this.input)
+        if (!this.queryResult.length) ipcRenderer.send('restore-box-height')
       }
     }
   })

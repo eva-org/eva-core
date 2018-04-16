@@ -37,6 +37,7 @@ app.on('ready', () => {
   ipcMain.on('box-input', boxInput)
   ipcMain.on('box-blur', () => hideWindow())
   ipcMain.on('action', action)
+  ipcMain.on('restore-box-height', () => changeBoxNum(0))
 })
 
 function changeBoxNum(num) {
