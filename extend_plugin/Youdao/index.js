@@ -2,6 +2,7 @@ const child_process = require('child_process')
 const os = require('os')
 const axios = require('axios')
 const {appKey, appSecret} = require('./config.json')
+if(!appKey || !appSecret)
 console.log(YouDaoConfig)
 // 存入剪切板 mac xos
 const pbcopyMac = (data) => {

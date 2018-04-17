@@ -7,9 +7,30 @@ function isLinux() {
 function isMac() {
   return process.platform === 'darwin'
 }
+const color = require('colors')
+
+const info = (log) => {
+  console.log(log.green)
+}
+const debug = (log) => {
+  console.log(log.rainbow)
+}
+const warn = (log) => {
+  console.log(log.yellow)
+}
+const error = (log) => {
+  console.log(log.red)
+}
+
 
 module.exports = {
   isWindows,
   isLinux,
-  isMac
+  isMac,
+  log: {
+    info,
+    debug,
+    warn,
+    error
+  }
 }
