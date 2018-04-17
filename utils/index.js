@@ -22,6 +22,13 @@ const error = (log) => {
   console.log(log.red)
 }
 
+const md5 = (str) => {
+  const cr = require('crypto');
+  const md5 = cr.createHash('md5');
+  md5.update(str);
+  const result = md5.digest('hex');
+  return result.toUpperCase();  //32位大写
+}
 
 module.exports = {
   isWindows,
@@ -31,6 +38,7 @@ module.exports = {
     info,
     debug,
     warn,
-    error
+    error,
+    md5
   }
 }
