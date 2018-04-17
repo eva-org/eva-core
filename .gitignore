@@ -18,3 +18,4 @@ sync
 .uglify
 .cache-loader
 .cache
+extend_plugin/Youdao/config.json

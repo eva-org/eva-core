@@ -68,8 +68,9 @@ function boxInput (event, arg) {
   if (!plugin) return event.returnValue = []
 
   queryResult = plugin.query({query: value});
-  changeBoxNum(queryResult.length)
-  queryResult.then(ret => event.returnValue = ret)
+  // changeBoxNum(queryResult.length)
+  event.returnValue = []
+  // queryResult.then(ret => event.returnValue = ret)
 }
 
 let appIsVisible = true
