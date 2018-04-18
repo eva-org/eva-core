@@ -26,6 +26,7 @@ function getData ({query, utils: {logger}}) {
     const request = `http://openapi.youdao.com/api?q=${encodeURIComponent(query)}&appKey=${appKey}&from=auto&to=auto&salt=${salt}&sign=${sign}`
     axios.get(request).then((res) => {
       const resultList = []
+      // FIXME basic不存在的时候解构报错
       const {basic: {explains, phonetic}, translation} = res.data
       if (explains) {
         logger.debug(phonetic)

@@ -86,6 +86,9 @@ function boxInput(event, arg) {
   queryPromise.then(result => {
     changeBoxNum(result.length)
     event.sender.send('query-result', result)
+
+    // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
+    queryResult = result
   })
 }
 
