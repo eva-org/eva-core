@@ -30,6 +30,7 @@
     },
     watch: {
       input() {
+        this.queryResult = []
         ipcRenderer.send('box-input', this.input)
         this.currIndex = 0
       }

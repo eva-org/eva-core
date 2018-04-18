@@ -26,7 +26,8 @@ function createEvaWindow (mainWindow) {
     frame: false,
     skipTaskbar: true,
     resizable: false,
-    movable: false
+    movable: false,
+    backgroundColor: '#232323'
     // parent: mainWindow
   })
 
