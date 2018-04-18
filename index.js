@@ -20,16 +20,15 @@ let queryResult
 // noinspection JSAnnotator
 app.on('ready', () => {
   logger.info('APP IS READY')
-  try{
+  try {
     mainWindow = createMainWindow()
-  }catch (e) {
+  } catch (e) {
     logger(e)
   }
 
   logger.trace('创建隐藏的主窗口')
-  logger.trace('创建Eva窗口start')
+  logger.trace('创建Eva窗口')
   evaWindow = createEvaWindow(mainWindow)
-  logger.trace('创建Eva窗口end')
   const sizeArr = evaWindow.getSize()
   evaWidth = sizeArr[0]
   evaHeight = sizeArr[1]
@@ -40,7 +39,6 @@ app.on('ready', () => {
   globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
   globalShortcut.register('CommandOrControl+Shift+Alt+K', () => evaWindow.close())
   globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
-  logger.trace('注册全局快捷键')
   ipcMain.on('box-input-esc', () => hideWindow())
   ipcMain.on('hide-main-window', () => hideWindow())
   ipcMain.on('box-input', boxInput)
@@ -50,19 +48,19 @@ app.on('ready', () => {
   logger.info('欢迎使用Eva !')
 })
 
-function changeBoxNum (num) {
+function changeBoxNum(num) {
   if (num > 5) num = 5
   const h = 50
   evaWindow.setSize(evaWidth, +evaHeight + h * num)
 }
 
-function action (event, index) {
+function action(event, index) {
   queryResult[index].action()
   event.sender.send('clear-box-input-event')
   changeBoxNum(0)
 }
 
-function boxInput (event, arg) {
+function boxInput(event, arg) {
   console.log(arg)
 
   const [quickName, value] = arg.split(' ')
@@ -81,28 +79,26 @@ function boxInput (event, arg) {
     utils: require('./utils')
   }
   const queryPromise = plugin.query(pluginContext)
-  // if()
   queryPromise.then(result => {
     changeBoxNum(result.length)
     event.sender.send('query-result', result)
   })
-  // queryResult.then(ret => event.returnValue = ret)
 }
 
 let appIsVisible = true
 
-function hideWindow () {
+function hideWindow() {
   evaWindow.hide()
   if (isMac()) app.hide()
   appIsVisible = false
 }
 
-function showWindow () {
+function showWindow() {
   evaWindow.show()
   if (isMac()) app.show()
   appIsVisible = true
 }
 
-function switchWindowShown () {
+function switchWindowShown() {
   appIsVisible ? hideWindow() : showWindow()
 }

@@ -21,7 +21,7 @@
 
   const vue = new Vue({
     el: '#app',
-    data () {
+    data() {
       return {
         input: '',
         queryResult: [],
@@ -29,28 +29,24 @@
       }
     },
     watch: {
-      input () {
-        // this.queryResult = ipcRenderer.sendSync('box-input', this.input)
+      input() {
         ipcRenderer.send('box-input', this.input)
         this.currIndex = 0
-        // if (!this.queryResult.length) ipcRenderer.send('restore-box-height')
       }
     }
   })
 
   ipcRenderer.on('clear-box-input-event', () => vue.$data.input = '')
-  ipcRenderer.on('query-result', (e, result) => {
-    console.log(result)
-    console.log(vue.$data)
-    vue.$data.queryResult = result
-    if (result.length <= 0) ipcRenderer.send('restore-box-height')
+  ipcRenderer.on('query-result', (event, queryResult) => {
+    vue.$data.queryResult = queryResult
+    if (queryResult.length <= 0) ipcRenderer.send('restore-box-height')
   })
 
-  function onBlur () {
+  function onBlur() {
     // ipcRenderer.send('box-blur', vue.$data.input)
   }
 
-  function onKeyDown (e) {
+  function onKeyDown(e) {
     if (e.keyCode === 13) {
       ipcRenderer.send('action', vue.$data.currIndex)
       ipcRenderer.send('hide-main-window')
