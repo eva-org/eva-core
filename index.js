@@ -63,6 +63,10 @@ function action(event, index) {
 function boxInput(event, arg) {
   console.log(arg)
 
+  // 当有新的输入产生，清除之前的query result
+  event.sender.send('clear-query-result')
+  changeBoxNum(0)
+
   const [quickName, value] = arg.split(' ')
   if (!quickName || !value) return event.returnValue = []
 

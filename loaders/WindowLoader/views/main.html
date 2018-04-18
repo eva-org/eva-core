@@ -30,7 +30,6 @@
     },
     watch: {
       input() {
-        this.queryResult = []
         ipcRenderer.send('box-input', this.input)
         this.currIndex = 0
       }
@@ -41,6 +40,9 @@
   ipcRenderer.on('query-result', (event, queryResult) => {
     vue.$data.queryResult = queryResult
     if (queryResult.length <= 0) ipcRenderer.send('restore-box-height')
+  })
+  ipcRenderer.on('clear-query-result', () => {
+    vue.$data.queryResult = []
   })
 
   function onBlur() {
