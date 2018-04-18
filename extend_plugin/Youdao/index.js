@@ -2,8 +2,7 @@ const child_process = require('child_process')
 const os = require('os')
 const axios = require('axios')
 const {appKey, appSecret} = require('./config.json')
-if(!appKey || !appSecret)
-console.log(YouDaoConfig)
+if (!appKey || !appSecret) return
 // 存入剪切板 mac xos
 const pbcopyMac = (data) => {
   const proc = require('child_process').spawn('pbcopy')
@@ -19,12 +18,14 @@ const md5 = (str) => {
   return result.toUpperCase();  //32位大写
 }
 
-function getData (query) {
-  const salt = Math.random()
+function getData ({query, utils: {logger}}) {
+  const salt = new Date().getTime()
+  // appKey+q+salt+密钥
   const sign = md5(appKey + query + salt + appSecret)
-  const request = `http://openapi.youdao.com/api?q=${query}&appKey=${appKey}&from=auto&to=auto&salt=${salt}&sign=${sign}`
+  const request = `http://openapi.youdao.com/api?q=${encodeURIComponent(query)}&appKey=${appKey}&from=auto&to=auto&salt=${salt}&sign=${sign}`
   axios.get(request).then((res) => {
-    console.log(res.data)
+    const {basic} = res.data
+    logger.debug(basic)
   })
 
 }
@@ -37,10 +38,9 @@ module.exports = {
   name: 'YouDao',
   quick: 'yd',
   icon: '',
-  query: ({query, response}) => {
-
-
-    return getData(query)
+  query: (pluginContext) => {
+    const {query, utils} = pluginContext
+    return getData(pluginContext)
     // return new Promise((resolve) => {
     //   $.get(request, (ret) => {
     //     console.log(ret)

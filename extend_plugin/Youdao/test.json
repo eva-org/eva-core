@@ -1,0 +1,49 @@
+{
+  "tSpeakUrl": "http://openapi.youdao.com/ttsapi?q=%E5%A5%BD&langType=zh-CHS&sign=B1845F25004A4206401BF46763CD2CB3&salt=1523965306644&voice=4&format=mp3&appKey=30466fdece75f4f0",
+  "web": [
+    {
+      "value": [
+        null
+      ],
+      "key": "Good"
+    },
+    {
+      "value": [
+        null
+      ],
+      "key": "public good"
+    },
+    {
+      "value": [
+        null
+      ],
+      "key": "Good Job"
+    }
+  ],
+  "query": "good",
+  "translation": [
+    "好"
+  ],
+  "errorCode": "0",
+  "dict": {
+    "url": "yddict://m.youdao.com/dict?le=eng&q=good"
+  },
+  "webdict": {
+    "url": "http://m.youdao.com/dict?le=eng&q=good"
+  },
+  "basic": {
+    "us-phonetic": "ɡʊd",
+    "phonetic": "gʊd",
+    "uk-phonetic": "gʊd",
+    "uk-speech": "http://openapi.youdao.com/ttsapi?q=good&langType=en&sign=6AC1BBF873682186A2469428981B06B4&salt=1523965306644&voice=4&format=mp3&appKey=30466fdece75f4f0",
+    "explains": [
+      "n. 好处；善行；慷慨的行为",
+      "adj. 好的；优良的；愉快的；虔诚的",
+      "adv. 好",
+      "n. (Good)人名；(英)古德；(瑞典)戈德"
+    ],
+    "us-speech": "http://openapi.youdao.com/ttsapi?q=good&langType=en&sign=6AC1BBF873682186A2469428981B06B4&salt=1523965306644&voice=0&format=mp3&appKey=30466fdece75f4f0"
+  },
+  "l": "EN2zh-CHS",
+  "speakUrl": "http://openapi.youdao.com/ttsapi?q=good&langType=en&sign=6AC1BBF873682186A2469428981B06B4&salt=1523965306644&voice=4&format=mp3&appKey=30466fdece75f4f0"
+}

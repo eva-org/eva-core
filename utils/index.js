@@ -1,25 +1,49 @@
-function isWindows() {
+function isWindows () {
   return process.platform === 'win32'
 }
-function isLinux() {
+
+function isLinux () {
   return process.platform === 'linux'
 }
-function isMac() {
+
+function isMac () {
   return process.platform === 'darwin'
 }
-const color = require('colors')
 
-const info = (log) => {
-  console.log(log.green)
+const rewriteConsole = logger => {
+  console.log = function (item) {
+    logger.info(item)
+  }
+  console.debug = function (item) {
+    logger.debug(item)
+  }
+  console.debug = function (item) {
+    logger.debug(item)
+  }
 }
-const debug = (log) => {
-  console.log(log.rainbow)
-}
-const warn = (log) => {
-  console.log(log.yellow)
-}
-const error = (log) => {
-  console.log(log.red)
+
+const initLogger = () => {
+  const log4js = require('log4js')
+  log4js.configure({
+    appenders: {
+      out: {
+        type: 'console', layout: {
+          type: 'pattern',
+          pattern: '%[ %d %p %m %]'
+        }
+      }
+    },
+    categories: {default: {appenders: ['out'], level: 'all'}}
+  });
+  const logger = log4js.getLogger()
+  logger.level = 'all'
+
+  // ALL < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < MARK < OFF
+  logger.info('LOGGER IS INITIALIZED !')
+  //
+  console.oldLog = console.log
+  rewriteConsole(logger)
+  return logger
 }
 
 const md5 = (str) => {
@@ -34,11 +58,6 @@ module.exports = {
   isWindows,
   isLinux,
   isMac,
-  log: {
-    info,
-    debug,
-    warn,
-    error,
-    md5
-  }
+  md5,
+  logger: initLogger()
 }

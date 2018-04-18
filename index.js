@@ -8,11 +8,10 @@ const electron = require('electron')
 const {app, globalShortcut, ipcMain} = electron
 const {createEvaWindow, createMainWindow} = require('./loaders/windowLoader')
 const PluginLoader = require('./loaders/PluginLoader')
-const {isMac} = require('./utils')
-
+const {isMac, logger} = require('./utils')
+logger.info('APP START !')
 // 插件加载器
 const plugins = PluginLoader()
-
 let evaWindow
 let mainWindow
 let evaWidth
@@ -66,8 +65,11 @@ function boxInput (event, arg) {
     }
   }
   if (!plugin) return event.returnValue = []
-
-  queryResult = plugin.query({query: value});
+  const pluginContext = {
+    query: value,
+    utils: require('./utils')
+  }
+  queryResult = plugin.query(pluginContext)
   // changeBoxNum(queryResult.length)
   event.returnValue = []
   // queryResult.then(ret => event.returnValue = ret)

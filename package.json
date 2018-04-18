@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "colors": "^1.2.1"
+    "colors": "^1.2.1",
+    "log4js": "^2.5.3"
   }
 }
