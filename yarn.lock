@@ -3,8 +3,8 @@
 
 
 "@types/node@^8.0.24":
-  version "8.10.7"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.7.tgz#40c0058c115bd42ee9bf35d7a217eeef1acd2716"
+  version "8.10.8"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.8.tgz#794cba23cc9f8d9715f6543fa8827433b5f5cd3b"
 
 addressparser@1.0.1:
   version "1.0.1"

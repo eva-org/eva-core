@@ -19,15 +19,33 @@ const md5 = (str) => {
 }
 
 function getData ({query, utils: {logger}}) {
-  const salt = new Date().getTime()
-  // appKey+q+salt+密钥
-  const sign = md5(appKey + query + salt + appSecret)
-  const request = `http://openapi.youdao.com/api?q=${encodeURIComponent(query)}&appKey=${appKey}&from=auto&to=auto&salt=${salt}&sign=${sign}`
-  axios.get(request).then((res) => {
-    const {basic} = res.data
-    logger.debug(basic)
+  return new Promise(resolve => {
+    const salt = new Date().getTime()
+    // appKey+q+salt+密钥
+    const sign = md5(appKey + query + salt + appSecret)
+    const request = `http://openapi.youdao.com/api?q=${encodeURIComponent(query)}&appKey=${appKey}&from=auto&to=auto&salt=${salt}&sign=${sign}`
+    axios.get(request).then((res) => {
+      const resultList = []
+      const {basic: {explains, phonetic}, translation} = res.data
+      if (explains) {
+        logger.debug(phonetic)
+        logger.debug(translation)
+        if (phonetic && translation) {
+          resultList.push({
+            title: `${translation}`,
+            subTitle: `[${phonetic}]`
+          })
+        }
+        explains.forEach(item => {
+          resultList.push({
+            title: `${item}`,
+            subTitle: `${query}`
+          })
+        })
+      }
+      resolve(resultList)
+    })
   })
-
 }
 
 // 存入剪切板 windows
@@ -39,25 +57,6 @@ module.exports = {
   quick: 'yd',
   icon: '',
   query: (pluginContext) => {
-    const {query, utils} = pluginContext
     return getData(pluginContext)
-    // return new Promise((resolve) => {
-    //   $.get(request, (ret) => {
-    //     console.log(ret)
-    //     resolve([{
-    //       title: 'ret',
-    //       subTitle: 'subTitle',
-    //       action () {
-    //         // if (os.platform() === 'darwin') {
-    //         //   pbcopyMac(resultText)
-    //         // } else {
-    //         //   pbcopyWin(resultText)
-    //         // }
-    //       }
-    //     }])
-    //   })
-    // })
-
-
   }
 }

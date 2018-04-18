@@ -11,18 +11,18 @@ body {
     height: 100%;
     background-color: #232323;
 }
+.select-box{
 
+}
 .chosen {
     background-color: #3a8187;
-    height: 45px;
-    margin: 0;
-    padding: 5px;
 }
 
 .unchosen {
-    height: 45px;
+    height: 50px;
     margin: 0;
     padding: 5px;
+    box-sizing: border-box;
 }
 
 input {

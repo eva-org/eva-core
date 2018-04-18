@@ -5,7 +5,11 @@ const path = require('path')
 const url = require('url')
 
 function createMainWindow () {
-  return new BrowserWindow({x: 0, y: 0, width: 0, height: 0, show: false, focusable: false})
+  return new BrowserWindow({
+    x: 0, y: 0, width: 0, height: 0, show: false, focusable: false, frame: false,
+    titleBarStyle: 'customButtonsOnHover',
+    transparent: true
+  })
 }
 
 function createEvaWindow (mainWindow) {

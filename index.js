@@ -9,7 +9,7 @@ const {app, globalShortcut, ipcMain} = electron
 const {createEvaWindow, createMainWindow} = require('./loaders/windowLoader')
 const PluginLoader = require('./loaders/PluginLoader')
 const {isMac, logger} = require('./utils')
-logger.info('APP START !')
+logger.info('APP START')
 // 插件加载器
 const plugins = PluginLoader()
 let evaWindow
@@ -17,26 +17,37 @@ let mainWindow
 let evaWidth
 let evaHeight
 let queryResult
+// noinspection JSAnnotator
 app.on('ready', () => {
-  mainWindow = createMainWindow();
+  logger.info('APP IS READY')
+  try{
+    mainWindow = createMainWindow()
+  }catch (e) {
+    logger(e)
+  }
+
+  logger.trace('创建隐藏的主窗口')
+  logger.trace('创建Eva窗口start')
   evaWindow = createEvaWindow(mainWindow)
+  logger.trace('创建Eva窗口end')
   const sizeArr = evaWindow.getSize()
   evaWidth = sizeArr[0]
   evaHeight = sizeArr[1]
 
   // 初次启动，隐藏窗口，快捷键呼出即可
   hideWindow()
-
+  logger.trace('注册全局快捷键')
   globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
   globalShortcut.register('CommandOrControl+Shift+Alt+K', () => evaWindow.close())
   globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
-
+  logger.trace('注册全局快捷键')
   ipcMain.on('box-input-esc', () => hideWindow())
   ipcMain.on('hide-main-window', () => hideWindow())
   ipcMain.on('box-input', boxInput)
   ipcMain.on('box-blur', () => hideWindow())
   ipcMain.on('action', action)
   ipcMain.on('restore-box-height', () => changeBoxNum(0))
+  logger.info('欢迎使用Eva !')
 })
 
 function changeBoxNum (num) {
@@ -69,9 +80,12 @@ function boxInput (event, arg) {
     query: value,
     utils: require('./utils')
   }
-  queryResult = plugin.query(pluginContext)
-  // changeBoxNum(queryResult.length)
-  event.returnValue = []
+  const queryPromise = plugin.query(pluginContext)
+  // if()
+  queryPromise.then(result => {
+    changeBoxNum(result.length)
+    event.sender.send('query-result', result)
+  })
   // queryResult.then(ret => event.returnValue = ret)
 }
 

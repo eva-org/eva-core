@@ -29,7 +29,7 @@ const initLogger = () => {
       out: {
         type: 'console', layout: {
           type: 'pattern',
-          pattern: '%[ %d %p %m %]'
+          pattern: '%[%d{hh:mm:ss\'SSS} %p -- %m %]'
         }
       }
     },
