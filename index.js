@@ -102,7 +102,6 @@ function clearQueryResult(event) {
 let appIsVisible = true
 
 function hideWindow() {
-  if (isWindows) evaWindow.minimize()
   evaWindow.hide()
   if (isMac) app.hide()
   appIsVisible = false
