@@ -24,41 +24,46 @@ const buildLine = (title, subTitle = '') => {
   }
 }
 
-function getData ({query, utils: {logger}}) {
-  return new Promise(resolve => {
-    const salt = new Date().getTime()
-    // appKey+q+salt+密钥
-    const sign = md5(appKey + query + salt + appSecret)
-    const request = `http://openapi.youdao.com/api?q=${encodeURIComponent(query)}&appKey=${appKey}&from=auto&to=auto&salt=${salt}&sign=${sign}`
-    axios.get(request).then((res) => {
-      const resultList = []
-      // 无结果处理
-      if (!query) {
-        return resultList
-      }
+let timeout
 
-      const {basic, translation} = res.data
-      // 查词成功
-      if (basic) {
-        const {explains, phonetic} = basic
-        if (phonetic) {
-          resultList.push(buildLine(translation, `[${phonetic}]`))
+function getData({query, utils: {logger}}) {
+  if (timeout) clearTimeout(timeout)
+  return new Promise(resolve => {
+    timeout = setTimeout(() => {
+      const salt = new Date().getTime()
+      // appKey+q+salt+密钥
+      const sign = md5(appKey + query + salt + appSecret)
+      const request = `http://openapi.youdao.com/api?q=${encodeURIComponent(query)}&appKey=${appKey}&from=auto&to=auto&salt=${salt}&sign=${sign}`
+      axios.get(request).then((res) => {
+        const resultList = []
+        // 无结果处理
+        if (!query) {
+          return resultList
         }
-        explains.forEach(item => {
-          resultList.push(buildLine(item,query))
-        })
-      } else {
-        // 查词失败
-        // 翻译失败
-        if (query === translation[0]) {
-          resultList.push(buildLine('暂时没有合适的结果', '继续输入可能会不一样哦'))
-          return resolve(resultList)
+
+        const {basic, translation} = res.data
+        // 查词成功
+        if (basic) {
+          const {explains, phonetic} = basic
+          if (phonetic) {
+            resultList.push(buildLine(translation, `[${phonetic}]`))
+          }
+          explains.forEach(item => {
+            resultList.push(buildLine(item, query))
+          })
+        } else {
+          // 查词失败
+          // 翻译失败
+          if (query === translation[0]) {
+            resultList.push(buildLine('暂时没有合适的结果', '继续输入可能会不一样哦'))
+            return resolve(resultList)
+          }
+          // 翻译成功
+          resultList.push(buildLine(translation[0], query))
         }
-        // 翻译成功
-        resultList.push(buildLine(translation[0], query))
-      }
-      resolve(resultList)
-    })
+        resolve(resultList)
+      })
+    }, 500)
   })
 }
 
