@@ -38,21 +38,24 @@ function getData ({query, utils: {logger}}) {
       }
 
       const {basic, translation} = res.data
+      // 查词成功
       if (basic) {
         const {explains, phonetic} = basic
         if (phonetic) {
-          resultList.push(buildLine(translation, phonetic))
+          resultList.push(buildLine(translation, `[${phonetic}]`))
         }
         explains.forEach(item => {
           resultList.push(buildLine(item,query))
         })
       } else {
+        // 查词失败
+        // 翻译失败
         if (query === translation[0]) {
           resultList.push(buildLine('暂时没有合适的结果', '继续输入可能会不一样哦'))
           return resolve(resultList)
         }
-
-        resultList.push(buildLine(translation, `[${query}]`))
+        // 翻译成功
+        resultList.push(buildLine(translation[0], query))
       }
       resolve(resultList)
     })
