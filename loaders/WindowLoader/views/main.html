@@ -7,7 +7,8 @@
 </head>
 <body>
 <div id="app">
-    <input id="boxInput" autofocus="autofocus" onblur="onBlur()" onkeydown="onKeyDown(event)" v-model="input">
+    <input id="boxInput" autofocus="autofocus" @blur="blur()" v-model="input"
+           @keydown.enter="enter" @keydown.esc="esc" @keydown.up="up" @keydown.down="down">
     <template v-if="queryResult.length">
         <div v-for="(item, index) of queryResult" :class="['unchosen',index === currIndex ? 'chosen' : '']"
              @mousemove="mouseMove(index)">
@@ -32,6 +33,24 @@
     methods: {
       mouseMove(index) {
         this.currIndex = index
+      },
+      enter() {
+        ipcRenderer.send('action', this.currIndex)
+        ipcRenderer.send('hide-main-window')
+      },
+      esc(){
+        ipcRenderer.send('box-input-esc', this.input)
+      },
+      up(event) {
+        if (this.currIndex > 0) this.currIndex--
+        event.returnValue = false
+      },
+      down(event) {
+        if (this.currIndex + 1 < this.queryResult.length) this.currIndex++
+        event.returnValue = false
+      },
+      blur() {
+        // ipcRenderer.send('box-blur', vue.$data.input)
       }
     },
     watch: {
@@ -50,33 +69,6 @@
   ipcRenderer.on('clear-query-result', () => {
     vue.$data.queryResult = []
   })
-
-  function onBlur() {
-    // ipcRenderer.send('box-blur', vue.$data.input)
-  }
-
-  function onMouseOver(event) {
-    console.log(event)
-  }
-
-  function onKeyDown(e) {
-    if (e.keyCode === 13) {
-      ipcRenderer.send('action', vue.$data.currIndex)
-      ipcRenderer.send('hide-main-window')
-    }
-    if (e.keyCode === 27) ipcRenderer.send('box-input-esc', vue.$data.input)
-
-    // 方向键上
-    if (e.keyCode === 38) {
-      e.returnValue = false
-      if (vue.$data.currIndex > 0) return vue.$data.currIndex--
-    }
-    // 方向键下
-    if (e.keyCode === 40) {
-      e.returnValue = false
-      if (vue.$data.currIndex + 1 < vue.$data.queryResult.length) return vue.$data.currIndex++
-    }
-  }
 </script>
 </body>
 </html>
