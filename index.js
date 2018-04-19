@@ -63,12 +63,12 @@ function action(event, index) {
 function boxInput(event, arg) {
   console.log(arg)
 
-  // 当有新的输入产生，清除之前的query result
-  event.sender.send('clear-query-result')
-  changeBoxNum(0)
-
   const [quickName, ...value] = arg.split(' ')
-  if (!quickName || !value) return event.returnValue = []
+  const query = value.join(' ')
+  if (!quickName || !query) {
+    clearQueryResult(event)
+    return event.returnValue = []
+  }
 
   let plugin
   for (const p of plugins) {
@@ -77,13 +77,16 @@ function boxInput(event, arg) {
       break
     }
   }
-  if (!plugin) return event.returnValue = []
+  if (!plugin) {
+    clearQueryResult(event)
+    return event.returnValue = []
+  }
   const pluginContext = {
-    query: value.join(' '),
+    query,
     utils: require('./utils')
   }
   let queryPromise = plugin.query(pluginContext)
-  if(!(queryPromise instanceof Promise)) {
+  if (!(queryPromise instanceof Promise)) {
     queryPromise = new Promise(resolve => resolve(queryPromise))
   }
   queryPromise.then(result => {
@@ -93,6 +96,11 @@ function boxInput(event, arg) {
     // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
     queryResult = result
   })
+}
+
+function clearQueryResult(event) {
+  event.sender.send('clear-query-result')
+  changeBoxNum(0)
 }
 
 let appIsVisible = true
