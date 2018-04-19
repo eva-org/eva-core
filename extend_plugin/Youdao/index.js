@@ -17,6 +17,12 @@ const md5 = (str) => {
   const result = md5.digest('hex');
   return result.toUpperCase();  //32位大写
 }
+const buildLine = (title, subTitle = '') => {
+  return {
+    title,
+    subTitle
+  }
+}
 
 function getData ({query, utils: {logger}}) {
   return new Promise(resolve => {
@@ -26,23 +32,27 @@ function getData ({query, utils: {logger}}) {
     const request = `http://openapi.youdao.com/api?q=${encodeURIComponent(query)}&appKey=${appKey}&from=auto&to=auto&salt=${salt}&sign=${sign}`
     axios.get(request).then((res) => {
       const resultList = []
-      // FIXME basic不存在的时候解构报错
-      const {basic: {explains, phonetic}, translation} = res.data
-      if (explains) {
-        logger.debug(phonetic)
-        logger.debug(translation)
-        if (phonetic && translation) {
-          resultList.push({
-            title: `${translation}`,
-            subTitle: `[${phonetic}]`
-          })
+      // 无结果处理
+      if (!query) {
+        return resultList
+      }
+
+      const {basic, translation} = res.data
+      if (basic) {
+        const {explains, phonetic} = basic
+        if (phonetic) {
+          resultList.push(buildLine(translation, phonetic))
         }
         explains.forEach(item => {
-          resultList.push({
-            title: `${item}`,
-            subTitle: `${query}`
-          })
+          resultList.push(buildLine(item,query))
         })
+      } else {
+        if (query === translation[0]) {
+          resultList.push(buildLine('暂时没有合适的结果', '继续输入可能会不一样哦'))
+          return resolve(resultList)
+        }
+
+        resultList.push(buildLine(translation, `[${query}]`))
       }
       resolve(resultList)
     })

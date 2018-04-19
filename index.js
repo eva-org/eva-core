@@ -67,7 +67,7 @@ function boxInput(event, arg) {
   event.sender.send('clear-query-result')
   changeBoxNum(0)
 
-  const [quickName, value] = arg.split(' ')
+  const [quickName, ...value] = arg.split(' ')
   if (!quickName || !value) return event.returnValue = []
 
   let plugin
@@ -79,10 +79,13 @@ function boxInput(event, arg) {
   }
   if (!plugin) return event.returnValue = []
   const pluginContext = {
-    query: value,
+    query: value.join(' '),
     utils: require('./utils')
   }
-  const queryPromise = plugin.query(pluginContext)
+  let queryPromise = plugin.query(pluginContext)
+  if(!(queryPromise instanceof Promise)) {
+    queryPromise = new Promise(resolve => resolve(queryPromise))
+  }
   queryPromise.then(result => {
     changeBoxNum(result.length)
     event.sender.send('query-result', result)
