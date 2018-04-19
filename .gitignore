@@ -19,3 +19,5 @@ sync
 .cache-loader
 .cache
 extend_plugin/Youdao/config.json
+
+utils/native/windows/build
