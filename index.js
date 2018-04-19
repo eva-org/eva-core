@@ -7,9 +7,11 @@ const electron = require('electron')
 const {app, globalShortcut, ipcMain} = electron
 const {createEvaWindow, createMainWindow} = require('./loaders/windowLoader')
 const PluginLoader = require('./loaders/PluginLoader')
-const {isMac, logger} = require('./utils')
+const {isMac, isWindows, logger} = require('./utils')
+
 logger.trace('App开始启动')
 logger.debug(evaSpace)
+
 // 插件加载器
 const plugins = PluginLoader()
 let evaWindow
@@ -100,14 +102,15 @@ function clearQueryResult(event) {
 let appIsVisible = true
 
 function hideWindow() {
+  if (isWindows) evaWindow.minimize()
   evaWindow.hide()
-  if (isMac()) app.hide()
+  if (isMac) app.hide()
   appIsVisible = false
 }
 
 function showWindow() {
   evaWindow.show()
-  if (isMac()) app.show()
+  if (isMac) app.show()
   appIsVisible = true
 }
 
