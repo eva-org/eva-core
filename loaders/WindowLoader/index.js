@@ -12,7 +12,7 @@ function createMainWindow () {
   })
 }
 
-function createEvaWindow (mainWindow) {
+function createEvaWindow (width = 500, height = 60) {
   // Create the browser window.
   const x = (electron.screen.getPrimaryDisplay().workAreaSize.width / 2 - 250).toFixed(0)
   const y = 90
@@ -21,13 +21,14 @@ function createEvaWindow (mainWindow) {
     alwaysOnTop: true,
     x: +x,
     y: +y,
-    width: 500,
-    height: 60,
+    width,
+    height,
     frame: false,
     skipTaskbar: true,
     resizable: false,
     movable: false,
-    backgroundColor: '#232323'
+    backgroundColor: '#232323',
+    show: false
     // parent: mainWindow
   })
 

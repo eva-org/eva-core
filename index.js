@@ -1,40 +1,34 @@
 const evaSpace = {
-  returnValue: {}
+  ...require('./config.json')
 }
 Object.assign(evaSpace, require('./global'))
 global.evaSpace = evaSpace
-
 const electron = require('electron')
 const {app, globalShortcut, ipcMain} = electron
 const {createEvaWindow, createMainWindow} = require('./loaders/windowLoader')
 const PluginLoader = require('./loaders/PluginLoader')
 const {isMac, logger} = require('./utils')
-logger.info('APP START')
+logger.trace('App开始启动')
+logger.debug(evaSpace)
 // 插件加载器
 const plugins = PluginLoader()
 let evaWindow
 let mainWindow
-let evaWidth
-let evaHeight
 let queryResult
 // noinspection JSAnnotator
 app.on('ready', () => {
-  logger.info('APP IS READY')
+  logger.trace('App已经就绪')
   try {
+    logger.trace('创建隐藏的主窗口')
     mainWindow = createMainWindow()
   } catch (e) {
-    logger(e)
+    logger.error(e)
   }
-
-  logger.trace('创建隐藏的主窗口')
   logger.trace('创建Eva窗口')
-  evaWindow = createEvaWindow(mainWindow)
-  const sizeArr = evaWindow.getSize()
-  evaWidth = sizeArr[0]
-  evaHeight = sizeArr[1]
+  evaWindow = createEvaWindow(evaSpace.width, evaSpace.height)
 
   // 初次启动，隐藏窗口，快捷键呼出即可
-  hideWindow()
+  // hideWindow()
   logger.trace('注册全局快捷键')
   globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
   globalShortcut.register('CommandOrControl+Shift+Alt+K', () => evaWindow.close())
@@ -45,13 +39,13 @@ app.on('ready', () => {
   ipcMain.on('box-blur', () => hideWindow())
   ipcMain.on('action', action)
   ipcMain.on('restore-box-height', () => changeBoxNum(0))
-  logger.info('欢迎使用Eva !')
+  logger.info('欢迎使用Eva!')
 })
 
 function changeBoxNum(num) {
   if (num > 5) num = 5
   const h = 50
-  evaWindow.setSize(evaWidth, +evaHeight + h * num)
+  evaWindow.setSize(evaSpace.width, +evaSpace.height + h * num)
 }
 
 function action(event, index) {

@@ -2,9 +2,9 @@ const path = require('path')
 
 module.exports = () => {
   const baseArr = getPluginFromDir(path.join(evaSpace.ENTRY_DIR, 'base_plugin'))
-  console.log('BASE PLUGIN LOADED.')
+  console.trace('基础插件加载完毕.')
   const extendArr = getPluginFromDir(path.join(evaSpace.ENTRY_DIR, 'extend_plugin'))
-  console.log('EXTEND PLUGIN LOADED.')
+  console.trace('扩展插件加载完毕.')
   return baseArr.concat(extendArr)
 }
 
