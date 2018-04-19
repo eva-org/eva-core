@@ -7,8 +7,8 @@
 </head>
 <body>
 <div id="app">
-    <input id="boxInput" autofocus="autofocus" @blur="blur()" v-model="input"
-           @keydown.enter="enter" @keydown.esc="esc" @keydown.up="up" @keydown.down="down">
+    <input id="boxInput" autofocus="autofocus" v-model="input"
+           @keydown.enter="enter" @keydown.esc="esc" @keydown.up.prevent="up" @keydown.down.prevent="down" @blur="blur()">
     <template v-if="queryResult.length">
         <div v-for="(item, index) of queryResult" :class="['unchosen',index === currIndex ? 'chosen' : '']"
              @mousemove="mouseMove(index)">
@@ -41,16 +41,14 @@
       esc(){
         ipcRenderer.send('box-input-esc', this.input)
       },
-      up(event) {
+      up() {
         if (this.currIndex > 0) this.currIndex--
-        event.returnValue = false
       },
-      down(event) {
+      down() {
         if (this.currIndex + 1 < this.queryResult.length) this.currIndex++
-        event.returnValue = false
       },
       blur() {
-        // ipcRenderer.send('box-blur', vue.$data.input)
+        // ipcRenderer.send('box-blur', this.input)
       }
     },
     watch: {
