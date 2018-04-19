@@ -58,10 +58,12 @@
 
     // 方向键上
     if (e.keyCode === 38) {
+      e.returnValue = false
       if (vue.$data.currIndex > 0) return vue.$data.currIndex--
     }
     // 方向键下
     if (e.keyCode === 40) {
+      e.returnValue = false
       if (vue.$data.currIndex + 1 < vue.$data.queryResult.length) return vue.$data.currIndex++
     }
   }

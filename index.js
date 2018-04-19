@@ -99,7 +99,7 @@ function clearQueryResult(event) {
   changeBoxNum(0)
 }
 
-let appIsVisible = true
+let appIsVisible = false
 
 function hideWindow() {
   evaWindow.hide()
