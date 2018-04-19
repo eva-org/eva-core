@@ -37,16 +37,16 @@ function initAndGetData(pluginContext) {
 const getData = ({query}) => {
   return new Promise(resolve => {
     const resultFileArr = files.filter(item => item.replace(filePrefix, '').toUpperCase().indexOf(query.toUpperCase()) >= 0)
-    const resultArr = []
-    resultFileArr.forEach(item => {
-      resultArr.push({
+
+    const resultArr = resultFileArr.map(item => {
+      return {
         title: item.replace(filePrefix, ''),
         subTitle: `打开 ${item}`,
         action() {
           child_process.exec(`${command}"${item}"`)
         }
-      })
-    })
+      }
+    });
     resolve(resultArr)
   })
 }
