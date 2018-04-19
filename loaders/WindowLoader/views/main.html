@@ -8,7 +8,7 @@
 <body>
 <div id="app">
     <input id="boxInput" autofocus="autofocus" v-model="input"
-           @keydown.enter="enter" @keydown.esc="esc" @keydown.up.prevent="up" @keydown.down.prevent="down" @blur="blur()">
+           @keydown.enter="enter" @keydown.esc="esc" @keydown.up.prevent="up" @keydown.down.prevent="down" @blur="blur">
     <template v-if="queryResult.length">
         <div v-for="(item, index) of queryResult" :class="['unchosen',index === currIndex ? 'chosen' : '']"
              @mousemove="mouseMove(index)">
@@ -60,12 +60,10 @@
   })
 
   ipcRenderer.on('clear-box-input-event', () => vue.$data.input = '')
+  ipcRenderer.on('clear-query-result', () => vue.$data.queryResult = [])
   ipcRenderer.on('query-result', (event, queryResult) => {
     vue.$data.queryResult = queryResult
     if (queryResult.length <= 0) ipcRenderer.send('restore-box-height')
-  })
-  ipcRenderer.on('clear-query-result', () => {
-    vue.$data.queryResult = []
   })
 </script>
 </body>
