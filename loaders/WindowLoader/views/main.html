@@ -9,7 +9,8 @@
 <div id="app">
     <input id="boxInput" autofocus="autofocus" onblur="onBlur()" onkeydown="onKeyDown(event)" v-model="input">
     <template v-if="queryResult.length">
-        <div v-for="(item, index) of queryResult" :class="['unchosen',index === currIndex ? 'chosen' : '']">
+        <div v-for="(item, index) of queryResult" :class="['unchosen',index === currIndex ? 'chosen' : '']"
+             @mousemove="mouseMove(index)">
             <span class="title">{{item.title}}</span>
             <br>
             <span class="subTitle">{{item.subTitle}}</span>
@@ -26,6 +27,11 @@
         input: '',
         queryResult: [],
         currIndex: 0
+      }
+    },
+    methods: {
+      mouseMove(index) {
+        this.currIndex = index
       }
     },
     watch: {
@@ -47,6 +53,10 @@
 
   function onBlur() {
     // ipcRenderer.send('box-blur', vue.$data.input)
+  }
+
+  function onMouseOver(event) {
+    console.log(event)
   }
 
   function onKeyDown(e) {
