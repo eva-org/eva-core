@@ -12,7 +12,7 @@
     <template v-if="queryResult.length">
         <div class="result">
             <div v-for="(item, index) of queryResult" :class="['unchosen',index === currIndex ? 'chosen' : '']"
-                 @mousemove="mouseMove(index)">
+                 @mousemove="mouseMove(index)" @click="enter">
                 <span class="title">{{item.title}}</span>
                 <br>
                 <span class="subTitle">{{item.subTitle}}</span>

@@ -26,10 +26,6 @@ body {
     background-color: #232323;
 }
 
-.select-box {
-
-}
-
 .chosen {
     background-color: #3a8187;
 }
@@ -58,6 +54,8 @@ input {
 .result {
     max-height: 250px;
     overflow-y: auto;
+    user-select: none;
+    cursor: default;
 }
 
 .title {
