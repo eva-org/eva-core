@@ -56,8 +56,11 @@ function action(event, index) {
   changeBoxNum(0)
 }
 
+let latestInput
 function boxInput(event, arg) {
   logger.debug(arg)
+  let currentInput = arg
+  latestInput = arg
 
   const [quickName, ...value] = arg.split(' ')
   const query = value.join(' ')
@@ -93,6 +96,8 @@ function boxInput(event, arg) {
     queryPromise = new Promise(resolve => resolve(queryPromise))
   }
   queryPromise.then(result => {
+    if (latestInput !== currentInput) return
+
     changeBoxNum(result.length)
     event.sender.send('query-result', result)
 
