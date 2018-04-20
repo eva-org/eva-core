@@ -10,7 +10,7 @@
     <input id="boxInput" autofocus="autofocus" v-model="input"
            @keydown.enter="enter" @keydown.esc="esc" @keydown.up.prevent="up" @keydown.down.prevent="down" @blur="blur">
     <template v-if="queryResult.length">
-        <div class="result">
+        <div class="result" @mousedown.2.prevent @mousedown.3.prevent>
             <div v-for="(item, index) of queryResult" :class="['unchosen',index === currIndex ? 'chosen' : '']"
                  @mousemove="mouseMove(index)" @click="enter">
                 <span class="title">{{item.title}}</span>
@@ -50,7 +50,6 @@
       down() {
         if (this.currIndex + 1 < this.queryResult.length) this.currIndex++
         this.changePosition()
-
       },
       changePosition() {
         const range = [50 * (this.currIndex - 4), 50 * this.currIndex]
