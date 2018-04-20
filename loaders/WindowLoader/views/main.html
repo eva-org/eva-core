@@ -10,11 +10,13 @@
     <input id="boxInput" autofocus="autofocus" v-model="input"
            @keydown.enter="enter" @keydown.esc="esc" @keydown.up.prevent="up" @keydown.down.prevent="down" @blur="blur">
     <template v-if="queryResult.length">
-        <div v-for="(item, index) of queryResult" :class="['unchosen',index === currIndex ? 'chosen' : '']"
-             @mousemove="mouseMove(index)">
-            <span class="title">{{item.title}}</span>
-            <br>
-            <span class="subTitle">{{item.subTitle}}</span>
+        <div class="result">
+            <div v-for="(item, index) of queryResult" :class="['unchosen',index === currIndex ? 'chosen' : '']"
+                 @mousemove="mouseMove(index)">
+                <span class="title">{{item.title}}</span>
+                <br>
+                <span class="subTitle">{{item.subTitle}}</span>
+            </div>
         </div>
     </template>
 </div>
@@ -38,7 +40,7 @@
         ipcRenderer.send('action', this.currIndex)
         ipcRenderer.send('hide-main-window')
       },
-      esc(){
+      esc() {
         ipcRenderer.send('box-input-esc', this.input)
       },
       up() {
@@ -52,6 +54,10 @@
       }
     },
     watch: {
+      // currIndex(n, o) {
+      //   if (o < n && n < 5) return
+      //   document.getElementsByClassName('chosen')[0].scrollTo()
+      // },
       input() {
         ipcRenderer.send('box-input', this.input)
         this.currIndex = 0

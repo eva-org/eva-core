@@ -13,6 +13,8 @@ body {
 
 #app {
     background-color: #232323;
+    max-height: 310px;
+    overflow: hidden;
 }
 .select-box{
 
@@ -40,6 +42,11 @@ input {
     background-color: #1e1e1e;
     color: #ffffff;
     width: 100%;
+}
+
+.result {
+    max-height: 250px;
+    overflow-y: auto;
 }
 
 .title {
