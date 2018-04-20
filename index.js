@@ -54,7 +54,10 @@ function action(event, index) {
   changeBoxNum(0)
 }
 
+const NbPlugins = plugins.filter(plugin => plugin.quick === '*')
+
 let latestInput
+
 function boxInput(event, arg) {
   logger.debug(arg)
   let currentInput = arg
