@@ -121,8 +121,8 @@ function hideWindow() {
 }
 
 function showWindow() {
-  saveFocus()
-  if (isWindows) evaWindow.show()
+  evaWindow.show()
+  if (isWindows) saveFocus()
   if (isMac) app.show()
   appIsVisible = true
 }

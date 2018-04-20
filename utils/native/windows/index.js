@@ -1,16 +1,15 @@
 'use strict';
 
-let nativeModuleName = null;
-if (process.platform === 'win32') {
-  nativeModuleName = `${process.platform}-${process.arch}`;
-}
-
 let native = null;
-try {
-  native = require(`./${nativeModuleName}`);
-  console.log(native)
-} catch (e) {
-  console.error(e)
+
+if (process.platform === 'win32') {
+  const nativeModuleName = `${process.platform}-${process.arch}`;
+  try {
+    native = require(`./${nativeModuleName}`);
+    console.log(native)
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 // avoid invoke error

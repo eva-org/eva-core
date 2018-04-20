@@ -45,9 +45,23 @@
       },
       up() {
         if (this.currIndex > 0) this.currIndex--
+        this.changePosition()
       },
       down() {
         if (this.currIndex + 1 < this.queryResult.length) this.currIndex++
+        this.changePosition()
+
+      },
+      changePosition() {
+        const range = [50 * (this.currIndex - 4), 50 * this.currIndex]
+        const dom = document.getElementsByClassName('result')[0]
+        const currentScrollTop = dom.scrollTop
+        if (currentScrollTop < range[0]) {
+          dom.scrollTop = range[0]
+        }
+        if (currentScrollTop > range[1]) {
+          dom.scrollTop = range[1]
+        }
       },
       blur() {
         // ipcRenderer.send('box-blur', this.input)
@@ -64,6 +78,11 @@
       }
     }
   })
+
+  function a() {
+    const currDom = document.getElementsByClassName('chosen')[0]
+    index
+  }
 
   ipcRenderer.on('clear-box-input-event', () => vue.$data.input = '')
   ipcRenderer.on('clear-query-result', () => vue.$data.queryResult = [])
