@@ -1,5 +1,18 @@
-::-webkit-scrollbar{
-    display:none;
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background:  rgba(255, 255, 255, 0.3);
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 html {
@@ -13,12 +26,12 @@ body {
 
 #app {
     background-color: #232323;
-    max-height: 310px;
-    overflow: hidden;
 }
-.select-box{
+
+.select-box {
 
 }
+
 .chosen {
     background-color: #3a8187;
 }
