@@ -54,6 +54,7 @@ const getData = ({query}) => {
 module.exports = {
   name: 'FindApp',
   quick: 'op',
+  type:'ignoreQuick',
   async query(pluginContext) {
     if (!initialized) return initAndGetData(pluginContext)
     return getData(pluginContext)
