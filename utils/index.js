@@ -1,13 +1,16 @@
 const {logLevel} = evaSpace
-function isWindows () {
+
+const {restoreFocus, saveFocus} = require('./native/windows')
+
+function isWindows() {
   return process.platform === 'win32'
 }
 
-function isLinux () {
+function isLinux() {
   return process.platform === 'linux'
 }
 
-function isMac () {
+function isMac() {
   return process.platform === 'darwin'
 }
 
@@ -63,5 +66,7 @@ module.exports = {
   isLinux: isLinux(),
   isMac: isMac(),
   md5,
-  logger: initLogger(logLevel)
+  logger: initLogger(logLevel),
+  restoreFocus,
+  saveFocus
 }
