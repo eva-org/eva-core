@@ -67,21 +67,12 @@
       }
     },
     watch: {
-      // currIndex(n, o) {
-      //   if (o < n && n < 5) return
-      //   document.getElementsByClassName('chosen')[0].scrollTo()
-      // },
       input() {
         ipcRenderer.send('box-input', this.input)
         this.currIndex = 0
       }
     }
   })
-
-  function a() {
-    const currDom = document.getElementsByClassName('chosen')[0]
-    index
-  }
 
   ipcRenderer.on('clear-box-input-event', () => vue.$data.input = '')
   ipcRenderer.on('clear-query-result', () => vue.$data.queryResult = [])

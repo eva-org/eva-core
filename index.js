@@ -17,7 +17,7 @@ const plugins = PluginLoader()
 let evaWindow
 let mainWindow
 let queryResult
-// noinspection JSAnnotator
+
 app.on('ready', () => {
   logger.trace('App已经就绪')
   try {
@@ -29,8 +29,6 @@ app.on('ready', () => {
   logger.trace('创建Eva窗口')
   evaWindow = createEvaWindow(evaSpace.width, evaSpace.height)
 
-  // 初次启动，隐藏窗口，快捷键呼出即可
-  // hideWindow()
   logger.trace('注册全局快捷键')
   globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
   globalShortcut.register('CommandOrControl+Shift+Alt+K', () => evaWindow.close())
