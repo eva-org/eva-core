@@ -44,23 +44,28 @@ app.on('ready', () => {
   logger.info('欢迎使用Eva!')
 })
 
-function changeBoxNum(num) {
+function changeBoxNum (num) {
   if (num > 5) num = 5
   const h = 50
   evaWindow.setSize(evaSpace.width, +evaSpace.height + h * num)
 }
 
-function action(event, index) {
+function action (event, index) {
   queryResult[index].action()
   event.sender.send('clear-box-input-event')
   changeBoxNum(0)
 }
 
-function boxInput(event, arg) {
-  console.log(arg)
+function boxInput (event, arg) {
+  logger.debug(arg)
 
   const [quickName, ...value] = arg.split(' ')
   const query = value.join(' ')
+  logger.debug(`quickName:[${quickName}],query:[${query}]`)
+  if(!query) {
+    // TODO * plugins
+  }
+
   if (!quickName || !query) {
     clearQueryResult(event)
     return event.returnValue = []
@@ -77,10 +82,12 @@ function boxInput(event, arg) {
     clearQueryResult(event)
     return event.returnValue = []
   }
+
   const pluginContext = {
     query,
     utils: require('./utils')
   }
+
   let queryPromise = plugin.query(pluginContext)
   if (!(queryPromise instanceof Promise)) {
     queryPromise = new Promise(resolve => resolve(queryPromise))
@@ -94,25 +101,25 @@ function boxInput(event, arg) {
   })
 }
 
-function clearQueryResult(event) {
+function clearQueryResult (event) {
   event.sender.send('clear-query-result')
   changeBoxNum(0)
 }
 
 let appIsVisible = false
 
-function hideWindow() {
+function hideWindow () {
   evaWindow.hide()
   if (isMac) app.hide()
   appIsVisible = false
 }
 
-function showWindow() {
+function showWindow () {
   evaWindow.show()
   if (isMac) app.show()
   appIsVisible = true
 }
 
-function switchWindowShown() {
+function switchWindowShown () {
   appIsVisible ? hideWindow() : showWindow()
 }
