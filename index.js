@@ -5,7 +5,7 @@ Object.assign(evaSpace, require('./global'))
 global.evaSpace = evaSpace
 const electron = require('electron')
 const {app, globalShortcut, ipcMain} = electron
-const {createEvaWindow, createMainWindow} = require('./loaders/windowLoader')
+const {createEvaWindow, createMainWindow} = require('./loaders/WindowLoader')
 const PluginLoader = require('./loaders/PluginLoader')
 const {isMac, isWindows, saveFocus, logger, restoreFocus} = require('./utils')
 
