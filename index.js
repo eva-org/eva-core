@@ -1,14 +1,17 @@
 const evaSpace = {
   ...require('./config.json')
 }
-Object.assign(evaSpace, require('./global'))
+Object.assign(evaSpace, require('./global.js'))
 global.evaSpace = evaSpace
 const electron = require('electron')
 const {app, globalShortcut, ipcMain} = electron
-const {createEvaWindow, createMainWindow} = require('./loaders/WindowLoader')
-const PluginLoader = require('./loaders/PluginLoader')
-const {isMac, isWindows, saveFocus, logger, restoreFocus} = require('./utils')
-
+const path = require('path')
+const {createEvaWindow, createMainWindow} = require('./loaders/WindowLoader/index.js')
+const PluginLoader = require('./loaders/PluginLoader/index.js')
+const {isMac, isWindows, saveFocus, logger, restoreFocus} = require('./utils/index.js')
+const {initEva} = require('./utils/initialize.js')
+logger.trace('开始初始化App')
+initEva()
 logger.trace('App开始启动')
 logger.debug(evaSpace)
 
@@ -89,7 +92,7 @@ function boxInput(event, arg) {
 
   const pluginContext = {
     query,
-    utils: require('./utils')
+    utils: require('./utils/index.js')
   }
 
   let queryPromise = plugin.query(pluginContext)
