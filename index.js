@@ -68,9 +68,23 @@ function boxInput(event, arg) {
 
   const [quickName, ...value] = arg.split(' ')
   const query = value.join(' ')
+  const pluginContext = {
+    query,
+    utils: require('./utils/index.js')
+  }
   logger.debug(`quickName:[${quickName}],query:[${query}]`)
-  if (!query) {
-    // TODO * plugins
+
+
+  if (!query && NbPlugins.length) {
+    const queryPromises = NbPlugins.map(plugin => plugin.query(pluginContext))
+    Promise.all(queryPromises).then(result => {
+      if (latestInput !== currentInput) return
+      changeBoxNum(result.length)
+      event.sender.send('query-result', result)
+      // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
+      queryResult = result
+    })
+    return
   }
 
   if (!quickName || !query) {
@@ -88,11 +102,6 @@ function boxInput(event, arg) {
   if (!plugin) {
     clearQueryResult(event)
     return event.returnValue = []
-  }
-
-  const pluginContext = {
-    query,
-    utils: require('./utils/index.js')
   }
 
   let queryPromise = plugin.query(pluginContext)
