@@ -9,7 +9,9 @@ const path = require('path')
 const {createEvaWindow, createMainWindow} = require('./loaders/WindowLoader/index.js')
 const PluginLoader = require('./loaders/PluginLoader/index.js')
 const {isMac, isWindows, saveFocus, logger, restoreFocus} = require('./utils/index.js')
-
+const {initEva} = require('./utils/initialize.js')
+logger.trace('开始初始化App')
+initEva()
 logger.trace('App开始启动')
 logger.debug(evaSpace)
 

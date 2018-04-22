@@ -1,4 +1,5 @@
 const {logLevel} = evaSpace
+const os = require('os')
 
 const {restoreFocus, saveFocus} = require('./native/windows')
 
@@ -33,14 +34,20 @@ const initLogger = (level) => {
   const log4js = require('log4js')
   log4js.configure({
     appenders: {
-      out: {
+      console: {
         type: 'console', layout: {
+          type: 'pattern',
+          pattern: '%[%d{hh:mm:ss\'SSS} %p -- %m%]'
+        }
+      },
+      app: {
+        type: 'file', filename: `${os.homedir()}/.eva/eva.log`, layout: {
           type: 'pattern',
           pattern: '%[%d{hh:mm:ss\'SSS} %p -- %m%]'
         }
       }
     },
-    categories: {default: {appenders: ['out'], level: 'all'}}
+    categories: {default: {appenders: ['console', 'app'], level: 'all'}}
   });
   const logger = log4js.getLogger()
   logger.level = level
