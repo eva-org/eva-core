@@ -28,7 +28,10 @@ function createEvaWindow (width = 500, height = 60) {
     resizable: false,
     movable: false,
     backgroundColor: '#232323',
-    show: false
+    show: false,
+    webPreferences: {
+      devTools: true
+    }
     // parent: mainWindow
   })
 

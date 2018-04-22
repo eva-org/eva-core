@@ -6,13 +6,17 @@
   "scripts": {
     "start": "electron .",
     "debug": "electron --inspect=5858 .",
-    "build": "electron-packager . eva --win --out build --version=0.01 --asar --overwrite"
+    "build": "electron-packager . eva --win --out build --version=0.01 --asar --overwrite",
+    "packageDarwin:pro": "electron-packager . Eva --platform=darwin --arch=x64 --out=./dist --asar --app-version=2.0.1 --ignore=\"(dist|src|docs|.gitignore|LICENSE|README.md|webpack.config*|node_modules)\"",
+    "packageDarwin": "electron-packager ./ Eva --platform=darwin --arch=x64 --out=./dist --app-version=0.0.1 --overwrite --ignore=\"(dist|.gitignore|yarn.lock|yarn-error.log|LICENSE|README.md)\""
   },
   "author": "",
   "devDependencies": {
     "asar": "^0.14.3",
     "electron": "^2.0.0-beta.7",
-    "electron-package": "^0.1.0"
+    "electron-package": "^0.1.0",
+    "electron-packager": "^12.0.1",
+    "rollup": "^0.58.1"
   },
   "dependencies": {
     "axios": "^0.18.0",
