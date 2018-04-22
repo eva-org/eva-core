@@ -38,7 +38,7 @@ app.on('ready', () => {
   globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
   ipcMain.on('box-input-esc', () => hideWindow())
   ipcMain.on('hide-main-window', () => hideWindow())
-  ipcMain.on('box-input', boxInput)
+  ipcMain.on('box-input', boxInput2)
   ipcMain.on('box-blur', () => hideWindow())
   ipcMain.on('action', action)
   ipcMain.on('restore-box-height', () => changeBoxNum(0))
@@ -60,6 +60,36 @@ function action(event, index) {
 const NbPlugins = plugins.filter(plugin => plugin.quick === '*')
 
 let latestInput
+
+function executeCommonPlugin(input) {
+
+}
+
+function findSuitablePlugin(plugins, quickName) {
+  return plugins.find(plugin => plugin.quick.equal(quickName))
+}
+
+function executeExactPlugin(suitablePlugin, pluginQuery) {
+
+}
+
+function boxInput2(event, input) {
+  // 如果不包含空格则执行通用插件（*插件）
+  const blankIndex = input.indexOf(' ');
+  if (blankIndex === -1) {
+    return executeCommonPlugin(input)
+  }
+
+  const [quickName, ...values] = input.split(' ')
+  const suitablePlugin = findSuitablePlugin(plugins, quickName)
+  if (!suitablePlugin) {
+    return executeCommonPlugin(input)
+  }
+
+  const pluginQuery = values.join(' ')
+  return executeExactPlugin(suitablePlugin, pluginQuery)
+}
+
 
 function boxInput(event, arg) {
   logger.debug(arg)
