@@ -33,7 +33,6 @@ app.on('ready', () => {
 
   logger.trace('注册全局快捷键')
   globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
-  globalShortcut.register('CommandOrControl+Shift+Alt+K', () => evaWindow.close())
   globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
   ipcMain.on('box-input-esc', () => hideWindow())
   ipcMain.on('hide-main-window', () => hideWindow())
