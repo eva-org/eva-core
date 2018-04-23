@@ -15,6 +15,7 @@ function createDir(path) {
     !isExist ? fs.mkdirSync(curPath) : null;
   }
 }
+
 module.exports = {
   initEva
 }

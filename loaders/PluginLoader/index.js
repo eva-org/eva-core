@@ -6,7 +6,6 @@ module.exports = () => {
   console.trace('扩展插件加载完毕.')
   const allPlugin = baseArr.concat(extendArr)
   console.trace('检查自动执行插件')
-  evaSpace.autoPlugins = allPlugin.filter(plugin => plugin.quick === '*')
   return allPlugin
 }
 
