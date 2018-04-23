@@ -3,10 +3,9 @@
 let native = null;
 
 if (process.platform === 'win32') {
-  const nativeModuleName = `${process.platform}-${process.arch}`;
+  const nativeModuleName = `${process.platform}-${process.arch}`
   try {
-    native = require(`./${nativeModuleName}`);
-    console.log(native)
+    native = require(`./${nativeModuleName}`)
   } catch (e) {
     console.error(e)
   }
@@ -25,19 +24,19 @@ if (native === null) {
 
 function fetchFileIconAsPng(filePath, callback) {
   try {
-    native.fetchFileIconAsPng(filePath, callback);
+    native.fetchFileIconAsPng(filePath, callback)
   } catch (e) {
     console.log(e);
   }
 }
 
 function saveFocus() {
-  native.saveFocus();
+  native.saveFocus()
 }
 
 
 function restoreFocus() {
-  native.restoreFocus();
+  native.restoreFocus()
 }
 
-module.exports = { fetchFileIconAsPng, saveFocus, restoreFocus };
+module.exports = { fetchFileIconAsPng, saveFocus, restoreFocus }
