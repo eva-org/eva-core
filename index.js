@@ -37,7 +37,7 @@ app.on('ready', () => {
   globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
   ipcMain.on('box-input-esc', () => hideWindow())
   ipcMain.on('hide-main-window', () => hideWindow())
-  ipcMain.on('box-input', boxInput2)
+  ipcMain.on('box-input', boxInput)
   ipcMain.on('box-blur', () => hideWindow())
   ipcMain.on('action', action)
   ipcMain.on('restore-box-height', () => changeBoxNum(0))
@@ -86,7 +86,7 @@ async function executeExactPlugin(suitablePlugin, pluginQuery) {
 
 let lastedInput
 
-function boxInput2(event, input) {
+function boxInput(event, input) {
   lastedInput = input
   if (!input) return clearQueryResult(event)
 
