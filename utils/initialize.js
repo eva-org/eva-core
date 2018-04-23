@@ -5,10 +5,7 @@ const initEva = () => {
   console.log(`${path.join(evaSpace.ENTRY_DIR, 'node_modules/vue/dist/vue.min.js')}`)
   console.log(`${os.homedir()}/.eva/.init/vue`)
 
-
-  createDir(`${os.homedir()}/.eva`);
-
-
+  // createDir(`${os.homedir()}/.eva`);
 }
 function createDir(path) {
   const pathAry = path.split('/');

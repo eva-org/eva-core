@@ -30,7 +30,8 @@ function createEvaWindow (width = 500, height = 60) {
     backgroundColor: '#232323',
     show: false,
     webPreferences: {
-      devTools: true
+      devTools: true,
+      nodeIntegrationInWorker: true
     }
     // parent: mainWindow
   })

@@ -2,13 +2,12 @@
   "name": "eva",
   "version": "0.0.1",
   "description": "",
-  "main": "bundle.js",
+  "main": "index.js",
   "scripts": {
     "start": "electron .",
     "debug": "electron --inspect=5858 .",
-    "package": "webpack --config build/webpack.config.js --mode production",
-    "build": "electron-packager . eva --win --out package --version=0.0.1 --asar --overwrite",
-    "packageDarwin": "electron-packager ./dist/ Eva --platform=darwin --asar --arch=x64 --out=./package --app-version=0.0.1 --overwrite --ignore=\"(.gitignore|yarn.lock|yarn-error.log|LICENSE|README.md|.idea)\""
+    "build": "electron-packager . Eva --win --out package --version=0.0.1 --asar --overwrite",
+    "pa:mac": "electron-packager . Eva --platform=darwin --asar --arch=x64 --out=./package --app-version=0.0.1 --overwrite --ignore=\"(.gitignore|yarn.lock|yarn-error.log|LICENSE|README.md|.idea)\""
   },
   "author": "",
   "devDependencies": {
