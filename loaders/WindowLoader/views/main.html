@@ -7,8 +7,13 @@
 </head>
 <body>
 <div id="app">
-    <input id="boxInput" autofocus="autofocus" v-model="input"
-           @keydown.enter="enter" @keydown.esc="esc" @keydown.up.prevent="up" @keydown.down.prevent="down" @blur="blur">
+    <div>
+        <input id="boxInput" autofocus="autofocus" v-model="input"
+               @keydown.enter="enter" @keydown.esc="esc" @keydown.up.prevent="up" @keydown.down.prevent="down" @blur="blur">
+        <div>
+            <img class="icon" src="search-icon.png">
+        </div>
+    </div>
     <template v-if="queryResult.length">
         <div class="result" @mousedown.2.prevent @mousedown.3.prevent>
             <div v-for="(item, index) of queryResult" :class="['unchosen',index === currIndex ? 'chosen' : '']"
