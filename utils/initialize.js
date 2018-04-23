@@ -4,12 +4,9 @@ const fs = require('fs')
 const initEva = () => {
   console.log(`${path.join(evaSpace.ENTRY_DIR, 'node_modules/vue/dist/vue.min.js')}`)
   console.log(`${os.homedir()}/.eva/.init/vue`)
-
-
   createDir(`${os.homedir()}/.eva`);
-
-
 }
+
 function createDir(path) {
   const pathAry = path.split('/');
   for (let i = 0; i < pathAry.length; i++) {
@@ -18,6 +15,7 @@ function createDir(path) {
     !isExist ? fs.mkdirSync(curPath) : null;
   }
 }
+
 module.exports = {
   initEva
 }

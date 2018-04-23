@@ -1,19 +1,18 @@
-const evaSpace = {
-  ...require('./config.json')
+global.evaSpace = {
+  ...require('./config.json'),
+  ...require('./global.js')
 }
-Object.assign(evaSpace, require('./global.js'))
-global.evaSpace = evaSpace
+
 const electron = require('electron')
-const {app, globalShortcut, ipcMain} = electron
-const path = require('path')
-const {createEvaWindow, createMainWindow} = require('./loaders/WindowLoader/index.js')
+const utils = require('./utils/index.js')
 const PluginLoader = require('./loaders/PluginLoader/index.js')
 const {isMac, isWindows, saveFocus, logger, restoreFocus} = require('./utils/index.js')
 const {initEva} = require('./utils/initialize.js')
+const {app, globalShortcut, ipcMain} = electron
+const {createEvaWindow, createMainWindow} = require('./loaders/WindowLoader/index.js')
+
 logger.trace('开始初始化App')
 initEva()
-logger.trace('App开始启动')
-logger.debug(evaSpace)
 
 // 插件加载器
 const plugins = PluginLoader()
@@ -57,93 +56,64 @@ function action(event, index) {
   changeBoxNum(0)
 }
 
-const NbPlugins = plugins.filter(plugin => plugin.quick === '*')
 
-let latestInput
+const commonPlugins = plugins.filter(plugin => plugin.quick === '*')
 
-function executeCommonPlugin(input) {
-
+async function executeCommonPlugin(input) {
+  const queryPromises = commonPlugins.map(plugin => plugin.query({
+    query: input,
+    utils
+  }))
+  let queryResult = []
+  const resultArr = await Promise.all(queryPromises)
+  for (const result of resultArr) {
+    queryResult = queryResult.concat(result)
+  }
+  return queryResult
 }
 
 function findSuitablePlugin(plugins, quickName) {
-  return plugins.find(plugin => plugin.quick.equal(quickName))
+  return plugins.find(plugin => plugin.quick === quickName)
 }
 
-function executeExactPlugin(suitablePlugin, pluginQuery) {
-
+async function executeExactPlugin(suitablePlugin, pluginQuery) {
+  if (!pluginQuery) return []
+  return await suitablePlugin.query({
+    query: pluginQuery,
+    utils
+  })
 }
+
+let lastedInput
 
 function boxInput2(event, input) {
+  lastedInput = input
+  if (!input) return clearQueryResult(event)
+
   // 如果不包含空格则执行通用插件（*插件）
   const blankIndex = input.indexOf(' ');
   if (blankIndex === -1) {
-    return executeCommonPlugin(input)
+    return returnValue(event, input, executeCommonPlugin(input))
   }
 
   const [quickName, ...values] = input.split(' ')
   const suitablePlugin = findSuitablePlugin(plugins, quickName)
   if (!suitablePlugin) {
-    return executeCommonPlugin(input)
+    return returnValue(event, input, executeCommonPlugin(input))
   }
 
   const pluginQuery = values.join(' ')
-  return executeExactPlugin(suitablePlugin, pluginQuery)
+  return returnValue(event, input, executeExactPlugin(suitablePlugin, pluginQuery))
 }
 
+function returnValue(event, input, resultPromise) {
+  resultPromise.then(result => {
+    // 如果本次回调对应的input不是最新输入，则忽略
+    if (input !== lastedInput) return clearQueryResult(event)
 
-function boxInput(event, arg) {
-  logger.debug(arg)
-  let currentInput = arg
-  latestInput = arg
-
-  const [quickName, ...value] = arg.split(' ')
-  const query = value.join(' ')
-  const pluginContext = {
-    query,
-    utils: require('./utils/index.js')
-  }
-  logger.debug(`quickName:[${quickName}],query:[${query}]`)
-
-
-  if (!query && NbPlugins.length) {
-    const queryPromises = NbPlugins.map(plugin => plugin.query(pluginContext))
-    Promise.all(queryPromises).then(result => {
-      if (latestInput !== currentInput) return
-      changeBoxNum(result.length)
-      event.sender.send('query-result', result)
-      // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
-      queryResult = result
-    })
-    return
-  }
-
-  if (!quickName || !query) {
-    clearQueryResult(event)
-    return event.returnValue = []
-  }
-
-  let plugin
-  for (const p of plugins) {
-    if (p.quick === quickName) {
-      plugin = p
-      break
-    }
-  }
-  if (!plugin) {
-    clearQueryResult(event)
-    return event.returnValue = []
-  }
-
-  let queryPromise = plugin.query(pluginContext)
-  if (!(queryPromise instanceof Promise)) {
-    queryPromise = new Promise(resolve => resolve(queryPromise))
-  }
-  queryPromise.then(result => {
-    if (latestInput !== currentInput) return
-
+    if (result.length) clearQueryResult(event)
     changeBoxNum(result.length)
     event.sender.send('query-result', result)
-
     // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
     queryResult = result
   })
