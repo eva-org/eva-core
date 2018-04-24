@@ -24,6 +24,7 @@ function createEvaWindow(width = 500, height = 60, opacity = 1) {
     width,
     height,
     opacity,
+    // transparent: true,
     frame: false,
     skipTaskbar: true,
     resizable: false,

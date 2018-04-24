@@ -29,7 +29,7 @@ app.on('ready', () => {
     logger.error(e)
   }
   logger.trace('创建Eva窗口')
-  evaWindow = createEvaWindow(evaSpace.width, evaSpace.height)
+  evaWindow = createEvaWindow(evaSpace.width, evaSpace.height, evaSpace.opacity)
 
   logger.trace('注册全局快捷键')
   globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
