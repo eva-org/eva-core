@@ -1,0 +1,35 @@
+<html>
+<head></head>
+<link rel="stylesheet" type="text/css" href="index.css"/>
+<body>
+<div class="box" id="box">
+    <span id="clock_date"></span>
+    <span id="clock_time"></span>
+</div>
+<script>
+  const domDate = document.getElementById('clock_date')
+  const domTime = document.getElementById('clock_time')
+  let timeInterval
+
+  function addZero(number) {
+    return (number / 100).toFixed(2).toString().split('.')[1]
+  }
+
+  function initClock() {
+    if (!timeInterval) {
+      timeInterval = setInterval(() => {
+        const now = new Date()
+        domDate.innerText = `${now.getFullYear()}-${addZero(now.getMonth() + 1)}-${addZero(now.getDate())}`
+        domTime.innerText = `${addZero(now.getHours())}:${addZero(now.getMinutes())}:${addZero(now.getSeconds())}`
+      }, 1000)
+    }
+  }
+
+  initClock()
+  const {ipcRenderer} = require('electron')
+  document.getElementById('box').ondblclick = function () {
+    ipcRenderer.send('close')
+  }
+</script>
+</body>
+</html>

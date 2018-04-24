@@ -1,0 +1,27 @@
+html {
+    height: 100%;
+    font-family: Segoe UI, serif;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    opacity: 0.2;
+}
+
+body:hover {
+    background-color: rgba(0, 0, 0, 1);
+    opacity: 1;
+}
+
+span {
+    display: inline-block;
+    line-height: 15px;
+    color: white;
+}
+
+.box {
+    padding: 5px 0;
+    text-align: center;
+}

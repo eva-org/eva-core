@@ -68,6 +68,14 @@ const md5 = (str) => {
   return result.toUpperCase();  //32位大写
 }
 
+const buildLine = (title, subTitle = '', action = new Function()) => {
+  return {
+    title,
+    subTitle,
+    action
+  }
+}
+
 module.exports = {
   isWindows: isWindows(),
   isLinux: isLinux(),
@@ -75,5 +83,6 @@ module.exports = {
   md5,
   logger: initLogger(logLevel),
   restoreFocus,
-  saveFocus
+  saveFocus,
+  buildLine
 }

@@ -31,6 +31,8 @@ app.on('ready', () => {
   logger.trace('创建Eva窗口')
   evaWindow = createEvaWindow(evaSpace.width, evaSpace.height, evaSpace.opacity)
 
+  evaWindow.on('blur', () => hideWindow())
+
   logger.trace('注册全局快捷键')
   globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
   globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
@@ -128,12 +130,14 @@ let appIsVisible = false
 function hideWindow() {
   evaWindow.hide()
   if (isWindows) restoreFocus()
+  logger.info(isMac)
   if (isMac) app.hide()
   appIsVisible = false
 }
 
 function showWindow() {
   evaWindow.show()
+  logger.info(isMac)
   if (isWindows) saveFocus()
   if (isMac) app.show()
   appIsVisible = true
