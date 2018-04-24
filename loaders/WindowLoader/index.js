@@ -4,7 +4,7 @@ const {BrowserWindow} = electron
 const path = require('path')
 const url = require('url')
 
-function createMainWindow () {
+function createMainWindow() {
   return new BrowserWindow({
     x: 0, y: 0, width: 0, height: 0, show: false, focusable: false, frame: false,
     titleBarStyle: 'customButtonsOnHover',
@@ -12,9 +12,9 @@ function createMainWindow () {
   })
 }
 
-function createEvaWindow (width = 500, height = 60) {
+function createEvaWindow(width = 500, height = 60, opacity = 1) {
   // Create the browser window.
-  const x = (electron.screen.getPrimaryDisplay().workAreaSize.width / 2 - 250).toFixed(0)
+  const x = (electron.screen.getPrimaryDisplay().workAreaSize.width / 2 - width / 2).toFixed(0)
   const y = 90
 
   const evaWindow = new BrowserWindow({
@@ -23,6 +23,7 @@ function createEvaWindow (width = 500, height = 60) {
     y: +y,
     width,
     height,
+    opacity,
     frame: false,
     skipTaskbar: true,
     resizable: false,

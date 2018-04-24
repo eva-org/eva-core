@@ -28,7 +28,9 @@ body {
 }
 
 .chosen {
-    background-color: #3a8187;
+    /*background-color: #3a8187;*/
+    background-color: black;
+    opacity: 0.9;
 }
 
 .unchosen {
