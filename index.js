@@ -95,7 +95,7 @@ function boxInput(event, input) {
   if (!input) return clearQueryResult(event)
 
   // 如果不包含空格则执行通用插件（*插件）
-  const blankIndex = input.indexOf(' ');
+  const blankIndex = input.indexOf(' ')
   if (blankIndex === -1) {
     return returnValue(event, input, executeCommonPlugin(input))
   }

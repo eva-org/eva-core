@@ -1,4 +1,4 @@
-const child_process = require('child_process');
+const child_process = require('child_process')
 const glob = require('glob')
 const os = require('os')
 
@@ -27,7 +27,7 @@ async function initAndGetData(pluginContext) {
       config.patterns = ['C:/ProgramData/Microsoft/Windows/Start Menu/Programs/**.lnk']
       config.command = ''
     } else if (isLinux) {
-      // TODO linux support
+      // TODO linux support. Pull request needed.
     } else {
       logger.error('Not support current system.')
     }
