@@ -35,6 +35,7 @@ app.on('ready', () => {
 
   logger.trace('注册全局快捷键')
   globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
+  globalShortcut.register('Alt+Space', () => switchWindowShown())
   globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
   ipcMain.on('box-input-esc', () => hideWindow())
   ipcMain.on('hide-main-window', () => hideWindow())
@@ -113,6 +114,7 @@ function returnValue(event, input, resultPromise) {
     if (input !== lastedInput) return clearQueryResult(event)
 
     if (result.length) clearQueryResult(event)
+    logger.debug(result instanceof Array)
     changeBoxNum(result.length)
     event.sender.send('query-result', result)
     // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
@@ -130,14 +132,12 @@ let appIsVisible = false
 function hideWindow() {
   evaWindow.hide()
   if (isWindows) restoreFocus()
-  logger.info(isMac)
   if (isMac) app.hide()
   appIsVisible = false
 }
 
 function showWindow() {
   evaWindow.show()
-  logger.info(isMac)
   if (isWindows) saveFocus()
   if (isMac) app.show()
   appIsVisible = true

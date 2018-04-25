@@ -1,9 +1,9 @@
 const child_process = require('child_process');
 const glob = require('glob')
+const os = require('os')
 
 let files = []
-let pattern
-let filePrefix
+let patterns = []
 let command
 
 let initialized = false
@@ -12,38 +12,44 @@ function initAndGetData(pluginContext) {
   const {utils: {isMac, isWindows, isLinux, logger}} = pluginContext
   return new Promise(resolve => {
     if (isMac) {
-      pattern = '/Applications/**.app'
-      filePrefix = '/Applications/'
+      patterns.push('/Applications/**.app')
+      patterns.push(`${os.homedir()}/Downloads/**.**`)
       command = 'open '
     }
     else if (isWindows) {
-      pattern = 'C:/ProgramData/Microsoft/Windows/Start Menu/Programs/**.lnk'
-      filePrefix = 'C:/ProgramData/Microsoft/Windows/Start Menu/Programs/'
+      patterns.push('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/**.lnk')
       command = ''
     } else if (isLinux) {
       // TODO linux support
     } else {
       logger.error('Not support current system.')
     }
-
-    glob(pattern, (err, file) => {
-      files = file.toString().split(',')
-      initialized = true
-      resolve(getData(pluginContext))
+    patterns.forEach(pattern => {
+      glob(pattern, (err, file) => {
+        console.trace(file)
+        files = files.concat(file.toString().split(','))
+        initialized = true
+      })
     })
+    console.log(files)
+    resolve(getData(pluginContext))
   })
 }
 
 const getData = ({query}) => {
   return new Promise(resolve => {
-    const resultFileArr = files.filter(item => item.replace(filePrefix, '').toUpperCase().indexOf(query.toUpperCase()) >= 0)
+    const resultFileArr = files.filter(fileUri => {
+      const position = fileUri.lastIndexOf('/') + 1
+      return fileUri.slice(position).toUpperCase().indexOf(query.toUpperCase()) >= 0
+    })
 
-    const resultArr = resultFileArr.map(item => {
+    const resultArr = resultFileArr.map(fileUri => {
+      const position = fileUri.lastIndexOf('/') + 1
       return {
-        title: item.replace(filePrefix, ''),
-        subTitle: `打开 ${item}`,
+        title: fileUri.slice(position),
+        subTitle: `打开 ${fileUri}`,
         action() {
-          child_process.exec(`${command}"${item}"`)
+          child_process.exec(`${command}${fileUri}`)
         }
       }
     });
@@ -54,7 +60,7 @@ const getData = ({query}) => {
 module.exports = {
   name: 'FindApp',
   quick: '*',
-  type:'ignoreQuick',
+  type: 'ignoreQuick',
   async query(pluginContext) {
     if (!initialized) return initAndGetData(pluginContext)
     return getData(pluginContext)
