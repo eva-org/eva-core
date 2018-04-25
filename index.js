@@ -114,7 +114,6 @@ function returnValue(event, input, resultPromise) {
     if (input !== lastedInput) return clearQueryResult(event)
 
     if (result.length) clearQueryResult(event)
-    logger.debug(result instanceof Array)
     changeBoxNum(result.length)
     event.sender.send('query-result', result)
     // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
