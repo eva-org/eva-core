@@ -1,3 +1,3 @@
 module.exports = {
-  ENTRY_DIR: __dirname
+  ROOT_DIR: __dirname
 }

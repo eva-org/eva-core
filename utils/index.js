@@ -1,7 +1,9 @@
 const {logLevel} = evaSpace
 const os = require('os')
+const fs = require('fs')
 
 const {restoreFocus, saveFocus} = require('./native/windows')
+const {evaWorkHome} = require('./initialize')
 
 function isWindows() {
   return process.platform === 'win32'
@@ -48,7 +50,7 @@ const initLogger = (level) => {
       }
     },
     categories: {default: {appenders: ['console', 'app'], level: 'all'}}
-  });
+  })
   const logger = log4js.getLogger()
   logger.level = level
 
@@ -61,11 +63,11 @@ const initLogger = (level) => {
 }
 
 const md5 = (str) => {
-  const cr = require('crypto');
-  const md5 = cr.createHash('md5');
-  md5.update(str);
-  const result = md5.digest('hex');
-  return result.toUpperCase();  //32位大写
+  const cr = require('crypto')
+  const md5 = cr.createHash('md5')
+  md5.update(str)
+  const result = md5.digest('hex')
+  return result.toUpperCase()  //32位大写
 }
 
 const buildLine = (title, subTitle = '', action = new Function()) => {
@@ -76,6 +78,17 @@ const buildLine = (title, subTitle = '', action = new Function()) => {
   }
 }
 
+const saveConfig = (configName, config) => {
+  fs.writeFileSync(`${evaWorkHome}/${configName}.json`, JSON.stringify(config, null, 2))
+}
+
+const getConfig = (configName) => {
+  let configPath = `${evaWorkHome}/${configName}.json`
+  const exist = fs.existsSync(configPath)
+  if (!exist) fs.writeFileSync(configPath, '{}')
+  return JSON.parse(fs.readFileSync(configPath).toString())
+}
+
 module.exports = {
   isWindows: isWindows(),
   isLinux: isLinux(),
@@ -84,5 +97,7 @@ module.exports = {
   logger: initLogger(logLevel),
   restoreFocus,
   saveFocus,
-  buildLine
+  buildLine,
+  saveConfig,
+  getConfig
 }

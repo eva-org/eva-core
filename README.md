@@ -1,7 +1,7 @@
 # Eva
 Launcher for all plantforms, an alternative to Alfred and Wox.
 
-## Quick tutorial
+## Usage
 * Press `alt+space` to show/hide the window
 * Start typing a program name
 * Press Enter to launch the program
@@ -18,3 +18,6 @@ Launcher for all plantforms, an alternative to Alfred and Wox.
     * `bd`: Baidu
     * `yd`: Youdao
     
+## LICENSE
+* code-license : Apache License 2.0 http://www.apache.org/licenses/LICENSE-2.0 
+* non-software-license : CC BY-NC-SA 2.5 http://creativecommons.org/licenses/by-nc-sa/2.5/

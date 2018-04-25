@@ -1,6 +1,4 @@
-'use strict';
-
-let native = null;
+let native = null
 
 if (process.platform === 'win32') {
   const nativeModuleName = `${process.platform}-${process.arch}`
@@ -15,18 +13,18 @@ if (process.platform === 'win32') {
 if (native === null) {
   native = {
     fetchFileIconAsPng: (path, cb) => {
-      cb([]);
+      cb([])
     },
     saveFocus: () => {},
     restoreFocus: () => {}
-  };
+  }
 }
 
 function fetchFileIconAsPng(filePath, callback) {
   try {
     native.fetchFileIconAsPng(filePath, callback)
   } catch (e) {
-    console.log(e);
+    console.log(e)
   }
 }
 

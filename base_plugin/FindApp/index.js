@@ -1,39 +1,46 @@
-const child_process = require('child_process');
+const child_process = require('child_process')
 const glob = require('glob')
 const os = require('os')
 
 let files = []
-let patterns = []
-let command
+let config
 
 let initialized = false
 
-function initAndGetData(pluginContext) {
-  const {utils: {isMac, isWindows, isLinux, logger}} = pluginContext
-  return new Promise(resolve => {
+glob.promise = function (pattern, options) {
+  return new Promise(function (resolve, reject) {
+    const g = new glob.Glob(pattern, options)
+    g.once('end', resolve)
+    g.once('error', reject)
+  })
+}
+
+async function initAndGetData(pluginContext) {
+  const {utils: {isMac, isWindows, isLinux, logger, getConfig, saveConfig}} = pluginContext
+
+  config = getConfig('FindApp')
+  if (!config.patterns) {
     if (isMac) {
-      patterns.push('/Applications/**.app')
-      patterns.push(`${os.homedir()}/Downloads/**.**`)
-      command = 'open '
-    }
-    else if (isWindows) {
-      patterns.push('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/**.lnk')
-      command = ''
+      config.patterns = ['/Applications/**.app', `${os.homedir()}/Downloads/**.**`]
+      config.command = 'open '
+    } else if (isWindows) {
+      config.patterns = ['C:/ProgramData/Microsoft/Windows/Start Menu/Programs/**.lnk']
+      config.command = ''
     } else if (isLinux) {
-      // TODO linux support
+      // TODO linux support. Pull request needed.
     } else {
       logger.error('Not support current system.')
     }
-    patterns.forEach(pattern => {
-      glob(pattern, (err, file) => {
-        console.trace(file)
-        files = files.concat(file.toString().split(','))
-        initialized = true
-      })
+    saveConfig('findApp', config)
+  }
+
+  for (const pattern of config.patterns) {
+    await glob.promise(pattern, (err, file) => {
+      files = files.concat((file.toString().split(',')))
     })
-    console.log(files)
-    resolve(getData(pluginContext))
-  })
+  }
+  initialized = true
+  return getData(pluginContext)
 }
 
 const getData = ({query}) => {
@@ -49,10 +56,10 @@ const getData = ({query}) => {
         title: fileUri.slice(position),
         subTitle: `打开 ${fileUri}`,
         action() {
-          child_process.exec(`${command}${fileUri}`)
+          child_process.exec(`${config.command}${fileUri}`)
         }
       }
-    });
+    })
     resolve(resultArr)
   })
 }

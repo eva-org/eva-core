@@ -11,11 +11,11 @@ const pbcopyMac = (data) => {
 }
 
 const md5 = (str) => {
-  const cr = require('crypto');
-  const md5 = cr.createHash('md5');
-  md5.update(str);
-  const result = md5.digest('hex');
-  return result.toUpperCase();  //32位大写
+  const cr = require('crypto')
+  const md5 = cr.createHash('md5')
+  md5.update(str)
+  const result = md5.digest('hex')
+  return result.toUpperCase()  //32位大写
 }
 const buildLine = (title, subTitle = '') => {
   return {
