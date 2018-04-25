@@ -3,28 +3,30 @@ const glob = require('glob')
 const os = require('os')
 
 let files = []
-let patterns = []
-let command
+let config
 
 let initialized = false
 
 function initAndGetData(pluginContext) {
-  const {utils: {isMac, isWindows, isLinux, logger}} = pluginContext
-  return new Promise(resolve => {
+  const {utils: {isMac, isWindows, isLinux, logger, getConfig, saveConfig}} = pluginContext
+
+  config = getConfig('FindApp')
+  if (!config.patterns) {
     if (isMac) {
-      patterns.push('/Applications/**.app')
-      patterns.push(`${os.homedir()}/Downloads/**.**`)
-      command = 'open '
-    }
-    else if (isWindows) {
-      patterns.push('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/**.lnk')
-      command = ''
+      config.patterns = ['/Applications/**.app', `${os.homedir()}/Downloads/**.**`]
+      config.command = 'open '
+    } else if (isWindows) {
+      config.patterns = ['C:/ProgramData/Microsoft/Windows/Start Menu/Programs/**.lnk']
+      config.command = ''
     } else if (isLinux) {
       // TODO linux support
     } else {
       logger.error('Not support current system.')
     }
-    patterns.forEach(pattern => {
+    saveConfig('findApp', config)
+  }
+  return new Promise(resolve => {
+    config.patterns.forEach(pattern => {
       glob(pattern, (err, file) => {
         files = files.concat(file.toString().split(','))
         initialized = true
@@ -48,7 +50,7 @@ const getData = ({query}) => {
         title: fileUri.slice(position),
         subTitle: `打开 ${fileUri}`,
         action() {
-          child_process.exec(`${command}${fileUri}`)
+          child_process.exec(`${config.command}${fileUri}`)
         }
       }
     })

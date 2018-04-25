@@ -21,5 +21,6 @@ const initEva = () => {
 }
 
 module.exports = {
-  initEva
+  initEva,
+  evaWorkHome
 }

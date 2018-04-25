@@ -1,7 +1,9 @@
 const {logLevel} = evaSpace
 const os = require('os')
+const fs = require('fs')
 
 const {restoreFocus, saveFocus} = require('./native/windows')
+const {evaWorkHome} = require('./initialize')
 
 function isWindows() {
   return process.platform === 'win32'
@@ -76,6 +78,16 @@ const buildLine = (title, subTitle = '', action = new Function()) => {
   }
 }
 
+const saveConfig = (configName, config) => {
+  fs.writeFileSync(`${evaWorkHome}/${configName}.json`, JSON.stringify(config, null, 2))
+}
+
+const getConfig = (configName) => {
+  let configPath = `${evaWorkHome}/${configName}.json`;
+  const exist = fs.existsSync(configPath)
+  if (!exist) fs.writeFileSync(configPath, '{}')
+  return JSON.parse(fs.readFileSync(configPath).toString())
+}
 
 module.exports = {
   isWindows: isWindows(),
@@ -85,5 +97,7 @@ module.exports = {
   logger: initLogger(logLevel),
   restoreFocus,
   saveFocus,
-  buildLine
+  buildLine,
+  saveConfig,
+  getConfig
 }
