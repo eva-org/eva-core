@@ -7,7 +7,15 @@ let config
 
 let initialized = false
 
-function initAndGetData(pluginContext) {
+glob.promise = function (pattern, options) {
+  return new Promise(function (resolve, reject) {
+    const g = new glob.Glob(pattern, options)
+    g.once('end', resolve)
+    g.once('error', reject)
+  })
+}
+
+async function initAndGetData(pluginContext) {
   const {utils: {isMac, isWindows, isLinux, logger, getConfig, saveConfig}} = pluginContext
 
   config = getConfig('FindApp')
@@ -25,16 +33,14 @@ function initAndGetData(pluginContext) {
     }
     saveConfig('findApp', config)
   }
-  return new Promise(resolve => {
-    config.patterns.forEach(pattern => {
-      glob(pattern, (err, file) => {
-        files = files.concat(file.toString().split(','))
-        initialized = true
-      })
+
+  for (const pattern of config.patterns) {
+    await glob.promise(pattern, (err, file) => {
+      files = files.concat((file.toString().split(',')))
     })
-    console.log(files)
-    resolve(getData(pluginContext))
-  })
+  }
+  initialized = true
+  return getData(pluginContext)
 }
 
 const getData = ({query}) => {
