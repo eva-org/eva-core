@@ -26,7 +26,6 @@ function initAndGetData(pluginContext) {
     }
     patterns.forEach(pattern => {
       glob(pattern, (err, file) => {
-        console.trace(file)
         files = files.concat(file.toString().split(','))
         initialized = true
       })

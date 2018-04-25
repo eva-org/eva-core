@@ -76,6 +76,7 @@ const buildLine = (title, subTitle = '', action = new Function()) => {
   }
 }
 
+
 module.exports = {
   isWindows: isWindows(),
   isLinux: isLinux(),
