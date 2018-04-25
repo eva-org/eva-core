@@ -1,5 +1,7 @@
 global.evaSpace = {
-  ...require('./config.json'),
+  config: {
+    ...require('./config.json')
+  },
   ...require('./global.js')
 }
 
@@ -29,7 +31,7 @@ app.on('ready', () => {
     logger.error(e)
   }
   logger.trace('创建Eva窗口')
-  evaWindow = createEvaWindow(evaSpace.width, evaSpace.height, evaSpace.opacity)
+  evaWindow = createEvaWindow(evaSpace.config.width, evaSpace.config.height, evaSpace.config.opacity)
 
   evaWindow.on('blur', () => hideWindow())
 
@@ -49,7 +51,7 @@ app.on('ready', () => {
 function changeBoxNum(num) {
   if (num > 5) num = 5
   const h = 50
-  evaWindow.setSize(evaSpace.width, +evaSpace.height + h * num)
+  evaWindow.setSize(evaSpace.config.width, +evaSpace.config.height + h * num)
 }
 
 function action(event, index) {

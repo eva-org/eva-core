@@ -52,7 +52,7 @@ const getData = ({query}) => {
           child_process.exec(`${command}${fileUri}`)
         }
       }
-    });
+    })
     resolve(resultArr)
   })
 }
