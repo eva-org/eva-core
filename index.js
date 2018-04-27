@@ -23,6 +23,7 @@ let mainWindow
 let queryResult
 
 function registerGlobalShortcut() {
+  logger.trace('注册全局快捷键')
   let registerSuccess = globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+M失败')
   registerSuccess = globalShortcut.register('Alt+Space', () => switchWindowShown())
@@ -44,7 +45,6 @@ app.on('ready', () => {
 
   evaWindow.on('blur', () => hideWindow())
 
-  logger.trace('注册全局快捷键')
   registerGlobalShortcut()
   ipcMain.on('box-input-esc', () => hideWindow())
   ipcMain.on('hide-main-window', () => hideWindow())
