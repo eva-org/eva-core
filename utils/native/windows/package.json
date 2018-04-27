@@ -1,5 +1,5 @@
 {
-  "name": "hook windows",
+  "name": "hookWindows",
   "version": "0.0.1",
   "description": "utility functions to provide a bridge to Windows API",
   "main": "index.js",
