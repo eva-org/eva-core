@@ -20,5 +20,5 @@ sync
 .cache
 extend_plugin/Youdao/config.json
 
-utils/native/windows/build
+build
 package
