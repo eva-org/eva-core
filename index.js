@@ -10,7 +10,7 @@ const utils = require('./utils/index.js')
 const PluginLoader = require('./loaders/PluginLoader/index.js')
 const {isMac, isWindows, saveFocus, logger, restoreFocus} = require('./utils/index.js')
 const {initEva} = require('./utils/initialize.js')
-const {app, globalShortcut, ipcMain} = electron
+const {app, globalShortcut, ipcMain, Notification} = electron
 const {createEvaWindow, createMainWindow} = require('./loaders/WindowLoader/index.js')
 
 logger.trace('开始初始化App')
@@ -21,6 +21,15 @@ const plugins = PluginLoader()
 let evaWindow
 let mainWindow
 let queryResult
+
+function registerGlobalShortcut() {
+  let registerSuccess = globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
+  if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+M失败')
+  registerSuccess = globalShortcut.register('Alt+Space', () => switchWindowShown())
+  if (!registerSuccess) logger.error('注册快捷键Alt+Space失败')
+  registerSuccess = globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
+  if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+Alt+M失败')
+}
 
 app.on('ready', () => {
   logger.trace('App已经就绪')
@@ -36,9 +45,7 @@ app.on('ready', () => {
   evaWindow.on('blur', () => hideWindow())
 
   logger.trace('注册全局快捷键')
-  globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
-  globalShortcut.register('Alt+Space', () => switchWindowShown())
-  globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
+  registerGlobalShortcut()
   ipcMain.on('box-input-esc', () => hideWindow())
   ipcMain.on('hide-main-window', () => hideWindow())
   ipcMain.on('box-input', boxInput)
