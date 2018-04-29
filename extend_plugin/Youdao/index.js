@@ -1,14 +1,8 @@
-const child_process = require('child_process')
-const os = require('os')
+const clipboard = require('electron').clipboard
+
 const axios = require('axios')
 const {appKey, appSecret} = require('./config.json')
 if (!appKey || !appSecret) return
-// 存入剪切板 mac xos
-const pbcopyMac = (data) => {
-  const proc = require('child_process').spawn('pbcopy')
-  proc.stdin.write(data)
-  proc.stdin.end()
-}
 
 const md5 = (str) => {
   const cr = require('crypto')
@@ -20,13 +14,16 @@ const md5 = (str) => {
 const buildLine = (title, subTitle = '') => {
   return {
     title,
-    subTitle
+    subTitle,
+    action() {
+      clipboard.writeText(title)
+    }
   }
 }
 
 let timeout
 
-function getData ({query, utils: {logger}}) {
+function getData({query, utils: {logger}}) {
   if (timeout) clearTimeout(timeout)
   return new Promise(resolve => {
     timeout = setTimeout(() => {
