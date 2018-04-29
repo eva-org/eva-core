@@ -1,0 +1,14 @@
+{
+  "name": "mac-bundle-util",
+  "version": "0.0.1",
+  "description": "A utility library for getting bundle informations on macOS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Heejin Lee <monster@teamappetizer.com>",
+  "license": "MIT",
+  "dependencies": {
+    "nan": "^2.5.1"
+  }
+}
