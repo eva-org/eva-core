@@ -3,6 +3,26 @@ const {BrowserWindow} = electron
 
 const path = require('path')
 const url = require('url')
+import { app, BrowserWindow, Menu } from 'electron'
+var template = [{
+  label: "Application",
+  submenu: [
+    { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
+    { type: "separator" },
+    { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
+  ]}, {
+  label: "Edit",
+  submenu: [
+    { label: "Undo", accelerator: "CommandOrControl+Z", selector: "undo:" },
+    { label: "Redo", accelerator: "Shift+CommandOrControl+Z", selector: "redo:" },
+    { type: "separator" },
+    { label: "Cut", accelerator: "CommandOrControl+X", selector: "cut:" },
+    { label: "Copy", accelerator: "CommandOrControl+C", selector: "copy:" },
+    { label: "Paste", accelerator: "CommandOrControl+V", selector: "paste:" },
+    { label: "Select All", accelerator: "CommandOrControl+A", selector: "selectAll:" }
+  ]}
+]
+Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
 function createMainWindow() {
   return new BrowserWindow({
