@@ -18,7 +18,7 @@ sync
 .uglify
 .cache-loader
 .cache
-extend_plugin/Youdao/config.json
+src/extend_plugin/Youdao/config.json
 
 build
 package
