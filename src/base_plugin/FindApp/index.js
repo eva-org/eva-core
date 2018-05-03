@@ -16,10 +16,13 @@ glob.promise = function (pattern, options) {
 }
 
 async function initAndGetData(pluginContext) {
+  initialized = true
   const {utils: {isMac, isWindows, isLinux, logger, getConfig, saveConfig}} = pluginContext
 
   config = getConfig('FindApp')
+  logger.trace(config)
   if (!config.patterns) {
+    logger.error('Error')
     if (isMac) {
       config.patterns = ['/Applications/**.app', `${os.homedir()}/Downloads/**.**`]
       config.command = 'open '
@@ -39,7 +42,6 @@ async function initAndGetData(pluginContext) {
       files = files.concat((file.toString().split(',')))
     })
   }
-  initialized = true
   return getData(pluginContext)
 }
 

@@ -26,7 +26,7 @@ function registerGlobalShortcut() {
   logger.trace('注册全局快捷键')
   let registerSuccess = globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+M失败')
-  registerSuccess = globalShortcut.register('Alt+Space', () => switchWindowShown())
+  registerSuccess = globalShortcut.register('CommandOrControl+\\', () => switchWindowShown())
   if (!registerSuccess) logger.error('注册快捷键Alt+Space失败')
   registerSuccess = globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+Alt+M失败')
