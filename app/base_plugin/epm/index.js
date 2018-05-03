@@ -1,4 +1,11 @@
-const download = async ({query}) => {
+const execute = async ({query}) => {
+
+  if (!query) return false
+  const opt = query.split(' ')
+  if (opt.length === 1) {
+    const option = opt[0]
+
+  }
   return [{
     title: `EvaPackageManager:${query}`,
     subTitle: 'EvaPackageManager',
@@ -11,6 +18,6 @@ module.exports = {
   name: 'EvaPackageManager',
   quick: 'epm',
   async query(pluginContext) {
-    return download(pluginContext)
+    return execute(pluginContext)
   }
 }

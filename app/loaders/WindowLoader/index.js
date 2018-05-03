@@ -1,9 +1,8 @@
 const electron = require('electron')
-const {BrowserWindow} = electron
+const {BrowserWindow, Menu, app} = electron
 
 const path = require('path')
 const url = require('url')
-import { app, BrowserWindow, Menu } from 'electron'
 var template = [{
   label: "Application",
   submenu: [
