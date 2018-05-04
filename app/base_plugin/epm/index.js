@@ -1,3 +1,4 @@
+const child_process = require('child_process')
 const execute = async ({query}) => {
 
   if (!query) return []
@@ -9,6 +10,8 @@ const execute = async ({query}) => {
       title: `安装插件:${optQuery || ''}`,
       subTitle: 'EvaPackageManager',
       action() {
+        const pluginName = optQuery.substr(optQuery.lastIndexOf('/') + 1)
+        child_process.exec(`git clone ${optQuery} C:\\Users\\hanzi\\.eva\\plugins\\${pluginName}`)
       }
     }]
   } else if (option === 'remove' || option === 'uninstall') {
