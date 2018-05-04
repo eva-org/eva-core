@@ -1,4 +1,6 @@
 const child_process = require('child_process')
+const fs = require('fs')
+
 const execute = async ({query}) => {
 
   if (!query) return []
@@ -19,6 +21,8 @@ const execute = async ({query}) => {
       title: `移除插件:${optQuery || ''}`,
       subTitle: 'EvaPackageManager',
       action() {
+        // TODO 删除非空目录
+        fs.rmdir(`${evaSpace.evaWorkHome}\\plugins\\${optQuery}`)
       }
     }]
   }
