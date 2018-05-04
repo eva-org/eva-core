@@ -5,12 +5,11 @@ global.evaSpace = {
   ...require('./global.js')
 }
 
-const electron = require('electron')
 const utils = require('./utils/index.js')
 const PluginLoader = require('./loaders/PluginLoader/index.js')
 const {isMac, isWindows, saveFocus, logger, restoreFocus} = require('./utils/index.js')
 const {initEva} = require('./utils/initialize.js')
-const {app, globalShortcut, ipcMain, Notification} = electron
+const {app, globalShortcut, ipcMain} = require('electron')
 const {createEvaWindow, createMainWindow} = require('./loaders/WindowLoader/index.js')
 
 logger.trace('开始初始化App')
@@ -27,7 +26,7 @@ function registerGlobalShortcut() {
   let registerSuccess = globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+M失败')
   registerSuccess = globalShortcut.register('CommandOrControl+\\', () => switchWindowShown())
-  if (!registerSuccess) logger.error('注册快捷键Alt+Space失败')
+  if (!registerSuccess) logger.error('注册快捷键CommandOrControl+\\失败')
   registerSuccess = globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+Alt+M失败')
 }
