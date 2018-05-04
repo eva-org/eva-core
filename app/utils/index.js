@@ -1,9 +1,10 @@
 const {logLevel} = evaSpace
 const os = require('os')
 const fs = require('fs')
+const path = require('path')
 
 const {restoreFocus, saveFocus} = require('./native/windows')
-const {evaWorkHome} = require('./initialize')
+const evaWorkHome = evaSpace.evaWorkHome
 
 function isWindows() {
   return process.platform === 'win32'
@@ -79,15 +80,28 @@ const buildLine = (title, subTitle = '', action = new Function()) => {
 }
 
 const saveConfig = (configName, config) => {
-  fs.writeFileSync(`${evaWorkHome}/${configName}.json`, JSON.stringify(config, null, 2))
+  fs.writeFileSync(`${evaWorkHome}${configName}.json`, JSON.stringify(config, null, 2))
 }
 
 const getConfig = (configName) => {
-  let configPath = `${evaWorkHome}/${configName}.json`
+  let configPath = `${evaWorkHome}${configName}.json`
   const exist = fs.existsSync(configPath)
   if (!exist) fs.writeFileSync(configPath, '{}')
   return JSON.parse(fs.readFileSync(configPath).toString())
 }
+
+const createFolder = (to) => { //文件写入
+  const sep = path.sep
+  const folders = path.dirname(to).split(sep);
+  console.log(folders)
+  let p = '';
+  while (folders.length) {
+    p += folders.shift() + sep;
+    if (!fs.existsSync(p)) {
+      fs.mkdirSync(p);
+    }
+  }
+};
 
 module.exports = {
   isWindows: isWindows(),
@@ -99,5 +113,6 @@ module.exports = {
   saveFocus,
   buildLine,
   saveConfig,
-  getConfig
+  getConfig,
+  createFolder
 }

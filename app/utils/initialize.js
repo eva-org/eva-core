@@ -2,7 +2,7 @@ const os = require('os')
 const fs = require('fs')
 
 const evaWorkHome = `${os.homedir()}/.eva`
-let userConfigFilePath = `${evaWorkHome}/config.json`
+let userConfigFilePath = `${evaWorkHome}config.json`
 
 function createConfigFile() {
   const exist = fs.existsSync(userConfigFilePath)
@@ -16,7 +16,8 @@ const initEva = () => {
 
   evaSpace.config = {
     ...evaSpace.config,
-    ...require(userConfigFilePath)
+    ...require(userConfigFilePath),
+    evaWorkHome
   }
 }
 

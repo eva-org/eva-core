@@ -1,15 +1,17 @@
+const os = require('os')
 global.evaSpace = {
   config: {
     ...require('./config.json')
   },
-  ...require('./global.js')
+  ...require('./global.js'),
+  evaWorkHome: `${os.homedir()}/.eva/`
 }
 
 const electron = require('electron')
 const utils = require('./utils/index.js')
+const {initEva} = require('./utils/initialize.js')
 const PluginLoader = require('./loaders/PluginLoader/index.js')
 const {isMac, isWindows, saveFocus, logger, restoreFocus} = require('./utils/index.js')
-const {initEva} = require('./utils/initialize.js')
 const {app, globalShortcut, ipcMain, Notification} = electron
 const {createEvaWindow, createMainWindow} = require('./loaders/WindowLoader/index.js')
 
@@ -30,6 +32,12 @@ function registerGlobalShortcut() {
   if (!registerSuccess) logger.error('注册快捷键Alt+Space失败')
   registerSuccess = globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+Alt+M失败')
+  // registerSuccess = globalShortcut.register('CommandOrControl+C',()=>{
+  //   const {clipboard} = require('electron')
+  //   clipboard.writeText('Example String', 'selection')
+  //   console.log(clipboard.readText('selection'))
+  // })
+  // if(!registerSuccess) logger.error()
 }
 
 app.on('ready', () => {
