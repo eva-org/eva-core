@@ -43,7 +43,7 @@ app.on('ready', () => {
   logger.trace('创建Eva窗口')
   evaWindow = createEvaWindow(evaSpace.config.width, evaSpace.config.height, evaSpace.config.opacity)
 
-  evaWindow.on('blur', () => hideWindow())
+  // evaWindow.on('blur', () => hideWindow())
 
   registerGlobalShortcut()
   ipcMain.on('box-input-esc', () => hideWindow())

@@ -3,13 +3,14 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "pa:win": "electron-packager ./src Eva --win --asar --arch=x64 --out=./package --app-version=0.0.1 --overwrite --ignore=\"(.gitignore|yarn.lock|yarn-error.log|.idea)\"",
-    "pa:mac": "electron-packager . Eva --darwin --arch=x64 --out=./package --app-version=0.0.1 --overwrite --icon=./icon.icns --ignore=\"(.gitignore|yarn.lock|yarn-error.log|.idea)\"",
+    "pa:win": "electron-packager ./app Eva --win --asar --arch=x64 --out=./package --app-version=0.0.1 --overwrite --ignore=\"(.gitignore|yarn.lock|yarn-error.log|.idea)\"",
+    "pa:mac": "electron-packager ./app Eva --darwin --arch=x64 --out=./package --app-version=0.0.1 --overwrite --icon=./icon.icns --ignore=\"(.gitignore|yarn.lock|yarn-error.log|.idea)\"",
     "pa": "pa:mac && pa:win"
   },
   "author": "",
   "devDependencies": {
     "asar": "^0.14.3",
+    "electron": "^2.0.0-beta.7",
     "electron-packager": "^12.0.1"
   }
 }

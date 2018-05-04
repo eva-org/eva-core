@@ -23,7 +23,8 @@ const execute = async ({query}) => {
 }
 
 module.exports = {
-  name: 'EvaPackageManager',
+  pluginId: '',
+  name: 'ClipboardPro',
   quick: 'epm',
   async query(pluginContext) {
     return execute(pluginContext)

@@ -20,7 +20,6 @@ async function initAndGetData(pluginContext) {
   const {utils: {isMac, isWindows, isLinux, logger, getConfig, saveConfig}} = pluginContext
 
   config = getConfig('FindApp')
-  logger.trace(config)
   if (!config.patterns) {
     logger.error('Error')
     if (isMac) {

@@ -42,7 +42,7 @@ body {
 
 input {
     margin: 0;
-    padding: 5px;
+    padding: 5px 66px 5px 5px;
     outline: none;
     border: none;
     height: 60px;
