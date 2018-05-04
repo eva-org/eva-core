@@ -1,11 +1,14 @@
 const path = require('path')
-module.exports = () => {
+module.exports = (utils) => {
   const baseArr = getPluginFromDir(path.join(evaSpace.ROOT_DIR, 'base_plugin'))
   console.trace('基础插件加载完毕.')
   const extendArr = getPluginFromDir(path.join(evaSpace.ROOT_DIR, 'extend_plugin'))
   console.trace('扩展插件加载完毕.')
   const allPlugin = baseArr.concat(extendArr)
-  console.trace('检查自动执行插件')
+  allPlugin.forEach(p => {
+    console.trace(`初始化插件: ${p.name}`)
+    p.init && new Promise(resolve => resolve(p.init(utils))).catch(reason => console.error(reason))
+  })
   return allPlugin
 }
 

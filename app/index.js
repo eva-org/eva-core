@@ -12,14 +12,16 @@ const utils = require('./utils/index.js')
 const {initEva} = require('./utils/initialize.js')
 const PluginLoader = require('./loaders/PluginLoader/index.js')
 const {isMac, isWindows, saveFocus, logger, restoreFocus} = require('./utils/index.js')
-const {app, globalShortcut, ipcMain, Notification} = electron
+const {app, globalShortcut, ipcMain} = electron
 const {createEvaWindow, createMainWindow} = require('./loaders/WindowLoader/index.js')
 
 logger.trace('开始初始化App')
 initEva()
 
 // 插件加载器
-const plugins = PluginLoader()
+const plugins = PluginLoader(utils)
+const commonPlugins = plugins.filter(plugin => plugin.quick === '*')
+
 let evaWindow
 let mainWindow
 let queryResult
@@ -29,7 +31,7 @@ function registerGlobalShortcut() {
   let registerSuccess = globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+M失败')
   registerSuccess = globalShortcut.register('CommandOrControl+\\', () => switchWindowShown())
-  if (!registerSuccess) logger.error('注册快捷键Alt+Space失败')
+  if (!registerSuccess) logger.error('注册快捷键CommandOrControl+\\失败')
   registerSuccess = globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+Alt+M失败')
   // registerSuccess = globalShortcut.register('CommandOrControl+C',()=>{
@@ -75,9 +77,6 @@ function action(event, index) {
   changeBoxNum(0)
 }
 
-
-const commonPlugins = plugins.filter(plugin => plugin.quick === '*')
-
 async function executeCommonPlugin(input) {
   const queryPromises = commonPlugins.map(plugin => plugin.query({
     query: input,
@@ -91,7 +90,7 @@ async function executeCommonPlugin(input) {
   return queryResult
 }
 
-function findSuitablePlugin(plugins, quickName) {
+function findSuitablePlugin(quickName) {
   return plugins.find(plugin => plugin.quick === quickName)
 }
 
@@ -116,7 +115,7 @@ function boxInput(event, input) {
   }
 
   const [quickName, ...values] = input.split(' ')
-  const suitablePlugin = findSuitablePlugin(plugins, quickName)
+  const suitablePlugin = findSuitablePlugin(quickName)
   if (!suitablePlugin) {
     return returnValue(event, input, executeCommonPlugin(input))
   }
@@ -126,16 +125,18 @@ function boxInput(event, input) {
 }
 
 function returnValue(event, input, resultPromise) {
-  resultPromise.then(result => {
-    // 如果本次回调对应的input不是最新输入，则忽略
-    if (input !== lastedInput) return clearQueryResult(event)
+  resultPromise
+      .then(result => {
+        // 如果本次回调对应的input不是最新输入，则忽略
+        if (input !== lastedInput) return clearQueryResult(event)
 
-    if (result.length) clearQueryResult(event)
-    changeBoxNum(result.length)
-    event.sender.send('query-result', result)
-    // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
-    queryResult = result
-  })
+        if (result.length) clearQueryResult(event)
+        changeBoxNum(result.length)
+        event.sender.send('query-result', result)
+        // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
+        queryResult = result
+      })
+      .catch(reason => logger.error(reason))
 }
 
 function clearQueryResult(event) {

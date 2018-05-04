@@ -1,8 +1,6 @@
 const clipboard = require('electron').clipboard
 
 const axios = require('axios')
-const {appKey, appSecret} = require('./config.json')
-if (!appKey || !appSecret) return
 
 const md5 = (str) => {
   const cr = require('crypto')
@@ -22,6 +20,7 @@ const buildLine = (title, subTitle = '') => {
 }
 
 let timeout
+let appKey, appSecret
 
 function getData({query, utils: {logger}}) {
   if (timeout) clearTimeout(timeout)
@@ -30,6 +29,8 @@ function getData({query, utils: {logger}}) {
       const salt = new Date().getTime()
       // appKey+q+salt+密钥
       const sign = md5(appKey + query + salt + appSecret)
+      if (!appKey || !appSecret) return resolve([buildLine('未配置AppKey或者AppSecret', '请正确配置AppKey或者AppSecret')])
+
       const request = `http://openapi.youdao.com/api?q=${encodeURIComponent(query)}&appKey=${appKey}&from=auto&to=auto&salt=${salt}&sign=${sign}`
       axios.get(request).then((res) => {
         const resultList = []
@@ -60,7 +61,7 @@ function getData({query, utils: {logger}}) {
         }
         resolve(resultList)
       })
-    }, 500)
+    }, 200)
   })
 }
 
@@ -72,6 +73,11 @@ module.exports = {
   name: 'YouDao',
   quick: 'yd',
   icon: '',
+  init() {
+    const config = require('./config.json')
+    appKey = config.appKey
+    appSecret = config.appSecret
+  },
   query: (pluginContext) => {
     return getData(pluginContext)
   }
