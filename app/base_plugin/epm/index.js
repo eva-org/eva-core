@@ -11,7 +11,7 @@ const execute = async ({query}) => {
       subTitle: 'EvaPackageManager',
       action() {
         const pluginName = optQuery.substr(optQuery.lastIndexOf('/') + 1)
-        child_process.exec(`git clone ${optQuery} ${evaSpace.evaWorkHome}\\${pluginName}`)
+        child_process.exec(`git clone ${optQuery} ${evaSpace.evaWorkHome}\\plugins\\${pluginName}`)
       }
     }]
   } else if (option === 'remove' || option === 'uninstall') {
