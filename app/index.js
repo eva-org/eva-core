@@ -68,8 +68,6 @@ function action(event, index) {
   changeBoxNum(0)
 }
 
-
-
 async function executeCommonPlugin(input) {
   const queryPromises = commonPlugins.map(plugin => plugin.query({
     query: input,
@@ -118,16 +116,18 @@ function boxInput(event, input) {
 }
 
 function returnValue(event, input, resultPromise) {
-  resultPromise.then(result => {
-    // 如果本次回调对应的input不是最新输入，则忽略
-    if (input !== lastedInput) return clearQueryResult(event)
+  resultPromise
+      .then(result => {
+        // 如果本次回调对应的input不是最新输入，则忽略
+        if (input !== lastedInput) return clearQueryResult(event)
 
-    if (result.length) clearQueryResult(event)
-    changeBoxNum(result.length)
-    event.sender.send('query-result', result)
-    // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
-    queryResult = result
-  })
+        if (result.length) clearQueryResult(event)
+        changeBoxNum(result.length)
+        event.sender.send('query-result', result)
+        // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
+        queryResult = result
+      })
+      .catch(reason => logger.error(reason))
 }
 
 function clearQueryResult(event) {

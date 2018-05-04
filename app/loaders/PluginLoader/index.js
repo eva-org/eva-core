@@ -7,7 +7,7 @@ module.exports = (utils) => {
   const allPlugin = baseArr.concat(extendArr)
   allPlugin.forEach(p => {
     console.trace(`初始化插件: ${p.name}`)
-    p.init && p.init(utils)
+    p.init && new Promise(resolve => resolve(p.init(utils))).catch(reason => console.error(reason))
   })
   return allPlugin
 }
