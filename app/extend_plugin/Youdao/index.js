@@ -60,7 +60,7 @@ function getData({query, utils: {logger}}) {
         }
         resolve(resultList)
       })
-    }, 500)
+    }, 300)
   })
 }
 

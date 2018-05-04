@@ -16,7 +16,9 @@ logger.trace('开始初始化App')
 initEva()
 
 // 插件加载器
-const plugins = PluginLoader()
+const plugins = PluginLoader(utils)
+const commonPlugins = plugins.filter(plugin => plugin.quick === '*')
+
 let evaWindow
 let mainWindow
 let queryResult
@@ -67,7 +69,6 @@ function action(event, index) {
 }
 
 
-const commonPlugins = plugins.filter(plugin => plugin.quick === '*')
 
 async function executeCommonPlugin(input) {
   const queryPromises = commonPlugins.map(plugin => plugin.query({
@@ -82,7 +83,7 @@ async function executeCommonPlugin(input) {
   return queryResult
 }
 
-function findSuitablePlugin(plugins, quickName) {
+function findSuitablePlugin(quickName) {
   return plugins.find(plugin => plugin.quick === quickName)
 }
 
@@ -107,7 +108,7 @@ function boxInput(event, input) {
   }
 
   const [quickName, ...values] = input.split(' ')
-  const suitablePlugin = findSuitablePlugin(plugins, quickName)
+  const suitablePlugin = findSuitablePlugin(quickName)
   if (!suitablePlugin) {
     return returnValue(event, input, executeCommonPlugin(input))
   }
