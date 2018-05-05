@@ -18,6 +18,20 @@ Launcher for all plantforms, an alternative to Alfred and Wox.
     * `bd`: Baidu
     * `yd`: Youdao
     
+## Plugin
+### Install Plugin
+1. `Ctrl + \` to active `Eva`.
+2. Input `epm add {plugin url}` and enter.
+
+Example: `epm add https://github.com/eva-org/eva-plugin-youdao`
+
+### Uninstall Plugin
+1. `Ctrl + \` to active `Eva`.
+2. Input `epm remove {plugin name}` and enter.
+
+Example: `epm remove eva-plugin-youdao`
+
+    
 ## LICENSE
 * code-license : Apache License 2.0 http://www.apache.org/licenses/LICENSE-2.0 
 * non-software-license : CC BY-NC-SA 2.5 http://creativecommons.org/licenses/by-nc-sa/2.5/

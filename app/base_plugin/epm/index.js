@@ -1,5 +1,6 @@
 const child_process = require('child_process')
 const rimraf = require('rimraf')
+const fs = require('fs')
 
 const execute = async ({query}) => {
   if (!query) return []
@@ -12,7 +13,10 @@ const execute = async ({query}) => {
       subTitle: 'EvaPackageManager',
       action() {
         const pluginName = optQuery.substr(optQuery.lastIndexOf('/') + 1)
-        child_process.exec(`git clone ${optQuery} ${evaSpace.evaWorkHome}\\plugins\\${pluginName}`)
+        const pluginDirPath = `${evaSpace.evaWorkHome}\\plugins`
+        if (!fs.existsSync(pluginDirPath)) fs.mkdirSync(pluginDirPath)
+
+        child_process.exec(`git clone ${optQuery} ${pluginDirPath}\\${pluginName}`)
       }
     }]
   } else if (option === 'remove' || option === 'uninstall') {
