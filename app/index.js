@@ -35,12 +35,6 @@ function registerGlobalShortcut() {
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+\\失败')
   registerSuccess = globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+Alt+M失败')
-  // registerSuccess = globalShortcut.register('CommandOrControl+C',()=>{
-  //   const {clipboard} = require('electron')
-  //   clipboard.writeText('Example String', 'selection')
-  //   console.log(clipboard.readText('selection'))
-  // })
-  // if(!registerSuccess) logger.error()
 }
 
 app.on('ready', () => {
@@ -54,7 +48,7 @@ app.on('ready', () => {
   logger.trace('创建Eva窗口')
   evaWindow = createEvaWindow(evaSpace.config.width, evaSpace.config.height, evaSpace.config.opacity)
 
-  // evaWindow.on('blur', () => hideWindow())
+  evaWindow.on('blur', () => hideWindow())
 
   registerGlobalShortcut()
   ipcMain.on('box-input-esc', () => hideWindow())
