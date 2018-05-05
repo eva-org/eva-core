@@ -8,7 +8,7 @@
 <body>
 <div id="app">
     <div>
-        <input id="boxInput" autofocus="autofocus" v-model="input"
+        <input ref="boxInput" autofocus="autofocus" v-model="input"
                @keydown.enter="enter" @keydown.esc="esc" @keydown.up.prevent="up" @keydown.down.prevent="down" @blur="blur">
         <div>
             <img class="icon" src="search-icon.png">
@@ -79,7 +79,7 @@
     }
   })
 
-  ipcRenderer.on('clear-box-input-event', () => vue.$data.input = '')
+  ipcRenderer.on('select-box-input', () => vue.$refs.boxInput.select())
   ipcRenderer.on('clear-query-result', () => vue.$data.queryResult = [])
   ipcRenderer.on('query-result', (event, queryResult) => {
     vue.$data.queryResult = queryResult

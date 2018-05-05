@@ -77,8 +77,7 @@ function action(event, index) {
     queryResult[index].action()
     resolve()
   }).then(() => {
-    event.sender.send('clear-box-input-event')
-    changeBoxNum(0)
+    event.sender.send('select-box-input')
   }).catch(reason => {
     logger.error(reason)
   })
