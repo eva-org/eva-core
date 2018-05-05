@@ -29,13 +29,11 @@ function fetchFileIconAsPng(filePath, callback) {
 }
 
 function saveFocus() {
-  console.trace('saveFocus')
   native.saveFocus()
 }
 
 
 function restoreFocus() {
-  console.trace('restoreFocus')
   native.restoreFocus()
 }
 
