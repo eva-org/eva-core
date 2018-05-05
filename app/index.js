@@ -73,9 +73,15 @@ function changeBoxNum(num) {
 }
 
 function action(event, index) {
-  queryResult[index].action()
-  event.sender.send('clear-box-input-event')
-  changeBoxNum(0)
+  new Promise((resolve) => {
+    queryResult[index].action()
+    resolve()
+  }).then(() => {
+    event.sender.send('clear-box-input-event')
+    changeBoxNum(0)
+  }).catch(reason => {
+    logger.error(reason)
+  })
 }
 
 async function executeCommonPlugin(input) {
