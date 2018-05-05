@@ -5,7 +5,7 @@
 </p>
 <h2 align="center">Eva</h2>
 
-Launcher for all plantforms, an alternative to Alfred and Wox.
+Launcher for Windows & OSX plantforms, an alternative to Alfred and Wox.
 
 ## Usage
 * Press `alt+space` to show/hide the window
