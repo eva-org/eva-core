@@ -1,4 +1,9 @@
-# Eva
+<p align="center"><a href="https://github.com/eva-org/eva-core" target="_blank" rel="noopener noreferrer"><img width="100" src="https://avatars3.githubusercontent.com/u/38346132" alt="Eva logo"></a></p>
+<p align="center">
+  <a href="https://travis-ci.org/eva-org/eva-core"><img src="https://travis-ci.org/eva-org/eva-core.svg?branch=master" alt="Build Status"></a>
+</p>
+<h2 align="center">Eva</h2>
+
 Launcher for all plantforms, an alternative to Alfred and Wox.
 
 ## Usage
