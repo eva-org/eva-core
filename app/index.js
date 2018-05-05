@@ -1,10 +1,11 @@
 const os = require('os')
+const {sep} = require('path')
 global.evaSpace = {
   config: {
     ...require('./config.json')
   },
   ...require('./global.js'),
-  evaWorkHome: `${os.homedir()}/.eva/`
+  evaWorkHome: `${os.homedir()}${sep}.eva${sep}`
 }
 
 const electron = require('electron')
