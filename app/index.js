@@ -25,7 +25,7 @@ const commonPlugins = plugins.filter(plugin => plugin.quick === '*')
 
 let evaWindow
 let mainWindow
-let queryResult
+let queryResult = []
 
 function registerGlobalShortcut() {
   logger.trace('注册全局快捷键')
@@ -67,11 +67,12 @@ function changeBoxNum(num) {
 }
 
 function action(event, index) {
+  if (queryResult.length <= 0) return
   new Promise((resolve) => {
     queryResult[index].action()
     resolve()
   }).then(() => {
-    event.sender.send('select-box-input')
+    event.sender.send('action-exec-success')
   }).catch(reason => {
     logger.error(reason)
   })
@@ -126,17 +127,17 @@ function boxInput(event, input) {
 
 function returnValue(event, input, resultPromise) {
   resultPromise
-      .then(result => {
-        // 如果本次回调对应的input不是最新输入，则忽略
-        if (input !== lastedInput) return clearQueryResult(event)
+    .then(result => {
+      // 如果本次回调对应的input不是最新输入，则忽略
+      if (input !== lastedInput) return clearQueryResult(event)
 
-        if (result.length) clearQueryResult(event)
-        changeBoxNum(result.length)
-        event.sender.send('query-result', result)
-        // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
-        queryResult = result
-      })
-      .catch(reason => logger.error(reason))
+      if (result.length) clearQueryResult(event)
+      changeBoxNum(result.length)
+      event.sender.send('query-result', result)
+      // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
+      queryResult = result
+    })
+    .catch(reason => logger.error(reason))
 }
 
 function clearQueryResult(event) {

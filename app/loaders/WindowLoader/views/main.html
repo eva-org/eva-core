@@ -43,7 +43,6 @@
       },
       enter() {
         ipcRenderer.send('action', this.currIndex)
-        ipcRenderer.send('hide-main-window')
       },
       esc() {
         ipcRenderer.send('box-input-esc', this.input)
@@ -79,7 +78,10 @@
     }
   })
 
-  ipcRenderer.on('select-box-input', () => vue.$refs.boxInput.select())
+  ipcRenderer.on('action-exec-success', () => {
+    vue.$refs.boxInput.select()
+    ipcRenderer.send('hide-main-window')
+  })
   ipcRenderer.on('clear-query-result', () => vue.$data.queryResult = [])
   ipcRenderer.on('query-result', (event, queryResult) => {
     vue.$data.queryResult = queryResult
