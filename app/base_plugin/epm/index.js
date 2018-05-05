@@ -1,8 +1,7 @@
 const child_process = require('child_process')
-const fs = require('fs')
+const rimraf = require('rimraf')
 
 const execute = async ({query}) => {
-
   if (!query) return []
   const opt = query.split(' ')
   const option = opt[0]
@@ -21,8 +20,9 @@ const execute = async ({query}) => {
       title: `移除插件:${optQuery || ''}`,
       subTitle: 'EvaPackageManager',
       action() {
-        // TODO 删除非空目录
-        fs.rmdir(`${evaSpace.evaWorkHome}\\plugins\\${optQuery}`)
+        rimraf(`${evaSpace.evaWorkHome}\\plugins\\${optQuery}`, () => {
+          console.log(`${evaSpace.evaWorkHome}\\plugins\\${optQuery} Removed.`)
+        })
       }
     }]
   }
