@@ -93,7 +93,6 @@ const getConfig = (configName) => {
 const createFolder = (to) => { //文件写入
   const sep = path.sep
   const folders = path.dirname(to).split(sep);
-  console.log(folders)
   let p = '';
   while (folders.length) {
     p += folders.shift() + sep;
