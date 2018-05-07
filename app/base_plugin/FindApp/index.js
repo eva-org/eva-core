@@ -80,7 +80,7 @@ const getData = ({query}) => {
           } catch (e) {
             console.log(e)
           }
-          child_process.exec(`${config.command}${fileUri}`)
+          child_process.exec(`${config.command}"${fileUri}"`)
         }
       }
     })
