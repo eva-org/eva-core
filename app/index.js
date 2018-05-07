@@ -1,5 +1,6 @@
 const os = require('os')
 const {sep} = require('path')
+
 global.evaSpace = {
   config: {
     ...require('./config.json')
