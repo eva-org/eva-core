@@ -13,7 +13,7 @@ const utils = require('./utils/index.js')
 const {initEva} = require('./utils/initialize.js')
 const PluginLoader = require('./loaders/PluginLoader/index.js')
 const {isMac, isWindows, saveFocus, logger, restoreFocus} = require('./utils/index.js')
-const {app, globalShortcut, ipcMain} = electron
+const {app, globalShortcut, ipcMain, Tray} = electron
 const {createEvaWindow, createMainWindow} = require('./loaders/WindowLoader/index.js')
 
 logger.trace('开始初始化App')
@@ -25,6 +25,7 @@ const commonPlugins = plugins.filter(plugin => plugin.quick === '*')
 
 let evaWindow
 let mainWindow
+let tray
 let queryResult = []
 
 function registerGlobalShortcut() {
@@ -47,6 +48,8 @@ app.on('ready', () => {
   }
   logger.trace('创建Eva窗口')
   evaWindow = createEvaWindow(evaSpace.config.width, evaSpace.config.height, evaSpace.config.opacity)
+  tray = new Tray('./icon.ico')
+  tray.setToolTip('Eva')
 
   evaWindow.on('blur', () => hideWindow())
 
@@ -127,17 +130,17 @@ function boxInput(event, input) {
 
 function returnValue(event, input, resultPromise) {
   resultPromise
-    .then(result => {
-      // 如果本次回调对应的input不是最新输入，则忽略
-      if (input !== lastedInput) return clearQueryResult(event)
+      .then(result => {
+        // 如果本次回调对应的input不是最新输入，则忽略
+        if (input !== lastedInput) return clearQueryResult(event)
 
-      if (result.length) clearQueryResult(event)
-      changeBoxNum(result.length)
-      event.sender.send('query-result', result)
-      // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
-      queryResult = result
-    })
-    .catch(reason => logger.error(reason))
+        if (result.length) clearQueryResult(event)
+        changeBoxNum(result.length)
+        event.sender.send('query-result', result)
+        // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
+        queryResult = result
+      })
+      .catch(reason => logger.error(reason))
 }
 
 function clearQueryResult(event) {
