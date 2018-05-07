@@ -13,7 +13,7 @@ const electron = require('electron')
 const utils = require('./utils/index.js')
 const {initEva} = require('./utils/initialize.js')
 const PluginLoader = require('./loaders/PluginLoader/index.js')
-const {isMac, isWindows, saveFocus, logger, restoreFocus} = require('./utils/index.js')
+const {isMac, isWindows, PAS, saveFocus, logger, restoreFocus} = require('./utils/index.js')
 const {app, globalShortcut, ipcMain, Tray} = electron
 const {createEvaWindow, createMainWindow} = require('./loaders/WindowLoader/index.js')
 
@@ -37,6 +37,8 @@ function registerGlobalShortcut() {
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+\\失败')
   registerSuccess = globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+Alt+M失败')
+  registerSuccess = globalShortcut.register('CommandOrControl+Shift+Alt+R', () => restart())
+  if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+Alt+R失败')
 }
 
 app.on('ready', () => {
@@ -49,7 +51,7 @@ app.on('ready', () => {
   }
   logger.trace('创建Eva窗口')
   evaWindow = createEvaWindow(evaSpace.config.width, evaSpace.config.height, evaSpace.config.opacity)
-  tray = new Tray('./icon.ico')
+  tray = new Tray(PAS('./logo-1024-16x16@3x.png', './icon.ico'))
   tray.setToolTip('Eva')
 
   evaWindow.on('blur', () => hideWindow())
@@ -131,17 +133,17 @@ function boxInput(event, input) {
 
 function returnValue(event, input, resultPromise) {
   resultPromise
-      .then(result => {
-        // 如果本次回调对应的input不是最新输入，则忽略
-        if (input !== lastedInput) return clearQueryResult(event)
+    .then(result => {
+      // 如果本次回调对应的input不是最新输入，则忽略
+      if (input !== lastedInput) return clearQueryResult(event)
 
-        if (result.length) clearQueryResult(event)
-        changeBoxNum(result.length)
-        event.sender.send('query-result', result)
-        // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
-        queryResult = result
-      })
-      .catch(reason => logger.error(reason))
+      if (result.length) clearQueryResult(event)
+      changeBoxNum(result.length)
+      event.sender.send('query-result', result)
+      // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
+      queryResult = result
+    })
+    .catch(reason => logger.error(reason))
 }
 
 function clearQueryResult(event) {
@@ -167,4 +169,9 @@ function showWindow() {
 
 function switchWindowShown() {
   appIsVisible ? hideWindow() : showWindow()
+}
+
+function restart() {
+  app.relaunch({args: process.argv.slice(1).concat(['--relaunch'])})
+  app.exit(0)
 }

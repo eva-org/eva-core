@@ -101,7 +101,12 @@ const createFolder = (to) => { //文件写入
     }
   }
 };
-
+// platform args selector 平台参数选择器
+const PAS = (mac, win, linux) => {
+  if (isMac) return mac
+  else if (isWindows) return win
+  else if (isLinux) return linux
+}
 module.exports = {
   isWindows: isWindows(),
   isLinux: isLinux(),
@@ -113,5 +118,6 @@ module.exports = {
   buildLine,
   saveConfig,
   getConfig,
-  createFolder
+  createFolder,
+  PAS
 }
