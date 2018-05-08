@@ -42,7 +42,10 @@ async function initAndGetData(pluginContext) {
 
   for (const pattern of config.patterns) {
     await glob.promise(pattern, (err, file) => {
-      if (err) logger.error(err)
+      if (err) {
+        logger.error(err)
+        return
+      }
       files = files.concat(file.toString().split(',').filter(() => true))
     })
   }
