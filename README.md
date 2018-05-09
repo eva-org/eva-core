@@ -7,6 +7,10 @@
 
 Launcher for Windows & OSX plantforms, an alternative to Alfred and Wox.
 
+## Preview
+* Usage `command+\` or `ctrl+\`
+* Temporarily support three extensions, you can get there from https://github.com/eva-org
+
 ## Usage
 * Press `alt+space` to show/hide the window
 * Start typing a program name
