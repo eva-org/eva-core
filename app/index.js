@@ -1,5 +1,5 @@
 const os = require('os')
-const {sep} = require('path')
+const {sep, join} = require('path')
 
 global.evaSpace = {
   config: {
@@ -39,6 +39,8 @@ function registerGlobalShortcut() {
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+Alt+M失败')
   registerSuccess = globalShortcut.register('CommandOrControl+Shift+Alt+R', () => restart())
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+Alt+R失败')
+  registerSuccess = globalShortcut.register('CommandOrControl+Alt+P', () => app.quit())
+  if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Alt+P失败')
 }
 
 app.on('ready', () => {
@@ -51,7 +53,7 @@ app.on('ready', () => {
   }
   logger.trace('创建Eva窗口')
   evaWindow = createEvaWindow(evaSpace.config.width, evaSpace.config.height, evaSpace.config.opacity)
-  tray = new Tray(PAS('./logo-1024-16x16@3x.png', './icon.ico'))
+  tray = new Tray(PAS(join(evaSpace.ROOT_DIR, './logo-1024-16x16@3x.png'), './icon.ico'))
   tray.setToolTip('Eva')
 
   evaWindow.on('blur', () => hideWindow())
@@ -64,6 +66,11 @@ app.on('ready', () => {
   ipcMain.on('action', action)
   ipcMain.on('restore-box-height', () => changeBoxNum(0))
   logger.info('欢迎使用Eva!')
+  let myNotification = new electron.Notification({
+    title: 'Eva',
+    body: '你好人类，我将给予你帮助！'
+  })
+  myNotification.show()
 })
 
 function changeBoxNum(num) {
