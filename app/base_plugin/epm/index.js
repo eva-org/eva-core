@@ -2,7 +2,7 @@ const child_process = require('child_process')
 const rimraf = require('rimraf')
 const {sep} = require('path')
 
-const execute = async ({query}) => {
+const execute = async ({query, utils: {notice}}) => {
   if (!query) return []
   const opt = query.split(' ')
   const option = opt[0]
@@ -12,7 +12,7 @@ const execute = async ({query}) => {
       title: `安装插件:${optQuery || '请输入插件名称'}`,
       subTitle: 'EvaPackageManager',
       action() {
-        if(!optQuery) return
+        if (!optQuery) return
         let gitUrl = optQuery
         let pluginName
         if (optQuery.indexOf('http') < 0) {
@@ -25,6 +25,10 @@ const execute = async ({query}) => {
         console.debug(pluginName)
         const pluginDirPath = `${evaSpace.evaWorkHome}plugins`
         child_process.execSync(`git clone ${gitUrl} ${pluginDirPath}${sep}${pluginName}`)
+        notice({
+          title: `EPM 提醒您：`,
+          body: `插件${pluginName}安装成功，他将守护您！记得重新启动Eva哦！`
+        })
         console.log('安装成功')
       }
     }]
@@ -33,9 +37,15 @@ const execute = async ({query}) => {
       title: `移除插件:${optQuery || '请输入插件名称'}`,
       subTitle: 'EvaPackageManager',
       action() {
-        if(!optQuery) return
-        rimraf(`${evaSpace.evaWorkHome}plugins${sep}${optQuery}`, () => {
-          console.log(`${evaSpace.evaWorkHome}plugins${sep}${optQuery} Removed.`)
+        if (!optQuery) return
+        let pluginName = optQuery
+        if (optQuery.indexOf('eva-plugin') < 0) pluginName = 'eva-plugin-' + optQuery
+        rimraf(`${evaSpace.evaWorkHome}plugins${sep}${pluginName}`, () => {
+          console.log(`${evaSpace.evaWorkHome}plugins${sep}${pluginName} Removed.`)
+          notice({
+            title: `EPM 提醒您：`,
+            body: `插件${pluginName}已经离你而去！记得重新启动Eva哦！`
+          })
         })
       }
     }]
@@ -44,7 +54,7 @@ const execute = async ({query}) => {
       title: `更新插件:${optQuery || '请输入插件名称'}`,
       subTitle: 'EvaPackageManager',
       action() {
-        if(!optQuery) return
+        if (!optQuery) return
         let gitUrl = optQuery
         let pluginName
         if (optQuery.indexOf('http') < 0) {
@@ -53,11 +63,12 @@ const execute = async ({query}) => {
         } else {
           pluginName = optQuery.substr(optQuery.lastIndexOf('/') + 1)
         }
-        console.debug(gitUrl)
-        console.debug(pluginName)
         const pluginDirPath = `${evaSpace.evaWorkHome}plugins`
         child_process.execSync(`cd ${pluginDirPath}${sep}${pluginName} && git pull`)
-        console.log('更新成功')
+        notice({
+          title: `EPM 提醒您：`,
+          body: `插件${pluginName}已经更新成功！记得重新启动Eva哦！`
+        })
       }
     }]
   }
