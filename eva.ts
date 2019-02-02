@@ -1,16 +1,33 @@
-import * as os from "os";
-import {sep} from "path";
+import * as electron from "electron";
 
-const evaSpace = {
-    config: {
-        logLevel: "all",
-        width: 600,
-        height: 60,
-        opacity: 0.9,
-        evaWorkHome: `${os.homedir()}/.eva`
-    },
-    ROOT_DIR: __dirname,
-    evaWorkHome: `${os.homedir()}${sep}.eva${sep}`
-};
+class Eva {
+    private appIsVisible = false;
+    private app: electron.App;
+    private evaWindow: Electron.BrowserWindow;
 
-export default evaSpace;
+    constructor(app: electron.App, evaWindow: electron.BrowserWindow) {
+        this.app = app;
+        this.evaWindow = evaWindow;
+    }
+
+    switchWindowShown() {
+        this.appIsVisible ? this.hideWindow() : this.showWindow()
+    }
+
+    hideWindow() {
+        this.evaWindow.hide();
+        this.appIsVisible = false
+    }
+
+    showWindow() {
+        this.evaWindow.show();
+        this.appIsVisible = true
+    }
+
+    restart() {
+        this.app.relaunch({args: process.argv.slice(1).concat(['--relaunch'])});
+        this.app.exit(0)
+    }
+}
+
+export default Eva;

@@ -2,10 +2,11 @@ import {join} from 'path'
 import electron from 'electron';
 import {createEvaWindow, createMainWindow} from './loaders/WindowLoader';
 import CommonUtils from "./utils/common"
-import evaSpace from "./eva";
+import evaSpace from "./evaspace";
 import EPlugin from "./eplugin";
 import PlatformUtils from "./utils/plantform";
 import logger from "./utils/log";
+import Eva from "./eva";
 
 const {app, globalShortcut, ipcMain, Tray} = electron;
 import BrowserWindow = Electron.BrowserWindow;
@@ -16,13 +17,14 @@ let evaWindow: BrowserWindow;
 let mainWindow;
 let tray;
 let queryResult: any[] = [];
+let eva: Eva;
 
 function registerGlobalShortcut() {
     logger.trace('注册全局快捷键');
-    globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown());
-    globalShortcut.register('CommandOrControl+\\', () => switchWindowShown());
+    globalShortcut.register('CommandOrControl+Shift+M', () => eva.switchWindowShown());
+    globalShortcut.register('CommandOrControl+\\', () => eva.switchWindowShown());
     globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.webContents.openDevTools());
-    globalShortcut.register('CommandOrControl+Shift+Alt+R', () => restart());
+    globalShortcut.register('CommandOrControl+Shift+Alt+R', () => eva.restart());
     globalShortcut.register('CommandOrControl+Alt+P', () => app.quit());
 }
 
@@ -36,16 +38,18 @@ app.on('ready', () => {
     }
     logger.trace('创建Eva窗口');
     evaWindow = createEvaWindow(evaSpace.config.width, evaSpace.config.height, evaSpace.config.opacity);
+    eva = new Eva(app, evaWindow);
+
     tray = new Tray(PlatformUtils.PAS(join(evaSpace.ROOT_DIR, './assets/logo-1024-16x16@3x.png'), './assets/icon.ico'));
     tray.setToolTip('Eva');
 
-    evaWindow.on('blur', () => hideWindow());
+    evaWindow.on('blur', () => eva.hideWindow());
 
     registerGlobalShortcut();
-    ipcMain.on('box-input-esc', () => hideWindow());
-    ipcMain.on('hide-main-window', () => hideWindow());
+    ipcMain.on('box-input-esc', () => eva.hideWindow());
+    ipcMain.on('hide-main-window', () => eva.hideWindow());
     ipcMain.on('box-input', boxInput);
-    ipcMain.on('box-blur', () => hideWindow());
+    ipcMain.on('box-blur', () => eva.hideWindow());
     ipcMain.on('action', action);
     ipcMain.on('restore-box-height', () => changeBoxNum(0));
     logger.info('欢迎使用Eva!');
@@ -136,25 +140,4 @@ function returnValue(event: any, input: string, resultPromise: Promise<any>) {
 function clearQueryResult(event: any) {
     event.sender.send('clear-query-result');
     changeBoxNum(0)
-}
-
-let appIsVisible = false;
-
-function hideWindow() {
-    evaWindow.hide();
-    appIsVisible = false
-}
-
-function showWindow() {
-    evaWindow.show();
-    appIsVisible = true
-}
-
-function switchWindowShown() {
-    appIsVisible ? hideWindow() : showWindow()
-}
-
-function restart() {
-    app.relaunch({args: process.argv.slice(1).concat(['--relaunch'])});
-    app.exit(0)
 }

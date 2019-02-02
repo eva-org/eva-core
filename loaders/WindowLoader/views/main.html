@@ -1,23 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-    <script type="text/javascript" src="../../../node_modules/vue/dist/vue.js"></script>
+    <link href="style.css" rel="stylesheet" type="text/css"/>
+    <script src="../../../node_modules/vue/dist/vue.js" type="text/javascript"></script>
+    <title>eva window</title>
 </head>
 <body>
 <div id="app">
     <div>
-        <input ref="boxInput" autofocus="autofocus" v-model="input"
-               @keydown.enter="enter" @keydown.esc="esc" @keydown.up.prevent="up" @keydown.down.prevent="down" @blur="blur">
+        <input @blur="blur" @keydown.down.prevent="down" @keydown.enter="enter"
+               @keydown.esc="esc" @keydown.up.prevent="up" autofocus="autofocus" ref="boxInput"
+               v-model="input">
         <div>
             <img class="icon" src="search-icon.png">
         </div>
     </div>
     <template v-if="queryResult.length">
-        <div class="result" @mousedown.2.prevent @mousedown.3.prevent>
-            <div v-for="(item, index) of queryResult" :class="['unchosen',index === currIndex ? 'chosen' : '']"
-                 @mousemove="mouseMove(index)" @click="enter">
+        <div @mousedown.2.prevent @mousedown.3.prevent class="result">
+            <div :class="['unchosen',index === currIndex ? 'chosen' : '']" @click="enter"
+                 @mousemove="mouseMove(index)" v-for="(item, index) of queryResult">
                 <span class="title">{{item.title}}</span>
                 <br>
                 <span class="subTitle">{{item.subTitle}}</span>
@@ -26,67 +28,67 @@
     </template>
 </div>
 <script>
-  const {ipcRenderer} = require('electron')
+    const {ipcRenderer} = require('electron');
 
-  const vue = new Vue({
-    el: '#app',
-    data() {
-      return {
-        input: '',
-        queryResult: [],
-        currIndex: 0
-      }
-    },
-    methods: {
-      mouseMove(index) {
-        this.currIndex = index
-      },
-      enter() {
-        ipcRenderer.send('action', this.currIndex)
-      },
-      esc() {
-        ipcRenderer.send('box-input-esc', this.input)
-      },
-      up() {
-        if (this.currIndex > 0) this.currIndex--
-        this.changePosition()
-      },
-      down() {
-        if (this.currIndex + 1 < this.queryResult.length) this.currIndex++
-        this.changePosition()
-      },
-      changePosition() {
-        const range = [50 * (this.currIndex - 4), 50 * this.currIndex]
-        const dom = document.getElementsByClassName('result')[0]
-        const currentScrollTop = dom.scrollTop
-        if (currentScrollTop < range[0]) {
-          dom.scrollTop = range[0]
+    const vue = new Vue({
+        el: '#app',
+        data() {
+            return {
+                input: '',
+                queryResult: [],
+                currIndex: 0
+            }
+        },
+        methods: {
+            mouseMove(index) {
+                this.currIndex = index
+            },
+            enter() {
+                ipcRenderer.send('action', this.currIndex)
+            },
+            esc() {
+                ipcRenderer.send('box-input-esc', this.input)
+            },
+            up() {
+                if (this.currIndex > 0) this.currIndex--;
+                this.changePosition()
+            },
+            down() {
+                if (this.currIndex + 1 < this.queryResult.length) this.currIndex++;
+                this.changePosition()
+            },
+            changePosition() {
+                const range = [50 * (this.currIndex - 4), 50 * this.currIndex];
+                const dom = document.getElementsByClassName('result')[0];
+                const currentScrollTop = dom.scrollTop;
+                if (currentScrollTop < range[0]) {
+                    dom.scrollTop = range[0]
+                }
+                if (currentScrollTop > range[1]) {
+                    dom.scrollTop = range[1]
+                }
+            },
+            blur() {
+                // ipcRenderer.send('box-blur', this.input)
+            }
+        },
+        watch: {
+            input() {
+                ipcRenderer.send('box-input', this.input);
+                this.currIndex = 0
+            }
         }
-        if (currentScrollTop > range[1]) {
-          dom.scrollTop = range[1]
-        }
-      },
-      blur() {
-        // ipcRenderer.send('box-blur', this.input)
-      }
-    },
-    watch: {
-      input() {
-        ipcRenderer.send('box-input', this.input)
-        this.currIndex = 0
-      }
-    }
-  })
+    });
 
-  ipcRenderer.on('action-exec-success', () => {
-    vue.$refs.boxInput.select()
-    ipcRenderer.send('hide-main-window')
-  })
-  ipcRenderer.on('clear-query-result', () => vue.$data.queryResult = [])
-  ipcRenderer.on('query-result', (event, queryResult) => {
-    vue.$data.queryResult = queryResult
-    if (queryResult.length <= 0) ipcRenderer.send('restore-box-height')
-  })
+    ipcRenderer.on('action-exec-success', () => {
+        vue.$refs.boxInput.select();
+        ipcRenderer.send('hide-main-window')
+    });
+    ipcRenderer.on('clear-query-result', () => vue.$data.queryResult = []);
+    ipcRenderer.on('query-result', (event, queryResult) => {
+        vue.$data.queryResult = queryResult;
+        if (queryResult.length <= 0) ipcRenderer.send('restore-box-height')
+    })
 </script>
 </body>
 </html>
