@@ -5,7 +5,7 @@
 
 node_modules
 npm-debug.log*
-dist/*
+dist
 
 # IntelliJ project files
 .idea

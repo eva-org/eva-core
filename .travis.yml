@@ -6,8 +6,8 @@ node_js:
   - "10"
 
 before_install:
-  - cd app && yarn
-  - cd .. && yarn
+  - cd app && npm i
+  - cd .. && npm i
 
 script:
-  - yarn pa:mac
+  - npm run pa:mac
