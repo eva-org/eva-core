@@ -1,5 +1,7 @@
 import NotificationConstructorOptions = Electron.NotificationConstructorOptions;
 import electron from "electron";
+import * as fs from "fs";
+import evaSpace from "../evaspace";
 
 class CommonUtils {
     /**
@@ -28,6 +30,17 @@ class CommonUtils {
         md5.update(str);
         const result = md5.digest('hex');
         return result.toUpperCase()  //32位大写
+    }
+
+    static saveConfig(configName: string, config: any) {
+        fs.writeFileSync(`${evaSpace.evaWorkHome}${configName}.json`, JSON.stringify(config, null, 2))
+    }
+
+    static getConfig(configName: string) {
+        let configPath = `${evaSpace.evaWorkHome}${configName}.json`
+        const exist = fs.existsSync(configPath)
+        if (!exist) fs.writeFileSync(configPath, '{}')
+        return JSON.parse(fs.readFileSync(configPath).toString())
     }
 }
 

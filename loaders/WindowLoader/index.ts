@@ -5,6 +5,7 @@ import BrowserWindow = electron.BrowserWindow;
 import MenuItemConstructorOptions = electron.MenuItemConstructorOptions;
 import app = electron.app;
 import Menu = electron.Menu;
+import evaSpace from "../../evaspace";
 
 const template: MenuItemConstructorOptions[] = [
     {
@@ -114,7 +115,7 @@ function createEvaWindow(width = 500, height = 60, opacity = 1): BrowserWindow {
 
     // and load the index.html of the app.
     evaWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'views/main.html'),
+        pathname: path.join(__dirname, `views/main.html`),
         protocol: 'file:',
         slashes: true
     }));
@@ -123,7 +124,7 @@ function createEvaWindow(width = 500, height = 60, opacity = 1): BrowserWindow {
     return evaWindow
 }
 
-export {
+export default {
     createMainWindow,
     createEvaWindow
 };

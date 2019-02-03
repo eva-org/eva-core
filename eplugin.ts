@@ -1,11 +1,16 @@
 interface EPlugin {
     pluginName: string;
     quick: string;
-    query: Function;
+    query: <T>(query: string) => Promise<EPluginResult[]>;
 }
 
-interface PluginContext {
-
+interface EPluginResult {
+    title: string;
+    subTitle: string;
+    action: Function;
 }
 
-export default EPlugin;
+export {
+    EPlugin,
+    EPluginResult
+};

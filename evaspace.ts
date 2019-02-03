@@ -9,7 +9,7 @@ const evaSpace = {
         opacity: 0.9,
         evaWorkHome: `${os.homedir()}/.eva`
     },
-    ROOT_DIR: __dirname,
+    rootDir: __dirname,
     evaWorkHome: `${os.homedir()}${sep}.eva${sep}`
 };
 

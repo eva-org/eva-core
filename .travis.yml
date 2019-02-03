@@ -1,13 +1,10 @@
 language: node_js
-os: osx
 
 node_js:
-  - "9"
   - "10"
 
 before_install:
-  - cd app && npm i
-  - cd .. && npm i
+  - npm i
 
 script:
-  - npm run pa:mac
+  - npm run start
