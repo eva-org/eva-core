@@ -1,9 +1,10 @@
 import logger from "./utils/log";
 import WindowLoader from "./loaders/WindowLoader";
 import evaSpace from "./evaspace";
-import {EPlugin, EPluginResult} from "./eplugin";
+import {EPluginInterface, EPluginResult} from "./eplugin";
 import Electron from 'electron'
 import FindApp from "./plugins/findapp";
+import {load} from "./loaders/ExtendPluginLoader";
 import globalShortcut = Electron.globalShortcut;
 import app = Electron.app;
 import ipcMain = Electron.ipcMain;
@@ -13,7 +14,7 @@ class Eva {
     private evaWindow: Electron.BrowserWindow;
     private lastedInput: string | undefined;
     private queryResult: any[] = [];
-    private plugins: EPlugin[];
+    private plugins: EPluginInterface[];
 
     constructor() {
         const config = evaSpace.config;
@@ -36,13 +37,15 @@ class Eva {
         app.exit(0)
     };
 
-    private static executeExactPlugin = async (suitablePlugin: EPlugin, pluginQuery: any) => {
+    private static executeExactPlugin = async (suitablePlugin: EPluginInterface, pluginQuery: any) => {
         if (!pluginQuery) return [];
         return await suitablePlugin.query(pluginQuery)
     };
 
-    private loadPlugins = (): EPlugin[] => {
-        return [new FindApp()];
+    private loadPlugins = (): EPluginInterface[] => {
+        const basePlugins = [new FindApp()];
+        const extendPlugins = load();
+        return (<EPluginInterface[]>basePlugins).concat(extendPlugins);
     };
 
     private clearQueryResult = (event: any) => {
@@ -92,7 +95,7 @@ class Eva {
         return queryResult
     };
 
-    private findSuitablePlugin = (quickName: string): EPlugin | undefined => {
+    private findSuitablePlugin = (quickName: string): EPluginInterface | undefined => {
         return this.plugins.find(plugin => plugin.quick === quickName)
     };
 

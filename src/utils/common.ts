@@ -2,6 +2,7 @@ import NotificationConstructorOptions = Electron.NotificationConstructorOptions;
 import electron from "electron";
 import * as fs from "fs";
 import evaSpace from "../evaspace";
+import * as path from "path";
 
 class CommonUtils {
     /**
@@ -18,30 +19,42 @@ class CommonUtils {
      * @param option
      * @returns {Electron.Notification}
      */
-    static notice(option: NotificationConstructorOptions): electron.Notification {
+    static notice = (option: NotificationConstructorOptions): electron.Notification => {
         const notice = new electron.Notification(option);
         notice.show();
         return notice
-    }
+    };
 
-    static md5(str: string) {
+    static md5 = (str: string) => {
         const cr = require('crypto');
         const md5 = cr.createHash('md5');
         md5.update(str);
         const result = md5.digest('hex');
         return result.toUpperCase()  //32位大写
-    }
+    };
 
-    static saveConfig(configName: string, config: any) {
+    static saveConfig = (configName: string, config: any) => {
         fs.writeFileSync(`${evaSpace.evaWorkHome}${configName}.json`, JSON.stringify(config, null, 2))
-    }
+    };
 
-    static getConfig(configName: string) {
-        let configPath = `${evaSpace.evaWorkHome}${configName}.json`
-        const exist = fs.existsSync(configPath)
-        if (!exist) fs.writeFileSync(configPath, '{}')
+    static getConfig = (configName: string) => {
+        let configPath = `${evaSpace.evaWorkHome}${configName}.json`;
+        const exist = fs.existsSync(configPath);
+        if (!exist) fs.writeFileSync(configPath, '{}');
         return JSON.parse(fs.readFileSync(configPath).toString())
-    }
+    };
+
+    static createFolder = (to: string) => { //文件写入
+        const sep = path.sep;
+        const folders = path.dirname(to).split(sep);
+        let p = '';
+        while (folders.length) {
+            p += folders.shift() + sep;
+            if (!fs.existsSync(p)) {
+                fs.mkdirSync(p);
+            }
+        }
+    };
 }
 
 export default CommonUtils

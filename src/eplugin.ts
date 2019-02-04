@@ -1,7 +1,20 @@
-interface EPlugin {
-    pluginName: string;
+interface EPluginInterface {
+    name: string;
     quick: string;
-    query: <T>(query: string) => Promise<EPluginResult[]>;
+
+    query(query: string): Promise<EPluginResult[]>;
+
+    init(): void;
+}
+
+abstract class EPlugin implements EPluginInterface {
+    abstract name: string;
+    abstract quick: string;
+
+    abstract query(query: string): Promise<EPluginResult[]> ;
+
+    init() {
+    };
 }
 
 interface EPluginResult {
@@ -11,6 +24,7 @@ interface EPluginResult {
 }
 
 export {
-    EPlugin,
-    EPluginResult
+    EPluginInterface,
+    EPluginResult,
+    EPlugin
 };
