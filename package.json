@@ -4,16 +4,19 @@
   "description": "",
   "repository": "https://github.com/eva-org/eva-core",
   "license": "Apache-2.0",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "clean": "rm -rf dist",
-    "start": "npm run clean && tsc && electron dist/"
+    "start": "electron dist/"
   },
   "author": "",
   "devDependencies": {
     "@types/log4js": "^2.3.5",
     "@types/rimraf": "^2.0.2",
-    "electron": "^4.0.3"
+    "del": "^3.0.0",
+    "electron": "^4.0.3",
+    "gulp": "^4.0.0",
+    "gulp-typescript": "^5.0.0",
+    "typescript": "^3.3.1"
   },
   "dependencies": {
     "axios": "^0.18.0",

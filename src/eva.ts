@@ -1,7 +1,7 @@
 import logger from "./utils/log";
 import WindowLoader from "./loaders/WindowLoader";
 import evaSpace from "./evaspace";
-import {EPlugin} from "./eplugin";
+import {EPlugin, EPluginResult} from "./eplugin";
 import Electron from 'electron'
 import FindApp from "./plugins/findapp";
 import globalShortcut = Electron.globalShortcut;
@@ -31,46 +31,46 @@ class Eva {
         this.plugins = this.loadPlugins();
     }
 
-    private static restart() {
+    private static restart = () => {
         app.relaunch({args: process.argv.slice(1).concat(['--relaunch'])});
         app.exit(0)
-    }
+    };
 
-    private static async executeExactPlugin(suitablePlugin: EPlugin, pluginQuery: any) {
+    private static executeExactPlugin = async (suitablePlugin: EPlugin, pluginQuery: any) => {
         if (!pluginQuery) return [];
         return await suitablePlugin.query(pluginQuery)
-    }
+    };
 
-    private loadPlugins(): EPlugin[] {
+    private loadPlugins = (): EPlugin[] => {
         return [new FindApp()];
-    }
+    };
 
-    private clearQueryResult(event: any) {
+    private clearQueryResult = (event: any) => {
         event.sender.send('clear-query-result');
         this.changeBoxNum(0)
-    }
+    };
 
-    private changeBoxNum(num: number) {
+    private changeBoxNum = (num: number) => {
         if (num > 5) num = 5;
         const h = 50;
         this.evaWindow.setSize(evaSpace.config.width, +evaSpace.config.height + h * num)
-    }
+    };
 
-    private switchWindowShown() {
+    private switchWindowShown = () => {
         this.appIsVisible ? this.hideWindow() : this.showWindow()
-    }
+    };
 
-    private hideWindow() {
+    private hideWindow = () => {
         this.evaWindow.hide();
         this.appIsVisible = false
-    }
+    };
 
-    private showWindow() {
+    private showWindow = () => {
         this.evaWindow.show();
         this.appIsVisible = true
-    }
+    };
 
-    private action(event: any, index: any) {
+    private action = (event: any, index: any) => {
         if (this.queryResult.length <= 0) return;
         new Promise((resolve) => {
             this.queryResult[index].action();
@@ -80,23 +80,23 @@ class Eva {
         }).catch(reason => {
             logger.error(reason)
         })
-    }
+    };
 
-    private async executeCommonPlugin(input: string) {
+    private executeCommonPlugin = async (input: string) => {
         const queryPromises = this.plugins.map(plugin => plugin.query(input));
-        let queryResult: any = [];
+        let queryResult: EPluginResult[] = [];
         const resultArr = await Promise.all(queryPromises);
         for (const result of resultArr) {
             queryResult = queryResult.concat(result)
         }
         return queryResult
-    }
+    };
 
-    private findSuitablePlugin(quickName: string): EPlugin | undefined {
+    private findSuitablePlugin = (quickName: string): EPlugin | undefined => {
         return this.plugins.find(plugin => plugin.quick === quickName)
-    }
+    };
 
-    private returnValue(event: any, input: string, resultPromise: Promise<any>) {
+    private returnValue = (event: any, input: string, resultPromise: Promise<EPluginResult[]>) => {
         resultPromise
             .then(result => {
                 // 如果本次回调对应的input不是最新输入，则忽略
@@ -109,15 +109,16 @@ class Eva {
                 this.queryResult = result
             })
             .catch(reason => logger.error(reason))
-    }
+    };
 
-    private boxInput(event: any, input: string) {
+    private boxInput = (event: any, input: string) => {
         this.lastedInput = input;
         if (!input) return this.clearQueryResult(event);
 
         // 如果不包含空格则执行通用插件（*插件）
         const blankIndex = input.indexOf(' ');
         if (blankIndex === -1) {
+            console.log(this.executeCommonPlugin);
             return this.returnValue(event, input, this.executeCommonPlugin(input))
         }
 
@@ -129,16 +130,16 @@ class Eva {
 
         const pluginQuery = values.join(' ');
         return this.returnValue(event, input, Eva.executeExactPlugin(suitablePlugin, pluginQuery))
-    }
+    };
 
-    private registerGlobalShortcut() {
+    private registerGlobalShortcut = () => {
         logger.trace('注册全局快捷键');
         globalShortcut.register('CommandOrControl+Shift+M', () => this.switchWindowShown());
         globalShortcut.register('CommandOrControl+\\', () => this.switchWindowShown());
         globalShortcut.register('CommandOrControl+Shift+Alt+M', () => this.evaWindow.webContents.openDevTools());
         globalShortcut.register('CommandOrControl+Shift+Alt+R', () => Eva.restart());
         globalShortcut.register('CommandOrControl+Alt+P', () => app.quit());
-    }
+    };
 }
 
 export default Eva;

@@ -1,10 +1,11 @@
 language: node_js
 
 node_js:
-  - "10"
+  - '10'
 
 before_install:
-  - npm i
+  - npm install -g typescript
+  - npm install -g gulp-cli
 
 script:
-  - npm run start
+  - gulp default
