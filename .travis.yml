@@ -1,13 +1,11 @@
 language: node_js
-os: osx
 
 node_js:
-  - "9"
-  - "10"
+  - '10'
 
 before_install:
-  - cd app && yarn
-  - cd .. && yarn
+  - npm install -g typescript
+  - npm install -g gulp-cli
 
 script:
-  - yarn pa:mac
+  - gulp default

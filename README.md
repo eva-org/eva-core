@@ -41,6 +41,14 @@ Example: `epm add https://github.com/eva-org/eva-plugin-youdao`
 
 Example: `epm remove eva-plugin-youdao`
 
+## Develop
+### Build
+1. Install gulp-cli first.
+```
+$ npm install -g gulp-cli
+```
+2. run `npm install && gulp && npm run start` to compile and run Eva!
+
     
 ## LICENSE
 * code-license : Apache License 2.0 http://www.apache.org/licenses/LICENSE-2.0 
