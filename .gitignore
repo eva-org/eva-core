@@ -22,3 +22,5 @@ app/extend_plugin/Youdao/config.json
 
 build
 package
+yarn.lock
+*.swp
