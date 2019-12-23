@@ -9,10 +9,10 @@
   },
   "author": "",
   "devDependencies": {
-    "asar": "^0.14.3",
-    "cz-conventional-changelog": "^2.1.0",
-    "electron": "^2.0.0-beta.7",
-    "electron-packager": "^12.1.0"
+    "asar": "^2.0.3",
+    "cz-conventional-changelog": "^3.0.2",
+    "electron": "^3.0.0-beta.2",
+    "electron-packager": "^12.2.0"
   },
   "dependencies": {},
   "config": {
