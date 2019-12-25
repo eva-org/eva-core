@@ -54,7 +54,7 @@ const template = [
 
 if (process.platform === 'darwin') {
   template.unshift({
-    label: app.getName(),
+    label: app.name,
     submenu: [
       {role: 'about'},
       {type: 'separator'},
@@ -93,10 +93,11 @@ function createEvaWindow(width = 500, height = 60, opacity = 1) {
     frame: false,
     skipTaskbar: true,
     resizable: false,
-    movable: false,
+    // movable: false,
     backgroundColor: '#232323',
     show: false,
     webPreferences: {
+      nodeIntegration: true,
       devTools: true,
       nodeIntegrationInWorker: true
     }
@@ -107,7 +108,7 @@ function createEvaWindow(width = 500, height = 60, opacity = 1) {
   if (process.platform === 'darwin') electron.app.dock.hide()
   evaWindow.setAlwaysOnTop(true, "floating")
   evaWindow.setVisibleOnAllWorkspaces(true)
-  evaWindow.setFullScreenable(false)
+  evaWindow.fullScreenable = false
 
 // and load the index.html of the app.
   evaWindow.loadURL(url.format({
