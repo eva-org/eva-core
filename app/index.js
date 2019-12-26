@@ -56,7 +56,7 @@ app.on('ready', () => {
   tray = new Tray(PAS(join(evaSpace.ROOT_DIR, './logo-1024-16x16@3x.png'), './icon.ico'))
   tray.setToolTip('Eva')
 
-  // evaWindow.on('blur', () => hideWindow())
+  evaWindow.on('blur', () => hideWindow())
 
   registerGlobalShortcut()
   ipcMain.on('box-input-esc', () => hideWindow())
