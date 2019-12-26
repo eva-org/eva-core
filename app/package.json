@@ -1,6 +1,6 @@
 {
   "name": "eva-app",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "./index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "author": "",
   "devDependencies": {
-    "electron": "^3.0.0-beta.2"
+    "electron": "^7.1.7"
   },
   "dependencies": {
     "axios": "^0.19.0",

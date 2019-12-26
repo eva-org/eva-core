@@ -1,5 +1,5 @@
 const os = require('os')
-const {sep, join} = require('path')
+const { sep, join } = require('path')
 
 global.evaSpace = {
   config: {
@@ -11,11 +11,11 @@ global.evaSpace = {
 
 const electron = require('electron')
 const utils = require('./utils/index.js')
-const {initEva} = require('./utils/initialize.js')
+const { initEva } = require('./utils/initialize.js')
 const PluginLoader = require('./loaders/PluginLoader/index.js')
-const {isMac, isWindows, PAS, saveFocus, logger, restoreFocus} = require('./utils/index.js')
-const {app, globalShortcut, ipcMain, Tray} = electron
-const {createEvaWindow, createMainWindow} = require('./loaders/WindowLoader/index.js')
+const { isMac, isWindows, PAS, saveFocus, logger, restoreFocus } = require('./utils/index.js')
+const { app, globalShortcut, ipcMain, Tray, clipboard } = electron
+const { createEvaWindow, createMainWindow } = require('./loaders/WindowLoader/index.js')
 
 logger.trace('开始初始化App')
 initEva()
@@ -29,7 +29,7 @@ let mainWindow
 let tray
 let queryResult = []
 
-function registerGlobalShortcut() {
+function registerGlobalShortcut () {
   logger.trace('注册全局快捷键')
   let registerSuccess = globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
   if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+M失败')
@@ -72,13 +72,14 @@ app.on('ready', () => {
   })
 })
 
-function changeBoxNum(num) {
+function changeBoxNum (num) {
   if (num > 5) num = 5
   const h = 50
   evaWindow.setSize(evaSpace.config.width, +evaSpace.config.height + h * num)
 }
 
-function action(event, index) {
+function action (event, index) {
+  logger.info(event)
   if (queryResult.length <= 0) return
   new Promise((resolve) => {
     queryResult[index].action()
@@ -90,7 +91,7 @@ function action(event, index) {
   })
 }
 
-async function executeCommonPlugin(input) {
+async function executeCommonPlugin (input) {
   const queryPromises = commonPlugins.map(plugin => plugin.query({
     query: input,
     utils
@@ -103,14 +104,15 @@ async function executeCommonPlugin(input) {
   return queryResult
 }
 
-function findSuitablePlugin(quickName) {
+function findSuitablePlugin (quickName) {
   return plugins.find(plugin => plugin.quick === quickName)
 }
 
-async function executeExactPlugin(suitablePlugin, pluginQuery) {
+async function executeExactPlugin (suitablePlugin, pluginQuery) {
   if (!pluginQuery) return []
   return await suitablePlugin.query({
     query: pluginQuery,
+    clipboard,
     utils: {
       ...utils,
       notice
@@ -120,7 +122,7 @@ async function executeExactPlugin(suitablePlugin, pluginQuery) {
 
 let lastedInput
 
-function boxInput(event, input) {
+function boxInput (event, input) {
   lastedInput = input
   if (!input) return clearQueryResult(event)
 
@@ -131,16 +133,18 @@ function boxInput(event, input) {
   }
 
   const [quickName, ...values] = input.split(' ')
+  // 匹配插件
   const suitablePlugin = findSuitablePlugin(quickName)
+  // 未匹配到
   if (!suitablePlugin) {
     return returnValue(event, input, executeCommonPlugin(input))
   }
-
+  // 处理执行匹配的插件
   const pluginQuery = values.join(' ')
   return returnValue(event, input, executeExactPlugin(suitablePlugin, pluginQuery))
 }
 
-function returnValue(event, input, resultPromise) {
+function returnValue (event, input, resultPromise) {
   resultPromise
     .then(result => {
       // 如果本次回调对应的input不是最新输入，则忽略
@@ -155,33 +159,33 @@ function returnValue(event, input, resultPromise) {
     .catch(reason => logger.error(reason))
 }
 
-function clearQueryResult(event) {
+function clearQueryResult (event) {
   event.sender.send('clear-query-result')
   changeBoxNum(0)
 }
 
 let appIsVisible = false
 
-function hideWindow() {
+function hideWindow () {
   evaWindow.hide()
   if (isWindows) restoreFocus()
   if (isMac) app.hide()
   appIsVisible = false
 }
 
-function showWindow() {
+function showWindow () {
   evaWindow.show()
   if (isWindows) saveFocus()
   if (isMac) app.show()
   appIsVisible = true
 }
 
-function switchWindowShown() {
+function switchWindowShown () {
   appIsVisible ? hideWindow() : showWindow()
 }
 
-function restart() {
-  app.relaunch({args: process.argv.slice(1).concat(['--relaunch'])})
+function restart () {
+  app.relaunch({ args: process.argv.slice(1).concat(['--relaunch']) })
   app.exit(0)
 }
 
@@ -199,7 +203,7 @@ function restart() {
  * @param option
  * @returns {Electron.Notification}
  */
-function notice(option) {
+function notice (option) {
   let notice = new electron.Notification(option)
   notice.show()
   return notice

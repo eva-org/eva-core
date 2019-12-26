@@ -27,7 +27,7 @@ function getData({query, utils: {logger, buildLine}}) {
           })
           clockWindow.setAlwaysOnTop(true, "floating")
           clockWindow.setVisibleOnAllWorkspaces(true)
-          clockWindow.setFullScreenable(false)
+          clockWindow.fullScreenable = false
           clockWindow.loadURL(url.format({
             pathname: path.join(__dirname, 'index.html'),
             protocol: 'file:',
