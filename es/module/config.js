@@ -23,5 +23,6 @@ export default {
   config: { ...config },
   merge,
   init,
-  store
+  store,
+  reload
 }

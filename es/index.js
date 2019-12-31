@@ -1,5 +1,5 @@
 import { initLogger } from './module/logger'
-import { sep, join } from 'path'
+import { sep } from 'path'
 import App from './app'
 import os from 'os'
 

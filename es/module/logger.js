@@ -1,3 +1,4 @@
+import os from 'os'
 const rewriteConsole = logger => {
   console.log = function (item) {
     logger.info(item)
