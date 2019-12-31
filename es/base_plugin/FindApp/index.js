@@ -16,7 +16,7 @@ glob.promise = function (pattern, options) {
 let searchCache = {}
 const fs = require('fs')
 // 缓存路径
-const cachePath = `${evaSpace.evaWorkHome}FindApp/cache.json`
+const cachePath = `${global.evaSpace.evaWorkHome}FindApp/cache.json`
 
 async function initAndGetData(pluginContext) {
   initialized = true

@@ -1,10 +1,10 @@
-const {logLevel} = evaSpace
+const logLevel = 'all'
 const os = require('os')
 const fs = require('fs')
 const path = require('path')
 
 const {restoreFocus, saveFocus} = require('./native/windows')
-const evaWorkHome = evaSpace.evaWorkHome
+const evaWorkHome = global.evaSpace.evaWorkHome
 
 function isWindows() {
   return process.platform === 'win32'

@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const evaWorkHome = evaSpace.evaWorkHome
+const evaWorkHome = global.evaSpace.evaWorkHome
 let userConfigFilePath = `${evaWorkHome}config.json`
 
 function createConfigFile() {
@@ -14,8 +14,8 @@ function createConfigFile() {
 const initEva = () => {
   createConfigFile()
 
-  evaSpace.config = {
-    ...evaSpace.config,
+  global.evaSpace.config = {
+    ...global.evaSpace.config,
     ...require(userConfigFilePath),
     evaWorkHome
   }

@@ -121,7 +121,7 @@ function createEvaWindow(width = 500, height = 60, opacity = 1) {
   return evaWindow
 }
 
-module.exports = {
+export {
   createMainWindow,
   createEvaWindow
 }

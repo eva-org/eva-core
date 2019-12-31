@@ -1,21 +1,25 @@
-const os = require('os')
-const { sep, join } = require('path')
+import os from 'os'
+import { sep, join } from 'path'
+import electron from 'electron'
+import utils, { isMac, isWindows, logger, PAS, restoreFocus, saveFocus } from './utils/index.js'
+import { initEva } from './utils/initialize.js'
+import PluginLoader from './loaders/PluginLoader/index.js'
+import { createEvaWindow, createMainWindow } from './loaders/WindowLoader/index.js'
+import { notice } from './module/notice'
+import Shortcut from './module/shortcut'
+import cfg from './config.json'
+import gbl from './global.js'
 
 global.evaSpace = {
   config: {
-    ...require('./config.json')
+    ...cfg
   },
-  ...require('./global.js'),
+  ...gbl,
   evaWorkHome: `${os.homedir()}${sep}.eva${sep}`
 }
+console.log(global)
 
-const electron = require('electron')
-const utils = require('./utils/index.js')
-const { initEva } = require('./utils/initialize.js')
-const PluginLoader = require('./loaders/PluginLoader/index.js')
-const { isMac, isWindows, PAS, saveFocus, logger, restoreFocus } = require('./utils/index.js')
 const { app, globalShortcut, ipcMain, Tray, clipboard } = electron
-const { createEvaWindow, createMainWindow } = require('./loaders/WindowLoader/index.js')
 
 logger.trace('开始初始化App')
 initEva()
@@ -29,18 +33,13 @@ let mainWindow
 let tray
 let queryResult = []
 
-function registerGlobalShortcut () {
+const registerGlobalShortcut = () => {
   logger.trace('注册全局快捷键')
-  let registerSuccess = globalShortcut.register('CommandOrControl+Shift+M', () => switchWindowShown())
-  if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+M失败')
-  registerSuccess = globalShortcut.register('CommandOrControl+\\', () => switchWindowShown())
-  if (!registerSuccess) logger.error('注册快捷键CommandOrControl+\\失败')
-  registerSuccess = globalShortcut.register('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
-  if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+Alt+M失败')
-  registerSuccess = globalShortcut.register('CommandOrControl+Shift+Alt+R', () => restart())
-  if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Shift+Alt+R失败')
-  registerSuccess = globalShortcut.register('CommandOrControl+Alt+P', () => app.quit())
-  if (!registerSuccess) logger.error('注册快捷键CommandOrControl+Alt+P失败')
+  Shortcut.registerGlobal('CommandOrControl+Shift+M', () => switchWindowShown())
+  Shortcut.registerGlobal('CommandOrControl+\\', () => switchWindowShown())
+  Shortcut.registerGlobal('CommandOrControl+Shift+Alt+M', () => evaWindow.openDevTools())
+  Shortcut.registerGlobal('CommandOrControl+Shift+Alt+R', () => restart())
+  Shortcut.registerGlobal('CommandOrControl+Alt+P', () => app.quit())
 }
 
 app.on('ready', () => {
@@ -52,8 +51,8 @@ app.on('ready', () => {
     logger.error(e)
   }
   logger.trace('创建Eva窗口')
-  evaWindow = createEvaWindow(evaSpace.config.width, evaSpace.config.height, evaSpace.config.opacity)
-  tray = new Tray(PAS(join(evaSpace.ROOT_DIR, './logo-1024-16x16@3x.png'), './icon.ico'))
+  evaWindow = createEvaWindow(global.evaSpace.config.width, global.evaSpace.config.height, global.evaSpace.config.opacity)
+  tray = new Tray(PAS(join(global.evaSpace.ROOT_DIR, './logo-1024-16x16@3x.png'), './icon.ico'))
   tray.setToolTip('Eva')
 
   evaWindow.on('blur', () => hideWindow())
@@ -75,7 +74,7 @@ app.on('ready', () => {
 function changeBoxNum (num) {
   if (num > 5) num = 5
   const h = 50
-  evaWindow.setSize(evaSpace.config.width, +evaSpace.config.height + h * num)
+  evaWindow.setSize(global.evaSpace.config.width, +global.evaSpace.config.height + h * num)
 }
 
 function action (event, index) {
@@ -189,22 +188,4 @@ function restart () {
   app.exit(0)
 }
 
-/**
- * titleString - 通知的标题, 将在通知窗口的顶部显示.
- * subtitleString (可选) 通知的副标题, 显示在标题下面。 macOS
- * bodyString 通知的正文文本, 将显示在标题或副标题下面.
- * silentBoolean (可选) 在显示通知时是否发出系统提示音。
- * icon(String | NativeImage ) (可选) 用于在该通知上显示的图标。
- * hasReplyBoolean (可选) 是否在通知中添加一个答复选项。 macOS
- * replyPlaceholderString (可选) 答复输入框中的占位符。 macOS
- * soundString (可选) 显示通知时播放的声音文件的名称。 macOS
- * actions NotificationAction[] (可选) macOS - 要添加到通知中的操作 请阅读 NotificationAction文档来了解可用的操作和限制。
- * closeButtonText String (可选) macOS - 自定义的警告框关闭按钮文字。如果该字符串为空，那么将使用本地化的默认文本。
- * @param option
- * @returns {Electron.Notification}
- */
-function notice (option) {
-  let notice = new electron.Notification(option)
-  notice.show()
-  return notice
-}
+
