@@ -15,6 +15,10 @@ const store = () => {
   // TODO save config.json file
 }
 
+const reload = () => {
+  // TODO 重新加载配置文件
+}
+
 export default {
   config: { ...config },
   merge,

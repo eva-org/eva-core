@@ -43,11 +43,7 @@ const start = (config, utils) => {
     ipcMain.on('box-blur', () => hideWindow())
     ipcMain.on('action', action)
     ipcMain.on('restore-box-height', () => changeBoxNum(0))
-    // logger.info('欢迎使用Eva!')
-//   notice({
-//     title: 'Eva',
-//     body: '你好人类，我将给予你帮助！'
-//   })
+    logger.info('欢迎使用Eva!')
     notice({ title: 'Eva', body: '你好人类，我将给予你帮助！' })
   })
 }
