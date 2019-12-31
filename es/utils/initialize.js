@@ -1,9 +1,9 @@
 const fs = require('fs')
 
 const evaWorkHome = global.evaSpace.evaWorkHome
-let userConfigFilePath = `${evaWorkHome}config.json`
+const userConfigFilePath = `${evaWorkHome}config.json`
 
-function createConfigFile() {
+function createConfigFile () {
   const exist = fs.existsSync(userConfigFilePath)
   console.log(userConfigFilePath)
   if (!exist) {

@@ -13,13 +13,14 @@ const registerGlobalShortcut = () => {
   Shortcut.registerGlobal('CommandOrControl+Shift+Alt+R', () => restart())
   Shortcut.registerGlobal('CommandOrControl+Alt+P', () => app.quit())
 }
+let mainWindow
+let evaWindow
+let tray
 
-const start = (config, utils) => {
+const start = (utils) => {
   const { logger } = utils
   const { evaWorkHome } = config
-  let mainWindow
-  let evaWindow
-  let tray
+
   app.on('ready', () => {
     registerGlobalShortcut()
     // logger.trace('App已经就绪')

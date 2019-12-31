@@ -1,4 +1,4 @@
-import electron from "electron"
+import electron from 'electron'
 
 /**
  * titleString - 通知的标题, 将在通知窗口的顶部显示.
@@ -15,7 +15,7 @@ import electron from "electron"
  * @returns {Electron.Notification}
  */
 export const notice = (option) => {
-  let notice = new electron.Notification(option)
+  const notice = new electron.Notification(option)
   notice.show()
   return notice
 }

@@ -3,9 +3,9 @@ const url = require('url')
 
 let clockWindow
 const electron = require('electron')
-const {BrowserWindow} = electron
+const { BrowserWindow } = electron
 
-function getData({query, utils: {logger, buildLine}}) {
+function getData ({ query, utils: { logger, buildLine } }) {
   return new Promise(resolve => {
     console.log(query)
     if (!query) return false
@@ -22,10 +22,17 @@ function getData({query, utils: {logger, buildLine}}) {
           const x = (electron.screen.getPrimaryDisplay().workAreaSize.width / 2 - width / 2).toFixed(0)
           const y = (electron.screen.getPrimaryDisplay().workAreaSize.height).toFixed(0)
           clockWindow = new BrowserWindow({
-            x: +x, y: +y, width: +width, height: +height, frame: false,
-            show: true, resizable: true, movable: true, transparent: true
+            x: +x,
+            y: +y,
+            width: +width,
+            height: +height,
+            frame: false,
+            show: true,
+            resizable: true,
+            movable: true,
+            transparent: true
           })
-          clockWindow.setAlwaysOnTop(true, "floating")
+          clockWindow.setAlwaysOnTop(true, 'floating')
           clockWindow.setVisibleOnAllWorkspaces(true)
           clockWindow.fullScreenable = false
           clockWindow.loadURL(url.format({

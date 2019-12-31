@@ -1,5 +1,5 @@
 const path = require('path')
-const fs = require("fs")
+const fs = require('fs')
 
 module.exports = (utils) => {
   const baseArr = getPluginFromDir(path.join(global.evaSpace.ROOT_DIR, 'base_plugin'))
@@ -15,7 +15,7 @@ module.exports = (utils) => {
   return allPlugin
 }
 
-function getPluginFromDir(path) {
+function getPluginFromDir (path) {
   return fs.readdirSync(path).filter(item => {
     return item !== '.DS_Store'
   }).map(file => {

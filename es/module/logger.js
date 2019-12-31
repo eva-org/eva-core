@@ -18,19 +18,22 @@ export const initLogger = (level) => {
   log4js.configure({
     appenders: {
       console: {
-        type: 'console', layout: {
+        type: 'console',
+        layout: {
           type: 'pattern',
           pattern: '%[%d{hh:mm:ss\'SSS} %p -- %m%]'
         }
       },
       app: {
-        type: 'file', filename: `${os.homedir()}/.eva/eva.log`, layout: {
+        type: 'file',
+        filename: `${os.homedir()}/.eva/eva.log`,
+        layout: {
           type: 'pattern',
           pattern: '%[%d{hh:mm:ss\'SSS} %p -- %m%]'
         }
       }
     },
-    categories: {default: {appenders: ['console', 'app'], level: 'all'}}
+    categories: { default: { appenders: ['console', 'app'], level: 'all' } }
   })
   const logger = log4js.getLogger()
   logger.level = level

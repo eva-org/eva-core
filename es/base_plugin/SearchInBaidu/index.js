@@ -1,10 +1,10 @@
 const child_process = require('child_process')
 
-const getData = async ({query}) => {
+const getData = async ({ query }) => {
   return [{
     title: `百度搜索:${query}`,
     subTitle: '基于百度搜索',
-    action() {
+    action () {
       const openUrl = `https://www.baidu.com/s?wd=${query}`
       let cmd
       if (process.platform === 'win32') {
@@ -23,7 +23,7 @@ const getData = async ({query}) => {
 module.exports = {
   name: 'SearchInBaidu',
   quick: 'bd',
-  async query(pluginContext) {
+  async query (pluginContext) {
     return getData(pluginContext)
   }
 }

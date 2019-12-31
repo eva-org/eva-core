@@ -13,15 +13,15 @@ glob.promise = function (pattern, options) {
   })
 }
 
-let searchCache = {}
+const searchCache = {}
 const fs = require('fs')
 // 缓存路径
 const cachePath = `${global.evaSpace.evaWorkHome}FindApp/cache.json`
 
-async function initAndGetData(pluginContext) {
+async function initAndGetData (pluginContext) {
   initialized = true
 
-  const {utils: {isMac, isWindows, isLinux, logger, getConfig, saveConfig, createFolder}} = pluginContext
+  const { utils: { isMac, isWindows, isLinux, logger, getConfig, saveConfig, createFolder } } = pluginContext
 
   config = getConfig('FindApp')
   if (!config.patterns) {
@@ -50,7 +50,7 @@ async function initAndGetData(pluginContext) {
     })
   }
 
-  //加载缓存
+  // 加载缓存
   const cacheFileExist = fs.existsSync(cachePath)
   files.forEach(file => {
     searchCache[file] = 0
@@ -63,7 +63,7 @@ async function initAndGetData(pluginContext) {
   return getData(pluginContext)
 }
 
-const getData = ({query}) => {
+const getData = ({ query }) => {
   return new Promise(resolve => {
     const resultFileArr = files.filter(fileUri => {
       const position = fileUri.lastIndexOf('/') + 1
@@ -78,7 +78,7 @@ const getData = ({query}) => {
         title: fileUri.slice(position),
         subTitle: `打开 ${fileUri}`,
         order,
-        action() {
+        action () {
           try {
             cache(fileUri)
           } catch (e) {
@@ -89,7 +89,7 @@ const getData = ({query}) => {
       }
     })
     resultArr.sort((a, b) => {
-      return b['order'] - a['order']
+      return b.order - a.order
     })
     resolve(resultArr)
   })
@@ -99,12 +99,11 @@ module.exports = {
   name: 'FindApp',
   quick: '*',
   type: 'ignoreQuick',
-  async query(pluginContext) {
+  async query (pluginContext) {
     if (!initialized) return initAndGetData(pluginContext)
     return getData(pluginContext)
   }
 }
-
 
 const cache = (filePath) => {
   const times = searchCache[filePath] || 0

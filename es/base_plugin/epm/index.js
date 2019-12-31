@@ -1,8 +1,8 @@
 const child_process = require('child_process')
 const rimraf = require('rimraf')
-const {sep} = require('path')
+const { sep } = require('path')
 
-const execute = async ({query, utils: {notice}}) => {
+const execute = async ({ query, utils: { notice } }) => {
   if (!query) return []
   const opt = query.split(' ')
   const option = opt[0]
@@ -11,7 +11,7 @@ const execute = async ({query, utils: {notice}}) => {
     return [{
       title: `安装插件:${optQuery || '请输入插件名称'}`,
       subTitle: 'EvaPackageManager',
-      action() {
+      action () {
         if (!optQuery) return
         let gitUrl = optQuery
         let pluginName
@@ -26,7 +26,7 @@ const execute = async ({query, utils: {notice}}) => {
         const pluginDirPath = `${global.evaSpace.evaWorkHome}plugins`
         child_process.execSync(`git clone ${gitUrl} ${pluginDirPath}${sep}${pluginName}`)
         notice({
-          title: `EPM 提醒您：`,
+          title: 'EPM 提醒您：',
           body: `插件${pluginName}安装成功，他将守护您！记得重新启动Eva哦！`
         })
         console.log('安装成功')
@@ -36,14 +36,14 @@ const execute = async ({query, utils: {notice}}) => {
     return [{
       title: `移除插件:${optQuery || '请输入插件名称'}`,
       subTitle: 'EvaPackageManager',
-      action() {
+      action () {
         if (!optQuery) return
         let pluginName = optQuery
         if (optQuery.indexOf('eva-plugin') < 0) pluginName = 'eva-plugin-' + optQuery
         rimraf(`${global.evaSpace.evaWorkHome}plugins${sep}${pluginName}`, () => {
           console.log(`${global.evaSpace.evaWorkHome}plugins${sep}${pluginName} Removed.`)
           notice({
-            title: `EPM 提醒您：`,
+            title: 'EPM 提醒您：',
             body: `插件${pluginName}已经离你而去！记得重新启动Eva哦！`
           })
         })
@@ -53,7 +53,7 @@ const execute = async ({query, utils: {notice}}) => {
     return [{
       title: `更新插件:${optQuery || '请输入插件名称'}`,
       subTitle: 'EvaPackageManager',
-      action() {
+      action () {
         if (!optQuery) return
         let gitUrl = optQuery
         let pluginName
@@ -66,7 +66,7 @@ const execute = async ({query, utils: {notice}}) => {
         const pluginDirPath = `${global.evaSpace.evaWorkHome}plugins`
         child_process.execSync(`cd ${pluginDirPath}${sep}${pluginName} && git pull`)
         notice({
-          title: `EPM 提醒您：`,
+          title: 'EPM 提醒您：',
           body: `插件${pluginName}已经更新成功！记得重新启动Eva哦！`
         })
       }
@@ -78,7 +78,7 @@ const execute = async ({query, utils: {notice}}) => {
 module.exports = {
   name: 'EvaPackageManager',
   quick: 'epm',
-  async query(pluginContext) {
+  async query (pluginContext) {
     return execute(pluginContext)
   }
 }

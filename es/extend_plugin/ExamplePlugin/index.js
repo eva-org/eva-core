@@ -1,4 +1,4 @@
-const execute = async ({query, utils: {buildLine, logger}}) => {
+const execute = async ({ query, utils: { buildLine, logger } }) => {
   return [buildLine(
     '例子插件',
     '欢迎创作',
@@ -9,7 +9,7 @@ const execute = async ({query, utils: {buildLine, logger}}) => {
 module.exports = {
   name: 'ExamplePlugin',
   quick: 'ep',
-  async query(pluginContext) {
+  async query (pluginContext) {
     return execute(pluginContext)
   }
 }

@@ -1,6 +1,5 @@
-const execute = async ({query, utils: {buildLine, logger}}) => {
-
-  let result = []
+const execute = async ({ query, utils: { buildLine, logger } }) => {
+  const result = []
   if (/^#[0-9abcdef]{3}$/.test(query)) {
     const arr = query.split('')
     arr.shift()
@@ -24,11 +23,10 @@ const execute = async ({query, utils: {buildLine, logger}}) => {
   )]
 }
 
-
 module.exports = {
   name: 'RgbTransform',
   quick: 'rgb',
-  async query(pluginContext) {
+  async query (pluginContext) {
     return execute(pluginContext)
   }
 }
