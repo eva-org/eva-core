@@ -1,4 +1,10 @@
-const config = {}
+import { saveJSONFile, getJSONFile } from '../utils'
+
+const evaWorkHome = `${os.homedir()}${path.sep}.eva${path.sep}`
+const config = {
+  evaWorkHome,
+  configPath: path.join(evaWorkHome, 'config.json')
+}
 
 const init = obj => {
   // TODO load config.json file
@@ -12,15 +18,15 @@ const merge = obj => {
 }
 
 const store = () => {
-  // TODO save config.json file
+  saveJSONFile(config.configPath, config)
 }
 
 const reload = () => {
-  // TODO 重新加载配置文件
+  merge(config, getJSONFile(config.configPath))
 }
 
 export default {
-  config: { ...config },
+  get: () => ({ ...config }),
   merge,
   init,
   store,

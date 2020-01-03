@@ -1,4 +1,3 @@
-const child_process = require('child_process')
 const rimraf = require('rimraf')
 const { sep } = require('path')
 

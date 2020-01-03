@@ -1,17 +1,13 @@
-const fs = require('fs')
-const path = require('path')
+// import fs from 'fs'
+// import path from 'path'
 
-const evaWorkHome = global.evaSpace.evaWorkHome
+export const isWindows = () => process.platform === 'win32'
 
-function isWindows () {
-  return process.platform === 'win32'
-}
-
-function isLinux () {
+const isLinux = () => {
   return process.platform === 'linux'
 }
 
-function isMac () {
+const isMac = () => {
   return process.platform === 'darwin'
 }
 
@@ -23,7 +19,7 @@ const md5 = (str) => {
   return result.toUpperCase() // 32位大写
 }
 
-const buildLine = (title, subTitle = '', action = new Function()) => {
+const buildLine = (title, subTitle = '', action = () => {}) => {
   return {
     title,
     subTitle,
@@ -31,15 +27,14 @@ const buildLine = (title, subTitle = '', action = new Function()) => {
   }
 }
 
-const saveConfig = (configName, config) => {
-  fs.writeFileSync(`${evaWorkHome}${configName}.json`, JSON.stringify(config, null, 2))
+const saveJSONFile = (filepath, config) => {
+  fs.writeFileSync(`${filepath}`, JSON.stringify(config, null, 2))
 }
 
-const getConfig = (configName) => {
-  const configPath = `${evaWorkHome}${configName}.json`
-  const exist = fs.existsSync(configPath)
-  if (!exist) fs.writeFileSync(configPath, '{}')
-  return JSON.parse(fs.readFileSync(configPath).toString())
+const getJSONFile = filepath => {
+  const exist = fs.existsSync(filepath)
+  if (!exist) fs.writeFileSync(filepath, '{}')
+  return JSON.parse(fs.readFileSync(filepath).toString())
 }
 
 const createFolder = (to) => { // 文件写入
@@ -53,20 +48,21 @@ const createFolder = (to) => { // 文件写入
     }
   }
 }
+
 // platform args selector 平台参数选择器
 const PAS = (mac, win, linux) => {
   if (isMac()) return mac
   else if (isWindows()) return win
   else if (isLinux()) return linux
 }
-module.exports = {
-  isWindows: isWindows(),
-  isLinux: isLinux(),
-  isMac: isMac(),
+
+export {
+  isLinux,
+  isMac,
   md5,
   buildLine,
-  saveConfig,
-  getConfig,
+  getJSONFile,
+  saveJSONFile,
   createFolder,
   PAS
 }

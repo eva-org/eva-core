@@ -1,5 +1,3 @@
-const child_process = require('child_process')
-
 const getData = async ({ query }) => {
   return [{
     title: `在NPM仓库中搜索:${query}`,

@@ -1,6 +1,4 @@
-const child_process = require('child_process')
 const glob = require('glob')
-const os = require('os')
 let files = []
 let config
 let initialized = false
