@@ -39,7 +39,7 @@ const start = (utils) => {
 
     evaWindow.on('blur', () => hideWindow())
 
-    registerGlobalShortcut()
+    // registerGlobalShortcut()
     ipcMain.on('box-input-esc', () => hideWindow())
     ipcMain.on('hide-main-window', () => hideWindow())
     ipcMain.on('box-input', boxInput)
