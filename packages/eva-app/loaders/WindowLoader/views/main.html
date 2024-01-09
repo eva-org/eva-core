@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="style.css"/>
-    <script type="text/javascript" src="../../../node_modules/vue/dist/vue.js"></script>
+    <script type="text/javascript" src="vue.js"></script>
 </head>
 <body>
 <div id="app">
@@ -26,8 +26,6 @@
     </template>
 </div>
 <script>
-  const {ipcRenderer} = require('electron')
-
   const vue = new Vue({
     el: '#app',
     data() {
@@ -42,10 +40,10 @@
         this.currIndex = index
       },
       enter() {
-        ipcRenderer.send('action', this.currIndex)
+        window.electronAPI.evaAction(this.currIndex)
       },
       esc() {
-        ipcRenderer.send('box-input-esc', this.input)
+        window.electronAPI.evaEsc(this.input)
       },
       up() {
         if (this.currIndex > 0) this.currIndex--
@@ -71,21 +69,21 @@
       }
     },
     watch: {
-      input() {
-        ipcRenderer.send('box-input', this.input)
+      input(val) {
+        window.eva.input(val)
         this.currIndex = 0
       }
     }
   })
 
-  ipcRenderer.on('action-exec-success', () => {
+  window.eva.on('action-exec-success', () => {
     vue.$refs.boxInput.select()
-    ipcRenderer.send('hide-main-window')
+    window.eva.send('hide-main-window')
   })
-  ipcRenderer.on('clear-query-result', () => vue.$data.queryResult = [])
-  ipcRenderer.on('query-result', (event, queryResult) => {
+  window.electronAPI.evaOn('clear-query-result', () => vue.$data.queryResult = [])
+  window.electronAPI.evaOn('query-result', (event, {result: queryResult}) => {
     vue.$data.queryResult = queryResult
-    if (queryResult.length <= 0) ipcRenderer.send('restore-box-height')
+    if (queryResult.length <= 0) window.electronAPI.evaSend('restore-box-height')
   })
 </script>
 </body>
