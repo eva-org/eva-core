@@ -102,6 +102,14 @@ module.exports = {
   async query(pluginContext) {
     if (!initialized) return initAndGetData(pluginContext)
     return getData(pluginContext)
+  },
+  action (fileUri) {
+    try {
+      cache(fileUri)
+    } catch (e) {
+      console.log(e)
+    }
+    child_process.exec(`${config.command}"${fileUri}"`)
   }
 }
 

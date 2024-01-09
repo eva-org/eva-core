@@ -16,6 +16,7 @@ const PluginLoader = require('./loaders/PluginLoader/index.js')
 const { isMac, isWindows, PAS, saveFocus, logger, restoreFocus } = require('./utils/index.js')
 const { app, globalShortcut, ipcMain, Tray, clipboard } = electron
 const { createEvaWindow, createMainWindow } = require('./loaders/WindowLoader/index.js')
+const { ipcRenderer } = require('electron')
 
 logger.trace('开始初始化App')
 initEva()
@@ -44,15 +45,12 @@ function registerGlobalShortcut () {
 }
 
 app.on('ready', () => {
-  logger.trace('App已经就绪')
-  try {
-    logger.trace('创建隐藏的主窗口')
-    mainWindow = createMainWindow()
-  } catch (e) {
-    logger.error(e)
-  }
-  logger.trace('创建Eva窗口')
-  evaWindow = createEvaWindow(evaSpace.config.width, evaSpace.config.height, evaSpace.config.opacity)
+  logger.trace('App已经就绪，创建Eva窗口')
+  logger.trace('')
+  evaWindow = createEvaWindow(evaSpace.config.width, evaSpace.config.height, evaSpace.config.opacity, mainWindow)
+  evaWindow.on('browser-window-focus', (e, w) => {
+    console.log('browser-window-focus', e)
+  })
   tray = new Tray(PAS(join(evaSpace.ROOT_DIR, './logo-1024-16x16@3x.png'), './icon.ico'))
   tray.setToolTip('Eva')
 
@@ -83,6 +81,7 @@ function action (event, index) {
   if (queryResult.length <= 0) return
   new Promise((resolve) => {
     queryResult[index].action()
+
     resolve()
   }).then(() => {
     event.sender.send('action-exec-success')
@@ -98,9 +97,12 @@ async function executeCommonPlugin (input) {
   }))
   let queryResult = []
   const resultArr = await Promise.all(queryPromises)
-  for (const result of resultArr) {
+  resultArr.forEach((result, index) => {
+    result.forEach(item => {
+      item.plugin = commonPlugins[index]
+    })
     queryResult = queryResult.concat(result)
-  }
+  })
   return queryResult
 }
 
@@ -122,14 +124,16 @@ async function executeExactPlugin (suitablePlugin, pluginQuery) {
 
 let lastedInput
 
-function boxInput (event, input) {
+function boxInput (event, { input }) {
+  logger.info('boxInput', event, input)
   lastedInput = input
-  if (!input) return clearQueryResult(event)
+  const render = evaWindow.webContents
+  if (!input) return clearQueryResult(event, render)
 
   // 如果不包含空格则执行通用插件（*插件）
   const blankIndex = input.indexOf(' ')
   if (blankIndex === -1) {
-    return returnValue(event, input, executeCommonPlugin(input))
+    return returnValue(event, input, executeCommonPlugin(input), render)
   }
 
   const [quickName, ...values] = input.split(' ')
@@ -137,30 +141,35 @@ function boxInput (event, input) {
   const suitablePlugin = findSuitablePlugin(quickName)
   // 未匹配到
   if (!suitablePlugin) {
-    return returnValue(event, input, executeCommonPlugin(input))
+    return returnValue(event, input, executeCommonPlugin(input), render)
   }
   // 处理执行匹配的插件
   const pluginQuery = values.join(' ')
-  return returnValue(event, input, executeExactPlugin(suitablePlugin, pluginQuery))
+  return returnValue(event, input, executeExactPlugin(suitablePlugin, pluginQuery), render)
 }
 
-function returnValue (event, input, resultPromise) {
+function returnValue (event, input, resultPromise, render) {
   resultPromise
     .then(result => {
       // 如果本次回调对应的input不是最新输入，则忽略
-      if (input !== lastedInput) return clearQueryResult(event)
+      if (input !== lastedInput) return clearQueryResult(event, render)
 
-      if (result.length) clearQueryResult(event)
+      if (result.length) clearQueryResult(event, render)
       changeBoxNum(result.length)
-      event.sender.send('query-result', result)
+      logger.log(result)
+      render.send('query-result', {
+        result: result.map(item => ({ ...item, plugin: undefined, action: undefined })),
+      })
+      // event.sender.send('query-result', result)
       // 在主线程保存插件结果，用于执行action，因为基于json的ipc通讯不可序列化function
       queryResult = result
     })
     .catch(reason => logger.error(reason))
 }
 
-function clearQueryResult (event) {
-  event.sender.send('clear-query-result')
+function clearQueryResult (event, render) {
+  render.send('clear-query-result')
+  // event.sender.send('clear-query-result')
   changeBoxNum(0)
 }
 

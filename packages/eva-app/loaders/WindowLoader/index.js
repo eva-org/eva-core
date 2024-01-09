@@ -70,11 +70,17 @@ if (process.platform === 'darwin') {
 }
 
 function createMainWindow() {
-  return new BrowserWindow({
-    x: 0, y: 0, width: 0, height: 0, show: false, focusable: false, frame: false,
+  const bounds = electron.screen.getPrimaryDisplay().workArea
+  const mainWindow = new BrowserWindow({
+    x: 0, y: 0, width: bounds.width, height: bounds.height, show: false, focusable: false, frame: false,
     titleBarStyle: 'customButtonsOnHover',
-    transparent: true
+    visibleOnAllWorkspaces: true,
+    transparent: true,
+    skipTaskbar: true
   })
+  mainWindow.setAlwaysOnTop(true, 'screen-saver')
+  mainWindow.setVisibleOnAllWorkspaces(true)
+  return mainWindow
 }
 
 function createEvaWindow(width = 500, height = 60, opacity = 1) {
@@ -93,21 +99,21 @@ function createEvaWindow(width = 500, height = 60, opacity = 1) {
     frame: false,
     skipTaskbar: true,
     resizable: false,
+    setVisibleOnAllWorkspaces: true,
     // movable: false,
     backgroundColor: '#232323',
     show: false,
     webPreferences: {
       nodeIntegration: true,
       devTools: true,
-      nodeIntegrationInWorker: true
+      nodeIntegrationInWorker: true,
+      preload: path.join(__dirname, 'preload.js')
     }
-    // parent: mainWindow
   })
 
   // 全屏代码
   if (process.platform === 'darwin') electron.app.dock.hide()
-  evaWindow.setAlwaysOnTop(true, "floating")
-  evaWindow.setVisibleOnAllWorkspaces(true)
+  evaWindow.setAlwaysOnTop(true, 'floating')
   evaWindow.fullScreenable = false
 
 // and load the index.html of the app.
