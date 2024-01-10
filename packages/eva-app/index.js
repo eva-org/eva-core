@@ -82,7 +82,6 @@ function action (event, index) {
   if (queryResult.length <= 0) return
   new Promise((resolve) => {
     queryResult[index].action()
-
     resolve()
   }).then(() => {
     event.sender.send('action-exec-success')
