@@ -43,7 +43,8 @@
         window.electronAPI.evaAction(this.currIndex)
       },
       esc() {
-        window.electronAPI.evaEsc(this.input)
+        this.input = ''
+        window.eva.esc(this.input)
       },
       up() {
         if (this.currIndex > 0) this.currIndex--
@@ -54,7 +55,7 @@
         this.changePosition()
       },
       changePosition() {
-        const range = [50 * (this.currIndex - 4), 50 * this.currIndex]
+        const range = [50 * (this.currIndex - 7), 50 * this.currIndex]
         const dom = document.getElementsByClassName('result')[0]
         const currentScrollTop = dom.scrollTop
         if (currentScrollTop < range[0]) {
@@ -80,10 +81,15 @@
     vue.$refs.boxInput.select()
     window.eva.send('hide-main-window')
   })
-  window.electronAPI.evaOn('clear-query-result', () => vue.$data.queryResult = [])
-  window.electronAPI.evaOn('query-result', (event, {result: queryResult}) => {
+  window.eva.on('clear-query-result', () => vue.$data.queryResult = [])
+  window.eva.on('query-result', (event, {result: queryResult}) => {
     vue.$data.queryResult = queryResult
-    if (queryResult.length <= 0) window.electronAPI.evaSend('restore-box-height')
+    if (queryResult.length <= 0) window.eva.send('restore-box-height')
+  })
+  window.eva.on('clear-all', () => {
+    vue.$data.input = ''
+    vue.$data.queryResult = []
+    vue.$data.currIndex = 0
   })
 </script>
 </body>

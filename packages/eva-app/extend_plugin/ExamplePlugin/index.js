@@ -1,4 +1,5 @@
 const execute = async ({query, utils: {buildLine, logger}}) => {
+  logger.info(111)
   return [buildLine(
     '例子插件',
     '欢迎创作',
