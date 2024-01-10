@@ -82,16 +82,17 @@ function createMainWindow() {
   mainWindow.setVisibleOnAllWorkspaces(true)
   return mainWindow
 }
-
+let pX = 0
+let pY = 0
 function createEvaWindow(width = 500, height = 60, opacity = 1) {
   // Create the browser window.
-  const x = (electron.screen.getPrimaryDisplay().workAreaSize.width / 2 - width / 2).toFixed(0)
-  const y = 90
+  pX = (electron.screen.getPrimaryDisplay().workAreaSize.width / 2 - width / 2).toFixed(0)
+  pY = 90
 
   const evaWindow = new BrowserWindow({
     alwaysOnTop: true,
-    x: +x,
-    y: +y,
+    x: +pX,
+    y: +pY,
     width,
     height,
     opacity,
@@ -102,6 +103,7 @@ function createEvaWindow(width = 500, height = 60, opacity = 1) {
     setVisibleOnAllWorkspaces: true,
     // movable: false,
     backgroundColor: '#232323',
+    type: 'panel',
     show: false,
     webPreferences: {
       nodeIntegration: true,
@@ -113,7 +115,7 @@ function createEvaWindow(width = 500, height = 60, opacity = 1) {
 
   // 全屏代码
   if (process.platform === 'darwin') electron.app.dock.hide()
-  evaWindow.setAlwaysOnTop(true, 'floating')
+  evaWindow.setAlwaysOnTop(true, 'floating', 21)
   evaWindow.fullScreenable = false
 
 // and load the index.html of the app.
@@ -126,8 +128,13 @@ function createEvaWindow(width = 500, height = 60, opacity = 1) {
 
   return evaWindow
 }
-
+const setPositionCenter = (win, width) => {
+  pX = (electron.screen.getPrimaryDisplay().workAreaSize.width / 2 - width / 2).toFixed(0)
+  pY = 90
+  win.setPosition(+pX, +pY)
+}
 module.exports = {
   createMainWindow,
-  createEvaWindow
+  createEvaWindow,
+  setPositionCenter
 }

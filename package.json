@@ -1,6 +1,6 @@
 {
   "name": "eva-package",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "scripts": {
     "pa:win": "electron-packager ./packages/eva-app Eva --win --asar --arch=x64 --out=./package --app-version=0.0.1 --overwrite --icon=./icon.ico --ignore=\"(.gitignore|yarn.lock|yarn-error.log|.idea)\"",

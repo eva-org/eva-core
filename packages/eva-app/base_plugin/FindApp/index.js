@@ -27,7 +27,13 @@ async function initAndGetData(pluginContext) {
   if (!config.patterns) {
     logger.error('Error')
     if (isMac) {
-      config.patterns = ['/Applications/**.app', `${os.homedir()}/Downloads/**.**`]
+      config.patterns = [
+        '/Applications/**.app',
+        `${os.homedir()}/Applications/**.app`,
+        `${os.homedir()}/Desktop/**.**`,
+        `${os.homedir()}/Documents/**.**`,
+        `${os.homedir()}/Downloads/**.**`
+      ]
       config.command = 'open '
     } else if (isWindows) {
       config.patterns = ['C:/ProgramData/Microsoft/Windows/Start Menu/Programs/**.lnk']

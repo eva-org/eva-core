@@ -12,17 +12,18 @@ global.evaSpace = {
 const electron = require('electron')
 const utils = require('./utils/index.js')
 const { initEva } = require('./utils/initialize.js')
-const PluginLoader = require('./loaders/PluginLoader/index.js')
+const { loadPlugins } = require('./loaders/PluginLoader/index.js')
 const { isMac, isWindows, PAS, saveFocus, logger, restoreFocus } = require('./utils/index.js')
 const { app, globalShortcut, ipcMain, Tray, clipboard } = electron
 const { createEvaWindow, createMainWindow } = require('./loaders/WindowLoader/index.js')
 const { ipcRenderer } = require('electron')
+const { setPositionCenter } = require('./loaders/WindowLoader')
 
 logger.trace('开始初始化App')
 initEva()
 
 // 插件加载器
-const plugins = PluginLoader(utils)
+const plugins = loadPlugins(utils, app)
 const commonPlugins = plugins.filter(plugin => plugin.quick === '*')
 
 let evaWindow
@@ -71,7 +72,7 @@ app.on('ready', () => {
 })
 
 function changeBoxNum (num) {
-  if (num > 5) num = 5
+  if (num > 8) num = 8
   const h = 50
   evaWindow.setSize(evaSpace.config.width, +evaSpace.config.height + h * num)
 }
@@ -125,7 +126,7 @@ async function executeExactPlugin (suitablePlugin, pluginQuery) {
 let lastedInput
 
 function boxInput (event, { input }) {
-  logger.info('boxInput', event, input)
+  logger.trace('boxInput', input)
   lastedInput = input
   const render = evaWindow.webContents
   if (!input) return clearQueryResult(event, render)
@@ -145,7 +146,18 @@ function boxInput (event, { input }) {
   }
   // 处理执行匹配的插件
   const pluginQuery = values.join(' ')
-  return returnValue(event, input, executeExactPlugin(suitablePlugin, pluginQuery), render)
+  logger.info('匹配到插件：', suitablePlugin.name, pluginQuery === '')
+  if (pluginQuery === '') {
+    changeBoxNum(1)
+    render.send('query-result', {
+      result: [{
+        title: `Enter plugin: ${suitablePlugin.name}`,
+        subTitle: 'Continue to enter parameters or press Enter to execute'
+      }],
+    })
+  } else {
+    return returnValue(event, input, executeExactPlugin(suitablePlugin, pluginQuery), render)
+  }
 }
 
 function returnValue (event, input, resultPromise, render) {
@@ -156,7 +168,6 @@ function returnValue (event, input, resultPromise, render) {
 
       if (result.length) clearQueryResult(event, render)
       changeBoxNum(result.length)
-      logger.log(result)
       render.send('query-result', {
         result: result.map(item => ({ ...item, plugin: undefined, action: undefined })),
       })
@@ -174,18 +185,27 @@ function clearQueryResult (event, render) {
 }
 
 let appIsVisible = false
-
+const beforeHide = () => {
+  changeBoxNum(0)
+  evaWindow.webContents.send('clear-all')
+}
 function hideWindow () {
+  beforeHide()
   evaWindow.hide()
   if (isWindows) restoreFocus()
   if (isMac) app.hide()
   appIsVisible = false
 }
 
+const beforeShow = () => {
+  setPositionCenter(evaWindow, evaSpace.config.width)
+}
+
 function showWindow () {
+  if (isMac) app.show()
+  beforeShow()
   evaWindow.show()
   if (isWindows) saveFocus()
-  if (isMac) app.show()
   appIsVisible = true
 }
 

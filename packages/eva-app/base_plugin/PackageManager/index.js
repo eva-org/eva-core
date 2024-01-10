@@ -76,7 +76,7 @@ const execute = async ({query, utils: {notice}}) => {
 }
 
 module.exports = {
-  name: 'EvaPackageManager',
+  name: 'PackageManager',
   quick: 'epm',
   async query(pluginContext) {
     return execute(pluginContext)
