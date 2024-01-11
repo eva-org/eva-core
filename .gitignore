@@ -24,3 +24,9 @@ build
 package
 yarn.lock
 *.swp
+
+# fleet project files
+.fleet
+
+# visual studio code project files
+.vscode
