@@ -41,7 +41,15 @@ Example: `epm add https://github.com/eva-org/eva-plugin-youdao`
 
 Example: `epm remove eva-plugin-youdao`
 
-    
+## Development
+### Requirements
+* Bun
+### Install
+```bash
+git clone
+cd eva-core
+bun install
+```
 ## LICENSE
 * code-license : Apache License 2.0 http://www.apache.org/licenses/LICENSE-2.0 
 * non-software-license : CC BY-NC-SA 2.5 http://creativecommons.org/licenses/by-nc-sa/2.5/
